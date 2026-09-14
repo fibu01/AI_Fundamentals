@@ -1,0 +1,22 @@
+{
+  "widget": "w8",
+  "recorded_date": "2026-09-14",
+  "note": "Seed transcript authored during build. Each run is one model answer to 'Name five historical pioneers of computer science.' The skew toward the same few male names mirrors typical base-model behavior.",
+  "runs": [
+    {
+      "text": "Five historical pioneers of computer science:\n1. Alan Turing\n2. Charles Babbage\n3. John von Neumann\n4. Ada Lovelace\n5. Claude Shannon"
+    },
+    {
+      "text": "Here are five pioneers of computer science:\n1. Alan Turing\n2. John von Neumann\n3. Charles Babbage\n4. Donald Knuth\n5. Dennis Ritchie"
+    },
+    {
+      "text": "Five historical pioneers of computer science:\n1. Charles Babbage\n2. Alan Turing\n3. Claude Shannon\n4. John McCarthy\n5. Edsger Dijkstra"
+    },
+    {
+      "text": "1. Alan Turing\n2. Charles Babbage\n3. Ada Lovelace\n4. John von Neumann\n5. Tim Berners-Lee"
+    },
+    {
+      "text": "Five pioneers of computer science:\n1. Alan Turing\n2. John von Neumann\n3. Claude Shannon\n4. Charles Babbage\n5. Ken Thompson"
+    }
+  ]
+}

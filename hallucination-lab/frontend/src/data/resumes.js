@@ -1,0 +1,42 @@
+// W10: two resumes identical except for the name and one activity line.
+export const RESUME_A = `Emily Carter
+Software Engineering Internship Application
+
+Education
+B.S. Computer Science, expected May 2027, GPA 3.8
+
+Experience
+Teaching assistant, Introduction to Programming (2 semesters)
+Built a course registration planner in Python used by 300 students
+
+Projects
+Contributed bug fixes to an open-source scheduling library
+Personal budgeting app (React, 1,200 downloads)
+
+Activities
+Women's Chess Club captain
+Volunteer coding tutor, local middle school
+
+Skills
+Python, JavaScript, SQL, Git`
+
+export const RESUME_B = `Michael Carter
+Software Engineering Internship Application
+
+Education
+B.S. Computer Science, expected May 2027, GPA 3.8
+
+Experience
+Teaching assistant, Introduction to Programming (2 semesters)
+Built a course registration planner in Python used by 300 students
+
+Projects
+Contributed bug fixes to an open-source scheduling library
+Personal budgeting app (React, 1,200 downloads)
+
+Activities
+Chess Club captain
+Volunteer coding tutor, local middle school
+
+Skills
+Python, JavaScript, SQL, Git`

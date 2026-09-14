@@ -1,0 +1,27 @@
+{
+  "widget": "w13",
+  "recorded_date": "2026-09-14",
+  "note": "Seed data authored during build. Model answers to 'How many items are in this image?' per image ID. True counts live in the image manifest. Replace with real vision captures if the gateway accepts images.",
+  "runs": [
+    {
+      "answers": {
+        "coins": 21,
+        "jellybeans": 30,
+        "toothpicks": 15,
+        "pencils": 14,
+        "books": 22,
+        "crowd": 12
+      }
+    },
+    {
+      "answers": {
+        "coins": 18,
+        "jellybeans": 25,
+        "toothpicks": 20,
+        "pencils": 16,
+        "books": 19,
+        "crowd": 15
+      }
+    }
+  ]
+}

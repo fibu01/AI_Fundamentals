@@ -1,0 +1,13 @@
+{
+  "widget": "w7",
+  "recorded_date": "2026-09-14",
+  "note": "Seed transcript authored during build. {{FACULTY_NAME}} and {{FACULTY_FIELD}} are replaced at render time from src/config.js. Get the named colleague's permission before Thursday (PRD open decision 3).",
+  "runs": [
+    {
+      "text": "{{FACULTY_NAME}} of Barry University has spoken about this. In a 2024 interview published in the Journal of {{FACULTY_FIELD}} Education, {{FACULTY_NAME}} said: \"Artificial intelligence will not replace practitioners in {{FACULTY_FIELD}}, but practitioners who understand AI will replace those who do not. The tools are only as trustworthy as the habits of the people using them.\" The piece appeared in the journal's Spring 2024 issue as part of a special section on emerging technology in the classroom."
+    },
+    {
+      "text": "Yes. {{FACULTY_NAME}} addressed this in an article for the Miami Herald's higher education section in late 2023, saying: \"We are past the question of whether AI belongs in {{FACULTY_FIELD}}. The real question is whether we teach students to verify what these systems produce before they act on it.\" The quote was widely shared in academic circles and later reprinted in Inside Higher Ed's technology newsletter."
+    }
+  ]
+}

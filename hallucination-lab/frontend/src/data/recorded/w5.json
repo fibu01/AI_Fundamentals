@@ -1,0 +1,16 @@
+{
+  "widget": "w5",
+  "recorded_date": "2026-09-14",
+  "note": "Seed transcript authored during build. Summaries deliberately mix correct and incorrect numbers, matching typical ungrounded model behavior on this statute.",
+  "runs": [
+    {
+      "text": "Florida Statute 692.203 restricts the purchase of real property by foreign principals from countries of concern. Key provisions:\n\n1. Foreign principals may not own or acquire any interest in real property within 20 miles of a military installation or critical infrastructure facility in Florida.\n\n2. A natural person holding a valid non-tourist visa may purchase one residential property of up to 5 acres, provided it is at least 10 miles from any military installation.\n\n3. Foreign principals who owned qualifying property before July 1, 2023 may keep it but must register with the Department of Commerce; late registration carries a civil penalty of $500 per day.\n\n4. Property acquired by inheritance must be divested within 2 years.\n\n5. Violations are a first-degree misdemeanor for the buyer and the seller."
+    },
+    {
+      "text": "Summary of Florida Statute 692.203 (foreign ownership of real property):\n\nThe statute bars foreign principals from countries of concern from owning or acquiring real property located within 10 miles of any military installation or within 25 miles of critical infrastructure such as power plants, seaports, and water treatment facilities.\n\nResidential exception: an individual with a lawful visa may buy a single residential parcel no larger than 1 acre, so long as it sits more than 5 miles from a military installation.\n\nRegistration: affected owners had to register with the Florida Department of State by June 30, 2024. The daily fine for late registration is $1,000.\n\nEnforcement: noncompliant property may be forfeited to the state, and a knowing violation is a third-degree felony."
+    },
+    {
+      "text": "Florida Statute 692.203 addresses foreign ownership of real property near sensitive sites:\n\n1. Prohibition: foreign principals cannot purchase real property within 10 miles of military installations or critical infrastructure facilities.\n\n2. Residential carve-out: a foreign national with a valid work or student visa may purchase one home on up to 2 acres, but only if the property is more than 10 miles from a military installation.\n\n3. Grandfathering: property owned before January 1, 2023 may be retained but must be registered within 90 days.\n\n4. Penalties: unregistered owners face fines of $1,000 per day, and property purchased in violation is subject to forfeiture. The purchase itself is a second-degree misdemeanor."
+    }
+  ]
+}
