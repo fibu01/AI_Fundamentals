@@ -15,7 +15,7 @@ const STEMS = [
 function Body() {
   const { data, run, loading } = useRun('w1')
   const [stem, setStem] = useState(STEMS[0])
-  const [temp, setTemp] = useState(0.9)
+  const [temp, setTemp] = useState(0.2)
   const res = data.result
 
   // Live responses carry { candidates: [[token, prob], ...] }. Recorded
@@ -32,6 +32,10 @@ function Body() {
 
   return (
     <div>
+      <p className="muted">
+        Experiment: run a stem at low temperature, note the top word's share, then drag the
+        temperature up and run the same stem again. Try at least two stems.
+      </p>
       <label className="field-label" htmlFor="w1-stem">Sentence stem</label>
       <select
         id="w1-stem"
@@ -71,7 +75,24 @@ export default {
   section: 'A. How the model produces text',
   title: 'Next Word Machine',
   priority: 'P1',
-  instruction: 'Pick a sentence stem, run it, then raise the temperature and run it again.',
+  instruction: 'Run a sentence stem, then raise the temperature and run it again.',
+  intro: {
+    lead: 'This is the whole machine, stripped bare. A language model does exactly one thing: given the words so far, it scores every possible next word by how often that word followed similar text in its training data, then picks one. Everything else in this lab, the fake court cases, the invented quotes, the biased lists, comes from this single mechanism running over and over.',
+    terms: [
+      ['Token', 'The unit the model actually predicts: usually a word or a piece of one. "Tallahassee" may be several tokens.'],
+      ['Probability', 'The model’s score for each candidate next word. The bars you are about to see are these scores.'],
+      ['Temperature', 'A dial from 0 upward that controls how adventurous the pick is. Low temperature: almost always take the top-scoring word. High temperature: give weaker candidates a real chance. It is a randomness dial, not a quality dial.'],
+    ],
+  },
+  predict: {
+    text: 'When you raise the temperature, what happens to the top word’s share of the probability?',
+    options: [
+      { key: 'a', label: 'It grows; the model gets more confident' },
+      { key: 'b', label: 'It shrinks; weaker candidates gain ground' },
+      { key: 'c', label: 'Nothing changes; temperature only affects speed' },
+      { key: 'd', label: 'The model starts refusing to answer' },
+    ],
+  },
   Body,
   questions: [
     {
@@ -99,7 +120,7 @@ export default {
       ],
       correct: 'b',
       explain:
-        'Higher temperature flattens the probability distribution, so lower-ranked words get picked more often. That adds variety, and with it more chances to drift from the most likely (often the true) continuation.',
+        'Higher temperature flattens the probability distribution, so lower-ranked words get picked more often. That adds variety, and with it more chances to drift from the most likely (often the true) continuation. Check your locked prediction against what the bars actually did.',
       slide: SLIDES.temperature,
     },
   ],

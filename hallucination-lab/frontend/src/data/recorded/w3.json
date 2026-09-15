@@ -1,16 +1,31 @@
 {
   "widget": "w3",
   "recorded_date": "2026-09-14",
-  "note": "Seed transcript authored during build. Replace with real captures via scripts/capture_recorded.py before Thursday. Case names below are fictional.",
+  "note": "Seed transcripts authored during build. Replace with real captures via scripts/capture_recorded.py before Thursday. Every case name below is fictional; runs are grouped by topic key.",
   "runs": [
     {
+      "topic": "drone_surveillance",
       "text": "Here are three recent Florida appellate decisions on drone surveillance:\n\n1. State v. Pemberton, 361 So. 3d 884 (Fla. 2d DCA 2023). The Second District held that sustained warrantless drone surveillance of a fenced residential backyard violated the defendant's reasonable expectation of privacy, suppressing evidence obtained from a 45-minute hover at 150 feet.\n\n2. Osceola Aerial Imaging, LLC v. Tavares, 358 So. 3d 1122 (Fla. 5th DCA 2023). The Fifth District upheld a municipal ordinance restricting commercial drone photography over private residential parcels, finding no conflict with s. 934.50, Florida Statutes.\n\n3. Cruz v. City of Hialeah, 349 So. 3d 512 (Fla. 3d DCA 2022). The Third District ruled that a city's use of drone footage in code enforcement proceedings without notice violated procedural due process, remanding for a new hearing."
     },
     {
+      "topic": "drone_surveillance",
       "text": "Three recent Florida appellate decisions addressing drone surveillance:\n\n1. Whitfield v. State, 355 So. 3d 209 (Fla. 4th DCA 2023). Held that thermal imaging from a drone above a residence constituted a search under Kyllo, requiring a warrant.\n\n2. Bay Harbor Homeowners Ass'n v. Delgado, 364 So. 3d 771 (Fla. 3d DCA 2023). Affirmed an injunction against a neighbor's repeated drone flights over adjoining property as an invasion of privacy under s. 934.50(3)(b).\n\n3. State v. Okafor, 352 So. 3d 445 (Fla. 1st DCA 2022). Reversed suppression, holding a single drone pass at 400 feet over an open field fell within the open-fields doctrine."
     },
     {
-      "text": "Certainly. Three recent Florida appellate decisions on drone surveillance:\n\n1. Marrero v. State, 359 So. 3d 1015 (Fla. 3d DCA 2023). The court suppressed video captured by a police drone hovering outside a third-floor apartment window, holding the vantage point was not lawfully accessible to the public.\n\n2. Coastal Watch, Inc. v. Sarasota County, 356 So. 3d 623 (Fla. 2d DCA 2023). Upheld the county's drone-based shoreline inspection program against a facial privacy challenge, noting the program's altitude floor and notice provisions.\n\n3. State v. Lindqvist, 348 So. 3d 998 (Fla. 5th DCA 2022). Held that s. 934.50 does not provide a suppression remedy for statutory violations absent a constitutional violation."
+      "topic": "red_light_cameras",
+      "text": "Three recent Florida appellate decisions on red-light camera enforcement:\n\n1. City of Doral v. Menendez, 357 So. 3d 660 (Fla. 3d DCA 2023). Held that delegating initial review of camera images to a private vendor exceeded the city's authority under the Mark Wandall Traffic Safety Act.\n\n2. Fontaine v. State, 350 So. 3d 291 (Fla. 4th DCA 2022). Affirmed that a registered owner may rebut the presumption of driving with an affidavit naming another driver.\n\n3. Palm Coast Traffic Solutions v. Hernandez, 362 So. 3d 1030 (Fla. 5th DCA 2023). Reversed a class certification order in a challenge to camera-generated penalties, finding individualized issues predominated."
+    },
+    {
+      "topic": "school_searches",
+      "text": "Three recent Florida appellate decisions on searches of student phones in public schools:\n\n1. M.R. v. Broward County School Board, 359 So. 3d 512 (Fla. 4th DCA 2023). Held that a dean's warrantless scroll through a student's text messages exceeded the reasonable-suspicion standard of T.L.O.\n\n2. State v. T.J., 353 So. 3d 118 (Fla. 2d DCA 2022). Suppressed evidence from a phone search where the tip concerned vaping, not the photographs the administrator examined.\n\n3. Duval County Schools v. Whitaker, 364 So. 3d 902 (Fla. 1st DCA 2023). Upheld a district policy requiring consent before device searches at extracurricular events."
+    },
+    {
+      "topic": "social_media_evidence",
+      "text": "Three recent Florida appellate decisions on social media posts used as criminal evidence:\n\n1. State v. Aceves, 356 So. 3d 774 (Fla. 3d DCA 2023). Held that screenshots of a public Instagram story were sufficiently authenticated through the account's distinctive characteristics.\n\n2. Killarney v. State, 351 So. 3d 208 (Fla. 5th DCA 2022). Reversed where the State failed to connect the defendant to the account that posted the threatening message.\n\n3. In re Grand Jury Petition (Snapchat Records), 360 So. 3d 445 (Fla. 2d DCA 2023). Enforced a subpoena for ephemeral message metadata while quashing the request for content absent a warrant."
+    },
+    {
+      "topic": "police_body_cameras",
+      "text": "Three recent Florida appellate decisions on public access to police body camera footage:\n\n1. Miami Herald Media Co. v. City of Opa-locka, 358 So. 3d 1201 (Fla. 3d DCA 2023). Ordered release of footage after redaction, rejecting the city's blanket invocation of the active-investigation exemption.\n\n2. Sentinel Communications v. Osceola County Sheriff, 354 So. 3d 663 (Fla. 5th DCA 2022). Held that footage recorded inside a private residence retains its exemption under s. 119.071 even after the investigation closes.\n\n3. Grady v. City of Fort Myers, 361 So. 3d 998 (Fla. 2d DCA 2023). Affirmed fee-shifting against an agency that unlawfully delayed production of requested footage."
     }
   ]
 }

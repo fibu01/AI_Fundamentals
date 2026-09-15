@@ -2,38 +2,102 @@ import React from 'react'
 import OutputPanel from '../components/OutputPanel.jsx'
 import { useRun } from '../lib/useRun.js'
 import { extractCaseNames } from '../lib/utils.js'
+import { REAL_CASES } from '../data/realcases.js'
 import { SLIDES } from '../config.js'
+import w3Recorded from '../data/recorded/w3.json'
+
+const TOPICS = [
+  { key: 'drone_surveillance', label: 'Drone surveillance' },
+  { key: 'red_light_cameras', label: 'Red-light camera enforcement' },
+  { key: 'school_searches', label: 'Searches of student phones in schools' },
+  { key: 'social_media_evidence', label: 'Social media posts as evidence' },
+  { key: 'police_body_cameras', label: 'Access to body camera footage' },
+]
+
+function scholarUrl(name) {
+  return `https://scholar.google.com/scholar?as_sdt=4,10,60&q=${encodeURIComponent(`"${name}"`)}`
+}
+
+function buildSortItems(modelText) {
+  const fabricated = extractCaseNames(modelText).slice(0, 3).map((name) => ({ name, isReal: false }))
+  const real = [...REAL_CASES].sort(() => Math.random() - 0.5).slice(0, 3)
+    .map((c) => ({ name: `${c.name}, ${c.cite}`, isReal: true, holding: c.holding }))
+  return [...fabricated, ...real].sort(() => Math.random() - 0.5)
+}
 
 function Body() {
-  const { data, run, loading } = useRun('w3')
+  const { data, setData, run, loading } = useRun('w3')
+  const topic = data.topic || 'drone_surveillance'
   const res = data.result
-  const text = res?.data?.text || ''
-  const cases = text ? extractCaseNames(text) : []
+  let text = res?.data?.text || ''
+  if (res?.source === 'recorded') {
+    // Recorded fallback: use a transcript that matches the chosen topic.
+    text = data.recordedText || ''
+  }
+  const items = data.sortItems || []
+  const verdicts = data.verdicts || {}
+  const checked = !!data.checked
+  const allSorted = items.length > 0 && items.every((_, i) => verdicts[i])
+
+  async function doRun() {
+    const r = await run({ topic })
+    let outText = r?.data?.text || ''
+    if (r?.source === 'recorded') {
+      const matches = w3Recorded.runs.filter((x) => x.topic === topic)
+      outText = matches[Math.floor(Math.random() * matches.length)]?.text || w3Recorded.runs[0].text
+      setData({ recordedText: outText })
+    }
+    setData({ sortItems: buildSortItems(outText), verdicts: {}, checked: false, sortScore: null })
+  }
+
+  function check() {
+    const score = items.reduce((s, it, i) => s + ((verdicts[i] === 'real') === it.isReal ? 1 : 0), 0)
+    setData({ checked: true, sortScore: score })
+  }
 
   return (
     <div>
-      <button className="btn-primary" disabled={loading} onClick={() => run({})}>
-        {loading ? 'Asking the Lab Model...' : 'Ask for three Florida drone cases with citations'}
-      </button>
-      {res && (
+      <label className="field-label" htmlFor="w3-topic">Pick your topic (each student can pick a different one)</label>
+      <select id="w3-topic" value={topic} style={{ font: 'inherit', padding: 8 }}
+        onChange={(e) => setData({ topic: e.target.value })}>
+        {TOPICS.map((t) => <option key={t.key} value={t.key}>{t.label}</option>)}
+      </select>
+      <div style={{ marginTop: 10 }}>
+        <button className="btn-primary" disabled={loading} onClick={doRun}>
+          {loading ? 'Asking the Lab Model...' : 'Ask for three Florida cases on this topic, with citations'}
+        </button>
+      </div>
+      {text && (
         <>
           <OutputPanel source={res.source} recordedDate={res.recordedDate}>{text}</OutputPanel>
-          {cases.length > 0 && (
-            <div className="card">
-              <strong>Verify each case yourself:</strong>
-              {cases.map((c) => (
-                <p key={c}>
-                  {c}{' '}
-                  <a href={`https://scholar.google.com/scholar?as_sdt=4,10&q=${encodeURIComponent(`"${c}"`)}`} target="_blank" rel="noreferrer">
-                    Google Scholar case law
-                  </a>{' | '}
-                  <a href={`https://onlinedocketssc.flcourts.org/DocketResults/CaseSearch?searchtype=case&searchterm=${encodeURIComponent(c)}`} target="_blank" rel="noreferrer">
-                    Florida Supreme Court docket
-                  </a>
-                </p>
-              ))}
-            </div>
-          )}
+          <div className="card">
+            <p className="question-text">Citation Sort: the model’s three cases are shuffled below with three real ones. Mark each Real or Fake, then check. Score to beat: 6 of 6.</p>
+            {items.map((it, i) => {
+              const verdict = checked ? ((verdicts[i] === 'real') === it.isReal ? 'right' : 'wrong') : null
+              return (
+                <div key={i} className="sort-item option" data-verdict={verdict}>
+                  <span style={{ flex: 1 }}>
+                    {it.name}
+                    {checked && (
+                      <span className="muted"> {it.isReal ? `REAL. ${it.holding}` : 'FAKE: generated by the Lab Model.'}</span>
+                    )}
+                    {' '}<a href={scholarUrl(it.name.split(',')[0])} target="_blank" rel="noreferrer">verify</a>
+                  </span>
+                  <span role="group" aria-label={`Mark ${it.name}`} style={{ display: 'flex', gap: 4 }}>
+                    <button aria-pressed={verdicts[i] === 'real'} disabled={checked}
+                      onClick={() => setData({ verdicts: { ...verdicts, [i]: 'real' } })}>Real</button>
+                    <button aria-pressed={verdicts[i] === 'fake'} disabled={checked}
+                      onClick={() => setData({ verdicts: { ...verdicts, [i]: 'fake' } })}>Fake</button>
+                  </span>
+                </div>
+              )
+            })}
+            <button className="btn-primary" disabled={!allSorted || checked} onClick={check}>Check my sort</button>
+            {checked && (
+              <p aria-live="polite"><strong>Sort score: {data.sortScore} of {items.length}.</strong>{' '}
+                Now verify at least one from each pile with the links; your eyes are not the test, the docket is.</p>
+            )}
+          </div>
         </>
       )}
     </div>
@@ -46,12 +110,29 @@ export default {
   section: 'B. Hallucination',
   title: 'Citation Forge',
   priority: 'P0',
-  instruction: 'Ask the Lab Model for three court cases, then verify each one in a real legal database.',
+  instruction: 'Pick a topic, get three citations from the model, then sort them from three real cases.',
+  intro: {
+    lead: 'Legal text has a rigid shape: name, volume, reporter, page, court, year. The model learned that shape from millions of real citations, so it can produce flawless-looking ones for cases that were never decided. You will make it do that on a topic you choose, then play Citation Sort: its inventions get shuffled with real Supreme Court cases, and you have to tell them apart before the verify links settle it.',
+    terms: [
+      ['Citation', 'The standardized address of a court decision, like 488 U.S. 445. Real ones resolve in a legal database; invented ones resolve to nothing.'],
+      ['Hallucination', 'Confident, well-formed output with no fact behind it. Not a glitch: the same word prediction that writes real-sounding sentences writes real-sounding case law.'],
+      ['Primary source', 'The actual docket, reporter, or statute. The only thing that can confirm a citation.'],
+    ],
+  },
+  predict: {
+    text: 'The Lab Model has no web access and no legal database. Asked for three Florida cases with citations, it will:',
+    options: [
+      { key: 'a', label: 'Say it cannot look up cases' },
+      { key: 'b', label: 'Produce three real cases from memory' },
+      { key: 'c', label: 'Produce three confident, correctly formatted citations that may not exist' },
+      { key: 'd', label: 'Produce citations with obviously broken formatting' },
+    ],
+  },
   Body,
   questions: [
     {
       id: 'q1',
-      text: 'How many of the three cases did you find in a real docket or reporter?',
+      text: 'How many of the MODEL’s three cases survived verification in a real docket or reporter?',
       options: [
         { key: '0', label: '0' },
         { key: '1', label: '1' },
@@ -59,8 +140,8 @@ export default {
         { key: '3', label: '3' },
       ],
       correct: '0',
-      explain:
-        'The Lab Model has no web access and no legal database, so its case names and reporter citations are generated from patterns. If you actually found one of these cases in a real docket, tell the instructor: that is a rare event worth checking together at the front.',
+      explain: (d) =>
+        `The Lab Model generates citations from patterns, not records, so its cases do not exist. If one of yours actually checked out, tell the instructor: that is a rare event worth examining at the front. Your sort score was ${d.sortScore ?? 'not recorded'} of 6; notice whether the fakes FELT different from the real ones before you verified. One tell in this build: the real cases are U.S. Supreme Court citations and the fakes are Florida So. 3d citations, a shortcut that will not exist outside this lab.`,
       slide: SLIDES.fabrication,
     },
     {

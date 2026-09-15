@@ -1,16 +1,35 @@
 # Hallucination Lab
 
-Week 4 Thursday lab for AI Fundamentals and Experimentation. Fourteen widgets
-plus the closing Fact-Check Challenge, per the Product Requirements draft of
-Sept 14, 2026. Students watch a sandboxed model (no tools, no web, no
+Week 4 Thursday lab for AI Fundamentals and Experimentation, per the PRD
+draft of Sept 14, 2026, reworked Sept 15 from a click-through demo into an
+experiment bench. Students make a sandboxed model (no tools, no web, no
 retrieval, temperature 0.9) fabricate citations, statute details, quotes, and
-counts, then practice the verification routine: stop, locate the source,
-compare, correct.
+counts, then make those failures stop using the lecture's techniques.
 
-All widgets in the catalog are implemented, P0 and P1 alike, including W1,
-W10, W11, and W13. Every live widget falls back to a recorded transcript when
-the gateway is slow (10 s timeout) or down, labeled "Recorded on [date], Lab
-Model". The lab runs Thursday even if DGX01 is off.
+Core mechanics, applied to every module:
+
+- **Set the stage**: each module opens with a plain-language intro and
+  definitions (temperature, grounding, logprob) written for students with no
+  background. Edit them in each widget file's `intro` block.
+- **Predict, then run**: the experiment stays closed until the student locks
+  a one-shot prediction. Predictions appear in the export as `-P` rows.
+- **One-shot answers**: every question locks on the first click, so the
+  explain panel cannot be farmed for right answers.
+- **Technique panel**: on the W5/W6 bench, lecture techniques are toggles
+  that visibly rewrite the prompt on screen; the proxy accepts only the
+  enumerated flags, never free text.
+
+Games: **Prompt Golf** (W5/W6: reach zero out-of-statute numbers in the
+fewest techniques; most toggles fail, which is the trial-and-error lesson),
+**Citation Sort** (W3: the model's fabrications shuffled with real Supreme
+Court cases), **Two Truths and a Lie** (timed rounds, curated sets),
+**Spot the Fake** (W14: real photo vs AI image head-to-head with a timer),
+and a session-wide **Hallucination Bingo** card in the corner.
+
+Every live widget falls back to a recorded transcript when the gateway is
+slow (10 s timeout) or down, labeled "Recorded on [date], Lab Model". The
+lab runs Thursday even if DGX01 is off. W6 is merged into the W5 bench; its
+worksheet rows keep their W6 labels.
 
 ## Layout
 
@@ -60,12 +79,14 @@ CRMDEVSRV03 at deploy time; nothing in this repo carries a key or hostname.
    marked as such in each JSON's note field; replace them with real captures.
 3. Set the W7 faculty name in `frontend/src/config.js` AND `proxy/.env`, with
    that colleague's permission (PRD open decision 3).
-4. Replace the placeholder images: W12 grids (64 generated images), W14 (five
-   AI-generated, five public-domain), and optionally W13 photos. Keep
-   `frontend/src/data/manifests.js` accurate (true counts, isFake, artifact,
-   alt text) and re-run the build.
-5. Verify the Fact-Check source list and the "real fact" notes in
-   `frontend/src/data/factcheck.js`; this feeds the graded report.
+4. Generate the images: every prompt, filename, and warning is in
+   `docs/IMAGE_PROMPTS.md` (W12 grids, W14 real-vs-AI pairs, optional W13
+   photos and header illustrations). Keep `frontend/src/data/manifests.js`
+   accurate and re-run the build.
+5. Verify the curated content: the Fact-Check source list and notes
+   (`factcheck.js`), the Two Truths and a Lie statements and sources
+   (`ttl.js`), and the real-case citations for Citation Sort
+   (`realcases.js`). All three are student-facing claims of fact.
 6. Confirm whether gemma-4-27b-it accepts image input through the gateway.
    If yes, set `VISION_ENABLED=1`; if not, W13 stays recorded-only, which the
    widget handles automatically.

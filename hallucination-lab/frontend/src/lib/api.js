@@ -7,14 +7,13 @@ import w1 from '../data/recorded/w1.json'
 import w3 from '../data/recorded/w3.json'
 import w4 from '../data/recorded/w4.json'
 import w5 from '../data/recorded/w5.json'
-import w6 from '../data/recorded/w6.json'
 import w7 from '../data/recorded/w7.json'
 import w8 from '../data/recorded/w8.json'
 import w9 from '../data/recorded/w9.json'
 import w10 from '../data/recorded/w10.json'
 import w13 from '../data/recorded/w13.json'
 
-const BUNDLED = { w1, w3, w4, w5, w6, w7, w8, w9, w10, w13 }
+const BUNDLED = { w1, w3, w4, w5, w7, w8, w9, w10, w13 }
 
 function pickRun(recorded) {
   const runs = recorded.runs || []

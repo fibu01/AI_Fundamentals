@@ -56,26 +56,46 @@ def capture(base, widget, runs):
                 bands[band] = data["candidates"]
             stems[stem] = bands
         out["runs"] = [{"stems": stems}]
-    elif widget in ("w3", "w5", "w7"):
+    elif widget == "w3":
+        # Two runs per topic so different students see different fabrications.
+        topics = ["drone_surveillance", "red_light_cameras", "school_searches",
+                  "social_media_evidence", "police_body_cameras"]
+        for topic in topics:
+            for _ in range(2):
+                out["runs"].append({"topic": topic, "text": post(base, "w3", {"topic": topic})["text"]})
+    elif widget == "w5":
+        # One output per technique variant per run, matching the bench's
+        # recorded-mode mapping in W5Statute.jsx.
+        variant_techniques = {
+            "baseline": [],
+            "low_temp": ["low_temp"],
+            "ground": ["ground"],
+            "ground_fallback": ["ground", "fallback"],
+        }
+        for _ in range(min(runs, 3)):
+            variants = {
+                name: post(base, "w5", {"techniques": tech})["text"]
+                for name, tech in variant_techniques.items()
+            }
+            out["runs"].append({"variants": variants})
+    elif widget == "w7":
         for _ in range(runs):
             out["runs"].append({"text": post(base, widget, {})["text"]})
     elif widget == "w4":
         # Build challenge chains on top of fresh w3 transcripts.
         for _ in range(min(runs, 3)):
-            transcript = post(base, "w3", {})["text"]
+            transcript = post(base, "w3", {"topic": "drone_surveillance"})["text"]
             turns = []
             for _i in range(3):
                 reply = post(base, "w4", {"transcript": transcript, "prior_challenges": turns})["text"]
                 turns.append(reply)
             out["runs"].append({"turns": turns})
-    elif widget == "w6":
-        for _ in range(min(runs, 3)):
-            out["runs"].append(post(base, "w6", {}))
     elif widget == "w8":
-        # One proxy call returns five texts; store them as five runs so the
-        # recorded widget can tally 25 slots.
-        texts = post(base, "w8", {})["texts"]
-        out["runs"] = [{"text": t} for t in texts]
+        variants = {
+            v: post(base, "w8", {"variant": v})["texts"]
+            for v in ("bare", "women", "world")
+        }
+        out["runs"] = [{"variants": variants}]
     elif widget == "w9":
         out["runs"] = [post(base, "w9", {})]
     elif widget == "w10":
@@ -103,7 +123,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--base", default="http://localhost:8100")
     ap.add_argument("--runs", type=int, default=5)
-    ap.add_argument("--widgets", default="w1,w3,w4,w5,w6,w7,w8,w9,w10,w13")
+    ap.add_argument("--widgets", default="w1,w3,w4,w5,w7,w8,w9,w10,w13")
     args = ap.parse_args()
     failures = []
     for w in args.widgets.split(","):

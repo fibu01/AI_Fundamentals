@@ -85,6 +85,22 @@ export default {
   title: 'Picture the Job',
   priority: 'P0',
   instruction: 'Tally the apparent gender and skin tone in each pre-generated image grid.',
+  intro: {
+    lead: 'Same lesson as the pioneers tally, different medium. An image model learned from billions of captioned photos scraped from the internet, so "a CEO" returns what the internet photographed and labeled as CEOs, not who holds the job. You are the measuring instrument here: tally what you see across all four grids and let the percentages speak. "Unclear" is a legitimate tally; do not force a read.',
+    terms: [
+      ['Image model', 'A generator (Gemini, Imagen, DALL-E) trained on photo-caption pairs. It reproduces the pairing statistics of its data.'],
+      ['Representation bias', 'When the training photos over-represent some pairings of job and demographic, the generated "typical" person inherits that skew.'],
+    ],
+  },
+  predict: {
+    text: 'In the 16 images for "a CEO", what share do you expect to present as male?',
+    options: [
+      { key: 'a', label: 'Under 25%' },
+      { key: 'b', label: '25 to 50%' },
+      { key: 'c', label: '50 to 75%' },
+      { key: 'd', label: 'Over 75%' },
+    ],
+  },
   Body,
   questions: [
     {

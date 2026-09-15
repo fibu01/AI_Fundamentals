@@ -11,7 +11,7 @@ const MAX_CHALLENGES = 3
 function Body() {
   const { runData, setWidgetData } = useLab()
   const w3res = runData.w3?.result
-  const baseText = w3res?.data?.text || ''
+  const baseText = (w3res?.source === 'recorded' ? runData.w3?.recordedText : w3res?.data?.text) || ''
   const turns = runData.w4?.turns || []
   const [loading, setLoading] = React.useState(false)
 
@@ -81,6 +81,22 @@ export default {
   title: 'Are You Sure?',
   priority: 'P0',
   instruction: 'Challenge the model on the citations from W3 up to three times and watch what it does.',
+  intro: {
+    lead: 'A natural instinct when you doubt an AI answer is to ask "are you sure?" This experiment tests what that actually does. The model has no database to re-check, so your challenge is just more text for it to continue. Watch whether the replies contain any new information, or only new confidence.',
+    terms: [
+      ['Challenge loop', 'Repeatedly asking a model to confirm itself. Each reply is generated the same way as the first answer: by pattern, without checking.'],
+      ['Verification', 'Comparing a claim against its primary source. Only you can do this; the sandboxed model cannot.'],
+    ],
+  },
+  predict: {
+    text: 'You will ask "Are you sure this citation is real?" three times. The model will:',
+    options: [
+      { key: 'a', label: 'Check the case and correct itself accurately' },
+      { key: 'b', label: 'Apologize, then restate or swap in a new invented case' },
+      { key: 'c', label: 'Admit on the first challenge that it cannot verify anything' },
+      { key: 'd', label: 'Refuse to keep talking about it' },
+    ],
+  },
   Body,
   questions: [
     {

@@ -161,6 +161,23 @@ export default {
   title: 'Fact-Check Challenge',
   priority: 'P0',
   instruction: 'Flag every sentence you distrust in the three AI drafts, with a reason and a source URL.',
+  intro: {
+    lead: 'The final challenge is the whole lab in one exercise, and it feeds your graded Fact-Check Report. Three AI-written drafts, in three majors, each seeded with the failure types you have now seen live: fabricated citations, wrong numbers, unsupported claims, and missing viewpoints. No timer this time, because this is the real routine at real speed: stop at each claim, locate the primary source, compare, and flag with the URL you used.',
+    terms: [
+      ['Primary source', 'The statute, the dataset, the docket, the original report. Not a blog quoting it.'],
+      ['Unsupported claim', 'A statement that might even be true but has nothing behind it. "Studies consistently prove" with no study named is the classic.'],
+      ['Missing viewpoint', 'A one-sided draft. Nothing in it is false; the omissions do the misleading.'],
+    ],
+  },
+  predict: {
+    text: 'Across three polished AI drafts, how many of the 14 planted errors do you expect to catch?',
+    options: [
+      { key: 'a', label: 'Nearly all of them' },
+      { key: 'b', label: 'Most; a few will slip past' },
+      { key: 'c', label: 'About half' },
+      { key: 'd', label: 'Fewer than half' },
+    ],
+  },
   Body,
   questions: FC_DRAFTS.map((d, i) => draftQuestion(d, i + 1)),
 }

@@ -91,15 +91,24 @@ def make_w13():
 
 
 def make_w14():
-    for i in range(1, 11):
-        fake = i % 2 == 1  # matches manifests.js: odd ids are the AI-generated slots
-        body = (
-            f'<rect width="400" height="300" fill="{"#efe2e6" if fake else "#e2ecef"}"/>'
-            + person_icon(200, 140, 4, "#777")
-            + label(f'PLACEHOLDER img{i:02d}: replace with {"AI-generated image" if fake else "public-domain photo"}', 40)
-            + label("Keep manifests.js isFake and artifact fields accurate", 285, 11)
-        )
-        write(IMG / "w14" / f"img{i:02d}.svg", body)
+    # Head-to-head pairs: pairN_real (public-domain photo slot) and pairN_ai
+    # (generated image slot). Placeholders differ subtly so the game is
+    # playable in testing: the "ai" placeholder has a six-fingered hand motif.
+    for i in range(1, 7):
+        for kind in ("real", "ai"):
+            fingers = 6 if kind == "ai" else 5
+            hand = "".join(
+                f'<rect x="{150 + f * 18}" y="90" width="10" height="{46 + (f % 3) * 8}" rx="5" fill="#8a8a8a"/>'
+                for f in range(fingers)
+            )
+            body = (
+                f'<rect width="400" height="300" fill="{"#efe2e6" if kind == "ai" else "#e2ecef"}"/>'
+                + hand
+                + f'<rect x="140" y="140" width="{20 + fingers * 18}" height="60" rx="18" fill="#8a8a8a"/>'
+                + label(f'PLACEHOLDER pair{i} {kind}: replace per docs/IMAGE_PROMPTS.md', 40)
+                + label(f'(placeholder tell: count the fingers)', 285, 11)
+            )
+            write(IMG / "w14" / f"pair{i}_{kind}.svg", body)
 
 
 if __name__ == "__main__":

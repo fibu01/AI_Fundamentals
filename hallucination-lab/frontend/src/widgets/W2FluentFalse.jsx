@@ -63,6 +63,22 @@ export default {
   title: 'Fluent and False',
   priority: 'P0',
   instruction: 'Read both paragraphs about a Barry University building and decide which one is real.',
+  intro: {
+    lead: 'W1 showed the model predicting words by pattern. Here is the consequence: a machine that has read thousands of university web pages can write a perfect-sounding campus page about a building that does not exist. Your job is to tell the real Barry paragraph from the invented one, using only what is on the screen, which is exactly the situation you are in every time an AI answers you.',
+    terms: [
+      ['Fluency', 'How natural and polished text sounds. Models are trained to maximize it, so fluency tells you nothing about truth.'],
+      ['Fabrication', 'Invented content stated as fact: names, dates, donors, buildings. It comes from the same word-prediction as everything else.'],
+    ],
+  },
+  predict: {
+    text: 'How confident are you that you can spot the fake paragraph without looking anything up?',
+    options: [
+      { key: 'a', label: 'Certain; fakes have obvious tells' },
+      { key: 'b', label: 'Probably; the writing will be slightly off' },
+      { key: 'c', label: 'Coin flip; both will read the same' },
+      { key: 'd', label: 'The fake will actually read better' },
+    ],
+  },
   Body,
   questions: [
     {

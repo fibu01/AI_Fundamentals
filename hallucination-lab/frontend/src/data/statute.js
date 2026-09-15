@@ -43,11 +43,17 @@ export const STATUTE_TEXT = `(1) A foreign principal may not directly or indirec
 
 History: s. 6, ch. 2023-33; s. 232, ch. 2024-6.`
 
-// Numbers that genuinely appear in the statute, used by the W5 auto-check
+// Numbers that genuinely appear in the statute (computed from the captured
+// text so a re-capture stays consistent), used by the W5 auto-check
 // heuristic. A number in the model output counts as a heuristic "match" only
 // if it appears in this set. The explain panel tells students the heuristic
 // checks presence, not context.
-export const STATUTE_NUMBERS = new Set([
-  '10', '5', '2', '1', '3', '30', '1,000', '1000',
-  '2023', '2024', '1940', '692.203', '775.082', '775.083', '48.23',
-])
+function numbersIn(text) {
+  const out = new Set(['692.203'])
+  for (const m of text.matchAll(/\d{1,4}(?:,\d{3})*(?:\.\d+)?/g)) {
+    out.add(m[0])
+    out.add(m[0].replace(/,/g, ''))
+  }
+  return out
+}
+export const STATUTE_NUMBERS = numbersIn(STATUTE_TEXT + ' ' + STATUTE_TITLE)

@@ -1,13 +1,17 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useLab } from '../lib/store.jsx'
-import { W14_IMAGES, W14_EXT } from '../data/manifests.js'
+import { W14_PAIRS, W14_EXT, W14_SECONDS } from '../data/manifests.js'
 import { SLIDES } from '../config.js'
 
-function ZoomImage({ src, alt }) {
+// Head-to-head: each round shows a real photo and an AI image of the same
+// kind of subject, sides shuffled. Pick the REAL one before the timer runs
+// out. Streak and score feed the questions and the export.
+
+const SIDES = W14_PAIRS.map(() => (Math.random() < 0.5 ? 'left' : 'right')) // real side per round, per session
+
+function ZoomImage({ src, alt, onPick, disabled, state }) {
   const wrapRef = useRef(null)
   const lensRef = useRef(null)
-  const [zoomed, setZoomed] = useState(false) // keyboard-accessible zoom toggle
-
   function onMove(e) {
     const wrap = wrapRef.current
     const lens = lensRef.current
@@ -22,75 +26,110 @@ function ZoomImage({ src, alt }) {
     lens.style.backgroundSize = `${rect.width * 2.5}px ${rect.height * 2.5}px`
     lens.style.backgroundPosition = `-${x * 2.5 - 70}px -${y * 2.5 - 70}px`
   }
-
   return (
-    <div>
-      <div
-        className="zoom-wrap"
-        ref={wrapRef}
-        onMouseMove={onMove}
-        onMouseLeave={() => { if (lensRef.current) lensRef.current.style.display = 'none' }}
-      >
-        <img src={src} alt={alt} style={zoomed ? { transform: 'scale(2)', transformOrigin: 'top left' } : undefined} />
+    <button className="pair-choice" data-state={state} disabled={disabled} onClick={onPick}
+      aria-label={`${alt}. Pick this one as the real photo.`}>
+      <div className="zoom-wrap" ref={wrapRef} onMouseMove={onMove}
+        onMouseLeave={() => { if (lensRef.current) lensRef.current.style.display = 'none' }}>
+        <img src={src} alt={alt} />
         <div className="zoom-lens" ref={lensRef} aria-hidden="true" />
       </div>
-      <button onClick={() => setZoomed(!zoomed)} aria-pressed={zoomed}>
-        {zoomed ? 'Zoom out' : 'Zoom 2x'}
-      </button>
-    </div>
+    </button>
   )
-}
-
-export function computeScore(marks) {
-  let score = 0
-  for (const img of W14_IMAGES) {
-    const m = marks?.[img.id]
-    if (m && ((m === 'fake') === img.isFake)) score++
-  }
-  return score
 }
 
 function Body() {
   const { runData, setWidgetData } = useLab()
-  const marks = runData.w14?.marks || {}
-  const revealed = !!runData.w14?.revealed
-  const allMarked = W14_IMAGES.every((i) => marks[i.id])
-  const score = computeScore(marks)
+  const round = runData.w14?.round ?? 0
+  const results = runData.w14?.results || []
+  const [picked, setPicked] = useState(null) // 'left' | 'right' | 'timeout'
+  const [timeLeft, setTimeLeft] = useState(W14_SECONDS)
+  const timerRef = useRef(null)
+  const done = round >= W14_PAIRS.length
+  const pair = W14_PAIRS[round]
+  const realSide = SIDES[round]
 
-  function mark(id, value) {
-    if (revealed) return
-    const next = { ...marks, [id]: value }
-    setWidgetData('w14', { marks: next, score: computeScore(next) })
+  useEffect(() => {
+    setPicked(null)
+    setTimeLeft(W14_SECONDS)
+    if (done) return
+    timerRef.current = setInterval(() => setTimeLeft((t) => t - 1), 1000)
+    return () => clearInterval(timerRef.current)
+  }, [round, done])
+
+  useEffect(() => {
+    if (timeLeft <= 0 && picked == null && !done) {
+      clearInterval(timerRef.current)
+      setPicked('timeout')
+      setWidgetData('w14', { results: [...results, 'timeout'] })
+    }
+  }, [timeLeft])
+
+  function pick(side) {
+    if (picked != null) return
+    clearInterval(timerRef.current)
+    setPicked(side)
+    setWidgetData('w14', { results: [...results, side === realSide ? 'hit' : 'miss'] })
   }
+
+  function next() {
+    const hits = results.filter((r) => r === 'hit').length
+    let best = 0, cur = 0
+    for (const r of results) { cur = r === 'hit' ? cur + 1 : 0; best = Math.max(best, cur) }
+    setWidgetData('w14', { round: round + 1, score: hits, streak: best })
+  }
+
+  if (done) {
+    return (
+      <div className="card">
+        <p className="golf-score">Final: {runData.w14?.score ?? 0} of {W14_PAIRS.length} real photos identified.{' '}
+          <span className="streak-chip">best streak {runData.w14?.streak ?? 0}</span></p>
+        <ul>
+          {W14_PAIRS.map((p) => (
+            <li key={p.id}><strong>{p.subject}.</strong> Artifact family: {p.artifact}. {p.note}</li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+
+  const leftSrc = `images/w14/${pair.id}_${realSide === 'left' ? 'real' : 'ai'}.${W14_EXT}`
+  const rightSrc = `images/w14/${pair.id}_${realSide === 'right' ? 'real' : 'ai'}.${W14_EXT}`
+  const state = (side) =>
+    picked == null ? null : side === realSide ? 'right' : picked === side ? 'wrong' : null
 
   return (
     <div>
-      <p className="muted">Drag your mouse over hands, text, reflections, and background lines, or use the Zoom button. Mark all ten, then reveal.</p>
-      <div className="img-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)' }}>
-        {W14_IMAGES.map((img) => (
-          <div className="img-cell" key={img.id}>
-            <ZoomImage src={`images/w14/${img.id}.${W14_EXT}`} alt={img.alt} />
-            <div className="cell-controls" role="group" aria-label={`Mark ${img.alt}`}>
-              <button aria-pressed={marks[img.id] === 'real'} onClick={() => mark(img.id, 'real')}>Real</button>
-              <button aria-pressed={marks[img.id] === 'fake'} onClick={() => mark(img.id, 'fake')}>Fake</button>
-            </div>
-            {revealed && (
-              <p className={marks[img.id] === (img.isFake ? 'fake' : 'real') ? 'muted' : 'error-note'}>
-                {img.isFake ? `AI-generated. Artifact: ${img.artifact}. ${img.note}.` : `Real. ${img.note}.`}
-              </p>
-            )}
-          </div>
-        ))}
+      <p className="golf-score">
+        Round {round + 1} of {W14_PAIRS.length}: {pair.subject}. Which one is the REAL photo?
+        <span className="streak-chip">{results.filter((r) => r === 'hit').length} right</span>
+      </p>
+      <div className="timer-track" role="timer" aria-label={`${Math.max(0, timeLeft)} seconds left`}>
+        <div className="timer-fill" style={{ width: `${Math.max(0, (timeLeft / W14_SECONDS) * 100)}%` }} />
       </div>
-      <button className="btn-primary" disabled={!allMarked || revealed} onClick={() => setWidgetData('w14', { revealed: true })}>
-        Reveal score
-      </button>
-      {revealed && <p aria-live="polite"><strong>Your score: {score} of 10.</strong></p>}
+      <p className="muted">{Math.max(0, timeLeft)} seconds. Mouse over to magnify; check hands, text, reflections, background lines.</p>
+      <div className="pair-row">
+        <ZoomImage src={leftSrc} alt={`Left image: ${pair.subject}`} disabled={picked != null}
+          onPick={() => pick('left')} state={state('left')} />
+        <ZoomImage src={rightSrc} alt={`Right image: ${pair.subject}`} disabled={picked != null}
+          onPick={() => pick('right')} state={state('right')} />
+      </div>
+      {picked != null && (
+        <div style={{ marginTop: 10, display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
+          <span aria-live="polite">
+            {picked === 'timeout' ? 'Time.' : picked === realSide ? 'Right.' : 'Wrong.'} The {realSide} image is the real photo.
+            {' '}{pair.artifact}: {pair.note}
+          </span>
+          <button className="btn-primary" onClick={next}>
+            {round + 1 === W14_PAIRS.length ? 'Finish' : 'Next round'}
+          </button>
+        </div>
+      )}
     </div>
   )
 }
 
-const scoreBucket = (s) => (s == null ? null : s <= 4 ? '0to4' : s <= 6 ? '5to6' : s <= 8 ? '7to8' : '9to10')
+const scoreBucket = (s) => (s == null ? null : s <= 2 ? '0to2' : s <= 4 ? '3to4' : '5to6')
 
 export default {
   id: 'w14',
@@ -98,28 +137,41 @@ export default {
   section: 'D. Visual hallucination',
   title: 'Spot the Fake',
   priority: 'P0',
-  instruction: 'Mark each of the ten images Real or Fake, using the zoom lens on the usual trouble spots.',
+  instruction: 'Six timed rounds: a real photo against an AI image of the same subject; pick the real one.',
+  intro: {
+    lead: 'The final skill: telling generated images from photographs, under time pressure, the way you will meet them in a feed. Each round pairs a real photo with an AI image of the same kind of subject. The tells cluster in the same places every time: hands and fingers, written text, reflections and shadows, and the geometry of background lines. Use the magnifier; those areas are where local texture stops agreeing with global structure.',
+    terms: [
+      ['Artifact', 'A physical impossibility a generator leaves behind: a sixth finger, letters that almost spell, a reflection with no owner.'],
+      ['Local vs global', 'Generators assemble patches that look right up close without a world model that keeps the whole scene consistent. Artifacts live at the seams.'],
+    ],
+  },
+  predict: {
+    text: 'Six rounds, twenty seconds each. How many real photos will you pick correctly?',
+    options: [
+      { key: 'a', label: 'All six' },
+      { key: 'b', label: 'Four or five' },
+      { key: 'c', label: 'Two or three' },
+      { key: 'd', label: 'Coin-flip territory' },
+    ],
+  },
   Body,
   questions: [
     {
       id: 'q1',
-      text: 'Your score out of 10:',
+      text: 'Your score out of 6:',
       options: [
-        { key: '0to4', label: '0 to 4' },
+        { key: '0to2', label: '0 to 2' },
+        { key: '3to4', label: '3 to 4' },
         { key: '5to6', label: '5 to 6' },
-        { key: '7to8', label: '7 to 8' },
-        { key: '9to10', label: '9 to 10' },
       ],
-      correct: (d) => (d.revealed ? scoreBucket(d.score) : null),
+      correct: (d) => (d.round >= W14_PAIRS.length ? scoreBucket(d.score ?? 0) : null),
       explain: (d) =>
-        d.revealed
-          ? `You scored ${d.score} of 10. Generators keep improving, so today’s artifacts (hands, text, reflections) are a habit of looking, not a permanent checklist.`
-          : 'Mark all ten images and reveal your score first.',
+        `You identified ${d.score ?? 0} of 6 real photos, best streak ${d.streak ?? 0}. Generators improve every few months, so treat today’s tells as a habit of looking, not a permanent checklist.`,
       slide: SLIDES.deepfakes,
     },
     {
       id: 'q2',
-      text: 'Which artifact did you find most often?',
+      text: 'Which artifact family helped you most?',
       options: [
         { key: 'hands', label: 'Hands and fingers' },
         { key: 'text', label: 'Garbled text' },
@@ -128,7 +180,7 @@ export default {
       ],
       correct: null,
       explain:
-        'All four artifact families come from the same cause: the generator assembles locally plausible texture without a global model of objects, writing, or physics. Check whichever family you found weakest next time; the tells rotate as models improve.',
+        'All four families come from the same cause: locally plausible texture without a global model of objects, writing, or physics. Next time, deliberately check the family you used least; the tells rotate as models improve.',
       slide: SLIDES.deepfakes,
     },
   ],

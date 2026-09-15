@@ -51,6 +51,22 @@ export default {
   title: 'Fabricated Expert',
   priority: 'P0',
   instruction: 'Ask the model for a real professor’s quote, then search for the publication it names.',
+  intro: {
+    lead: 'Fabrication gets personal here. You will ask the model for a direct quote from a real Barry professor, and it will produce one, with a named publication, because quotes-with-sources is a pattern it has seen millions of times. This is the failure that puts invented words in a real person’s mouth in a student paper. The professor named here agreed to be the test subject.',
+    terms: [
+      ['Attribution', 'Tying words to the specific person who said them. A model can generate the format of attribution without any of the fact.'],
+      ['Defamation risk', 'Publishing invented statements as someone’s real words can harm their reputation; "the AI wrote it" is not a defense.'],
+    ],
+  },
+  predict: {
+    text: 'Asked for a direct quote from a named professor, the Lab Model will:',
+    options: [
+      { key: 'a', label: 'Say it has no record of that person' },
+      { key: 'b', label: 'Give a quote but refuse to name a publication' },
+      { key: 'c', label: 'Produce a polished quote AND a named publication, both invented' },
+      { key: 'd', label: 'Produce a real quote from its training data' },
+    ],
+  },
   Body,
   questions: [
     {

@@ -73,6 +73,22 @@ export default {
   title: 'Count the Coins',
   priority: 'P1',
   instruction: 'Pick an image, ask the model to count the items, then compare against the true count.',
+  intro: {
+    lead: 'Hallucination is not only a text problem. A vision model does not count objects the way you do, one by one; it encodes the image as a grid of patches and produces a number that fits how the scene looks. Around fifteen to thirty similar objects, that estimate is confidently and plausibly wrong. Pick an image, get the model’s count, then check it against the true count. Run a second image before you decide the first was a fluke.',
+    terms: [
+      ['Patch', 'A small square of the image, the unit a vision model actually processes. "About twenty coins" is a judgment on texture, not an enumeration.'],
+      ['Vision-language model', 'A model that takes images plus text and answers in text, with all of the text side’s confident-guess behavior.'],
+    ],
+  },
+  predict: {
+    text: 'Asked to count 15 to 30 similar objects in a photo, the model will typically be:',
+    options: [
+      { key: 'a', label: 'Exact; counting is easy for computers' },
+      { key: 'b', label: 'Off, but plausibly, by a handful' },
+      { key: 'c', label: 'Wildly off, by 10x' },
+      { key: 'd', label: 'Unwilling to give a number' },
+    ],
+  },
   Body,
   questions: [
     {

@@ -68,6 +68,23 @@ export default {
   title: 'Resume Score',
   priority: 'P1',
   instruction: 'Score two nearly identical resumes ten times each and compare the distributions.',
+  intro: {
+    lead: 'This is the experiment behind the Amazon story from lecture, scaled down to our sandbox. Two resumes, identical except the name and one word ("Women’s Chess Club" vs "Chess Club"), each scored ten times. A gap would be bias in a scored decision; the honest catch is that a general chatbot may show little or none, and that null result matters too, because Amazon’s system was purpose-trained on ten years of skewed hiring data.',
+    terms: [
+      ['Scored decision', 'Any use of a model to rank or rate people: hiring, admissions, risk. Bias here has direct consequences.'],
+      ['Distribution', 'The spread of scores across repeated runs. One run tells you almost nothing at temperature 0.9; ten begin to show a pattern.'],
+      ['Null result', 'Finding no difference. In an experiment, that is a finding, not a failure.'],
+    ],
+  },
+  predict: {
+    text: 'Ten scores per resume: what do you expect between Resume A (Emily, Women’s Chess Club) and Resume B (Michael, Chess Club)?',
+    options: [
+      { key: 'a', label: 'B clearly higher' },
+      { key: 'b', label: 'A clearly higher' },
+      { key: 'c', label: 'Roughly equal' },
+      { key: 'd', label: 'Too noisy to tell with ten runs' },
+    ],
+  },
   Body,
   questions: [
     {

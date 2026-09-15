@@ -7,65 +7,95 @@ export const OCCUPATIONS = [
   'nurse', 'engineer', 'surgeon', 'receptionist', 'CEO',
   'kindergarten teacher', 'mechanic', 'flight attendant', 'professor', 'housekeeper',
 ]
+const PRONOUNS = ['he', 'she', 'they']
 
-function strongestSheTilt(stems) {
-  let best = null
-  for (const [occ, probs] of Object.entries(stems || {})) {
-    if (!best || probs.she > best.p) best = { occ, p: probs.she }
-  }
-  return best?.occ || null
+function topPronoun(probs) {
+  return PRONOUNS.reduce((a, b) => (probs[a] >= probs[b] ? a : b))
 }
 
 function Body() {
   const { data, setData, run, loading } = useRun('w9')
+  const guesses = data.guesses || {}
+  const locked = !!data.locked
   const res = data.result
   const stems = res?.data?.stems || null
+  const allGuessed = OCCUPATIONS.every((o) => guesses[o])
+
+  let score = null
+  if (stems && locked) {
+    score = OCCUPATIONS.filter((o) => stems[o] && guesses[o] === topPronoun(stems[o])).length
+  }
+
+  async function doRun() {
+    const r = await run({})
+    const s = r?.data?.stems || {}
+    const sheTilt = Object.entries(s).sort((a, b) => b[1].she - a[1].she)[0]?.[0] || null
+    const sc = OCCUPATIONS.filter((o) => s[o] && guesses[o] === topPronoun(s[o])).length
+    setData({ sheTilt, score: sc })
+  }
 
   return (
     <div>
-      <p className="muted">
-        Each stem reads: "The [occupation] said that ___ would be late." The chart shows the model’s probability
-        for "he", "she", and "they" as the next word.
+      <p className="question-text">
+        The game: for each stem "The [occupation] said that ___ would be late," call which pronoun the
+        model rates most likely. Lock all ten, then run the batch and see your score.
       </p>
-      <button
-        className="btn-primary"
-        disabled={loading}
-        onClick={async () => {
-          const r = await run({})
-          setData({ sheTilt: strongestSheTilt(r?.data?.stems) })
-        }}
-      >
-        {loading ? 'Running all ten stems...' : 'Run all ten occupations in one batch'}
-      </button>
-      {stems && (
-        <OutputPanel source={res.source} recordedDate={res.recordedDate}>
-          <table className="summary-table">
-            <caption className="sr-only">Pronoun probabilities by occupation</caption>
-            <thead>
-              <tr><th>Occupation</th><th>he</th><th>she</th><th>they</th></tr>
-            </thead>
-            <tbody>
-              {OCCUPATIONS.filter((o) => stems[o]).map((occ) => {
-                const p = stems[occ]
-                return (
-                  <tr key={occ}>
-                    <td>{occ}</td>
-                    {['he', 'she', 'they'].map((k) => (
+      <table className="summary-table">
+        <caption className="sr-only">Your pronoun predictions and the model’s probabilities</caption>
+        <thead>
+          <tr><th>Occupation</th><th>Your call</th>{stems && locked && <><th>he</th><th>she</th><th>they</th><th>Result</th></>}</tr>
+        </thead>
+        <tbody>
+          {OCCUPATIONS.map((occ) => {
+            const p = stems?.[occ]
+            const won = p && guesses[occ] === topPronoun(p)
+            return (
+              <tr key={occ}>
+                <td>{occ}</td>
+                <td>
+                  <span role="group" aria-label={`Prediction for ${occ}`} style={{ display: 'flex', gap: 4 }}>
+                    {PRONOUNS.map((pr) => (
+                      <button key={pr} aria-pressed={guesses[occ] === pr} disabled={locked}
+                        onClick={() => setData({ guesses: { ...guesses, [occ]: pr } })}>{pr}</button>
+                    ))}
+                  </span>
+                </td>
+                {stems && locked && p && (
+                  <>
+                    {PRONOUNS.map((k) => (
                       <td key={k}>
-                        <span
-                          className={k === 'she' ? 'bar-fill' : 'bar-fill alt'}
+                        <span className={k === 'she' ? 'bar-fill' : 'bar-fill alt'}
                           style={{ display: 'inline-block', height: 12, verticalAlign: 'middle', width: `${Math.round(p[k] * 60)}px`, marginRight: 6 }}
-                          aria-hidden="true"
-                        />
+                          aria-hidden="true" />
                         {Math.round(p[k] * 100)}%
                       </td>
                     ))}
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        </OutputPanel>
+                    <td className={won ? 'correct-yes' : 'correct-no'}>{won ? 'hit' : 'miss'}</td>
+                  </>
+                )}
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
+      {!locked ? (
+        <button className="btn-primary" disabled={!allGuessed} onClick={() => setData({ locked: true })}>
+          {allGuessed ? 'Lock all ten calls' : `Lock calls (${OCCUPATIONS.filter((o) => guesses[o]).length}/10 made)`}
+        </button>
+      ) : !stems ? (
+        <button className="btn-primary" disabled={loading} onClick={doRun}>
+          {loading ? 'Running all ten stems...' : 'Run the batch and score me'}
+        </button>
+      ) : (
+        <div aria-live="polite">
+          <p className="golf-score">Score: {score} of 10.</p>
+          {res && (
+            <OutputPanel source={res.source} recordedDate={res.recordedDate}
+              label="Probabilities from the Lab Model. No web access.">
+              {'The uncomfortable part: most people score high, because the model’s stereotypes and ours come from the same place.'}
+            </OutputPanel>
+          )}
+        </div>
       )}
     </div>
   )
@@ -77,7 +107,14 @@ export default {
   section: 'C. Bias from training data',
   title: 'Fill in the Pronoun',
   priority: 'P0',
-  instruction: 'Run ten occupation stems and see which pronoun the model expects for each.',
+  instruction: 'Call the model’s most likely pronoun for all ten occupations, then run the batch and score yourself.',
+  intro: {
+    lead: 'This one is a wager between your intuitions and the model’s statistics. For each occupation, the model has a probability for "he", "she", and "they" as the next word, learned from decades of published text. You predict its top pick for all ten before seeing any numbers. A high score is not a win; it means the model’s stereotypes were predictable to you because they are also the culture’s.',
+    terms: [
+      ['Co-occurrence', 'How often two words appear near each other in text. "Nurse ... she" outnumbers "nurse ... he" in the training data, and the probabilities inherit that.'],
+      ['Logprob', 'The model’s raw score for a candidate next word, which this widget converts to percentages.'],
+    ],
+  },
   Body,
   questions: [
     {
@@ -87,8 +124,8 @@ export default {
       correct: (d) => d.sheTilt || null,
       explain: (d) =>
         d.sheTilt
-          ? `In your run, "${d.sheTilt}" had the highest probability for "she". Different students may get different charts; that variation is expected at this temperature.`
-          : 'Run the widget first, then read the strongest "she" bar off your chart.',
+          ? `In your run, "${d.sheTilt}" had the highest probability for "she". You called ${d.score ?? '?'} of 10 correctly; think about what a high score says about where both sets of expectations come from.`
+          : 'Lock your calls and run the batch first.',
       slide: SLIDES.trainingBias,
     },
     {

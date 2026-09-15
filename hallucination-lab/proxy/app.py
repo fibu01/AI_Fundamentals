@@ -134,8 +134,24 @@ async def handle_w1(client, inputs):
     return {"candidates": candidates}
 
 
+def parse_techniques(inputs):
+    techniques = inputs.get("techniques", [])
+    if not isinstance(techniques, list) or len(techniques) > 5:
+        raise HTTPException(400, "Bad techniques")
+    tset = set(map(str, techniques))
+    if tset - T.TECHNIQUE_KEYS:
+        raise HTTPException(400, "Unknown technique")
+    return tset
+
+
 async def handle_w3(client, inputs):
-    return {"text": await gateway_chat(client, chat_prompt(T.W3_PROMPT))}
+    topic_key = inputs.get("topic", "drone_surveillance")
+    if topic_key not in T.W3_TOPICS:
+        raise HTTPException(400, "Unknown topic")
+    base = T.W3_PROMPT.format(topic=T.W3_TOPICS[topic_key])
+    techniques = parse_techniques(inputs) & {"cite_check", "low_temp"}
+    prompt, temperature = T.compose(base, techniques, STATUTE_TEXT)
+    return {"text": await gateway_chat(client, chat_prompt(prompt), temperature=temperature)}
 
 
 async def handle_w4(client, inputs):
@@ -158,16 +174,9 @@ async def handle_w4(client, inputs):
 
 
 async def handle_w5(client, inputs):
-    return {"text": await gateway_chat(client, chat_prompt(T.W5_PROMPT))}
-
-
-async def handle_w6(client, inputs):
-    grounded = T.W6_GROUNDED_PREFIX.format(statute=STATUTE_TEXT)
-    run_a, run_b = await asyncio.gather(
-        gateway_chat(client, chat_prompt(T.W6_BARE_PROMPT)),
-        gateway_chat(client, chat_prompt(grounded), temperature=0.3),
-    )
-    return {"runA": run_a, "runB": run_b}
+    techniques = parse_techniques(inputs)
+    prompt, temperature = T.compose(T.W5_PROMPT, techniques, STATUTE_TEXT)
+    return {"text": await gateway_chat(client, chat_prompt(prompt), temperature=temperature)}
 
 
 async def handle_w7(client, inputs):
@@ -176,8 +185,12 @@ async def handle_w7(client, inputs):
 
 
 async def handle_w8(client, inputs):
+    variant = inputs.get("variant", "bare")
+    if variant not in T.W8_VARIANTS:
+        raise HTTPException(400, "Unknown variant")
+    prompt = T.W8_VARIANTS[variant]
     texts = await asyncio.gather(*[
-        gateway_chat(client, chat_prompt(T.W8_PROMPT), max_tokens=200) for _ in range(5)
+        gateway_chat(client, chat_prompt(prompt), max_tokens=200) for _ in range(5)
     ])
     return {"texts": list(texts)}
 
@@ -235,7 +248,7 @@ async def handle_w13(client, inputs):
 
 HANDLERS = {
     "w1": handle_w1, "w3": handle_w3, "w4": handle_w4, "w5": handle_w5,
-    "w6": handle_w6, "w7": handle_w7, "w8": handle_w8, "w9": handle_w9,
+    "w7": handle_w7, "w8": handle_w8, "w9": handle_w9,
     "w10": handle_w10, "w13": handle_w13,
 }
 

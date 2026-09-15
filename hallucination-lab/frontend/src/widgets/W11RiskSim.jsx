@@ -86,6 +86,23 @@ export default {
   title: 'Risk Score Simulator',
   priority: 'P1',
   instruction: 'Change patrol intensity and watch what the risk score learns, while true offense rates stay equal.',
+  intro: {
+    lead: 'No language model here at all: this simulator exists to show that bias does not need one. Two neighborhoods offend at exactly the same locked rate. You control only how heavily each is patrolled. A toy risk score then "trains" on the arrest records your sliders generate. Move the sliders and watch who gets falsely flagged. This is the feedback-loop mechanism from lecture, running live under your hands.',
+    terms: [
+      ['Training data', 'Here, arrest records. The score never sees offenses, only arrests, and arrests measure patrols as much as crime.'],
+      ['False positive', 'A resident who never offended but gets flagged high-risk anyway.'],
+      ['Feedback loop', 'Flagged areas get more patrols, which generate more arrests, which raise the flag further. The model’s output becomes its own future training data.'],
+    ],
+  },
+  predict: {
+    text: 'Both neighborhoods offend at the same rate. If you double patrols in B only, B’s false-positive rate will:',
+    options: [
+      { key: 'a', label: 'Stay the same; offense rates are equal' },
+      { key: 'b', label: 'Go up; the score learns patrol patterns' },
+      { key: 'c', label: 'Go down; more data means more accuracy' },
+      { key: 'd', label: 'Drop to zero' },
+    ],
+  },
   Body,
   questions: [
     {

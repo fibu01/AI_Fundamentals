@@ -25,11 +25,13 @@ export default function Questions({ widgetId, questions }) {
     <div>
       {questions.map((q, qi) => {
         const chosen = widgetAnswers[q.id]
+        const locked = !!chosen && !instructorMode
         const correctKey = getCorrectKey(q, widgetData)
         return (
           <div className="question" key={q.id}>
             <div className="question-text" id={`${widgetId}-${q.id}-label`}>
               Q{qi + 1}. {q.text}
+              {!chosen && <span className="one-shot-tag"> one answer, no retries</span>}
             </div>
             <div role="radiogroup" aria-labelledby={`${widgetId}-${q.id}-label`}>
               {q.options.map((opt) => {
@@ -39,6 +41,7 @@ export default function Questions({ widgetId, questions }) {
                     key={opt.key}
                     role="radio"
                     aria-checked={chosen === opt.key}
+                    disabled={locked && chosen !== opt.key}
                     className={`option${showKey ? ' correct-key' : ''}`}
                     onClick={() => setAnswer(widgetId, q.id, opt.key)}
                   >

@@ -22,19 +22,19 @@ export const W13_IMAGES = [
 ]
 export const W13_EXT = 'svg'
 
-// W14: ten images, five AI-generated and five real. Placeholders ship with
-// obviously synthetic content; replace with the instructor's generated images
-// and public-domain photos (Wikimedia), keeping isFake and artifact accurate.
-export const W14_IMAGES = [
-  { id: 'img01', isFake: true, artifact: 'Hands and fingers', note: 'Six fingers on the left hand', alt: 'Portrait of a person waving' },
-  { id: 'img02', isFake: false, artifact: null, note: 'Public-domain photo', alt: 'Street market scene' },
-  { id: 'img03', isFake: true, artifact: 'Garbled text', note: 'Storefront sign letters are not real characters', alt: 'Storefront with signage' },
-  { id: 'img04', isFake: false, artifact: null, note: 'Public-domain photo', alt: 'Mountain landscape' },
-  { id: 'img05', isFake: true, artifact: 'Impossible geometry', note: 'Staircase railing merges into the wall', alt: 'Interior staircase' },
-  { id: 'img06', isFake: false, artifact: null, note: 'Public-domain photo', alt: 'Dog in a park' },
-  { id: 'img07', isFake: true, artifact: 'Reflections and shadows', note: 'Mirror reflection does not match the subject', alt: 'Person in front of a mirror' },
-  { id: 'img08', isFake: false, artifact: null, note: 'Public-domain photo', alt: 'City skyline at dusk' },
-  { id: 'img09', isFake: true, artifact: 'Hands and fingers', note: 'Fingers blend together holding the cup', alt: 'Person holding a coffee cup' },
-  { id: 'img10', isFake: false, artifact: null, note: 'Public-domain photo', alt: 'Sailboat on the water' },
+// W14: head-to-head pairs, one real photo and one AI image of the same kind
+// of subject. The student picks which is REAL, against a timer, for a streak.
+// Placeholders ship so the game runs; replace with the instructor's images
+// (docs/IMAGE_PROMPTS.md has the generation prompts and real-photo sourcing)
+// and keep artifact/note accurate. File naming: images/w14/{id}_real.EXT and
+// images/w14/{id}_ai.EXT.
+export const W14_PAIRS = [
+  { id: 'pair1', subject: 'A person waving at the camera', artifact: 'Hands and fingers', note: 'Count the fingers and check the knuckle spacing on the AI image.' },
+  { id: 'pair2', subject: 'A storefront with signage', artifact: 'Garbled text', note: 'The AI sign letters look like writing from a distance and dissolve up close.' },
+  { id: 'pair3', subject: 'An interior staircase', artifact: 'Impossible geometry', note: 'Follow the AI railing: it merges into the wall and the steps do not agree.' },
+  { id: 'pair4', subject: 'A person in front of a mirror', artifact: 'Reflections and shadows', note: 'The AI reflection does not match the pose or lag of the subject.' },
+  { id: 'pair5', subject: 'Hands holding playing cards', artifact: 'Hands and fingers', note: 'Fingers blend together and the card suits are almost, not quite, real.' },
+  { id: 'pair6', subject: 'A crowded street scene', artifact: 'Faces and background lines', note: 'Background faces in the AI image smear, and building lines bend.' },
 ]
 export const W14_EXT = 'svg'
+export const W14_SECONDS = 20
