@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 // replacing the shipped SVG placeholders, and a grid can be half-replaced
 // mid-upload. Rather than a single global extension constant, try each
 // candidate in turn and fall back to the next on error.
-const EXTS = ['png', 'jpg', 'jpeg', 'webp', 'svg']
+const EXTS = ['jpg', 'svg', 'png', 'jpeg', 'webp']
 
 export default function LabImage({ base, alt, className, style }) {
   const [i, setI] = useState(0)

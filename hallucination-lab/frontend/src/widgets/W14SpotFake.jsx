@@ -9,7 +9,7 @@ import { SLIDES } from '../config.js'
 
 const SIDES = W14_PAIRS.map(() => (Math.random() < 0.5 ? 'left' : 'right')) // real side per round, per session
 
-const EXTS = ['png', 'jpg', 'jpeg', 'webp', 'svg']
+const EXTS = ['jpg', 'svg', 'png', 'jpeg', 'webp']
 
 // `src` is a base path with no extension: instructor photos land as PNG/JPG
 // over the semester while placeholders stay SVG, so resolve by trying each.
