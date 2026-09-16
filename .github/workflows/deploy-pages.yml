@@ -20,15 +20,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Pick up instructor images uploaded at the repo root
-        # Images get uploaded to frontend/public/images/... as well as the
-        # lab's own folder; fold both into the build so either path works.
+      - name: Collect instructor images from anywhere in the repo
+        # Uploads have landed in several places over the week (repo root,
+        # frontend/public/images, and the lab's own folder). Fold every known
+        # location into the build so a drop in any of them ships.
         run: |
-          if [ -d frontend/public/images ]; then
-            mkdir -p hallucination-lab/frontend/public/images
-            cp -r frontend/public/images/. hallucination-lab/frontend/public/images/
-          fi
-          find hallucination-lab/frontend/public/images -type f | wc -l
+          DEST=hallucination-lab/frontend/public/images
+          mkdir -p "$DEST"
+          for SRC in frontend/public/images images .; do
+            for GRID in w12 w13 w14 headers; do
+              if [ -d "$SRC/$GRID" ] && [ "$SRC/$GRID" != "$DEST/$GRID" ]; then
+                echo "collecting $SRC/$GRID"
+                mkdir -p "$DEST/$GRID"
+                cp -r "$SRC/$GRID/." "$DEST/$GRID/"
+              fi
+            done
+          done
+          echo "image files in build:"
+          find "$DEST" -type f \( -name '*.png' -o -name '*.jpg' -o -name '*.jpeg' -o -name '*.webp' \) | wc -l
 
       - uses: actions/setup-node@v4
         with:
