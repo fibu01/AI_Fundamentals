@@ -40,6 +40,16 @@ scripts/    capture_recorded.py (refresh fallback transcripts each semester)
             make_placeholders.py (regenerate placeholder images)
 ```
 
+## Student URL
+
+Once Pages is live the lab is at **https://fibu01.github.io/AI_Fundamentals/**
+(instructor view: add `?mode=instructor`). The Pages build is static, so every
+widget runs from recorded transcripts; the live gateway path is only used when
+the proxy is deployed alongside the frontend on CRMDEVSRV03.
+
+Students finish on a results screen that downloads a `.txt` (and optional
+`.csv`) file stamped with their name for upload to Canvas.
+
 ## Quick start
 
 ```
