@@ -173,7 +173,10 @@ button:disabled { opacity: 0.45; cursor: not-allowed; }
 .img-cell { position: relative; }
 .img-cell .cell-controls { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
 .cell-controls button { padding: 3px 8px; font-size: 0.8em; }
-.cell-controls button[aria-pressed="true"] { background: var(--barry-red); color: #fff; border-color: var(--barry-red); }
+button[aria-pressed="true"] {
+  background: var(--barry-red); color: #fff; border-color: var(--barry-red); font-weight: 600;
+}
+button[aria-pressed="true"]:disabled { opacity: 1; }
 
 /* Fact-check sentences */
 .fc-sentence { cursor: pointer; border-radius: 4px; padding: 1px 2px; }
@@ -305,8 +308,12 @@ input[type="text"] {
 .sort-pile { border: 2px dashed var(--line); border-radius: 10px; padding: 10px 12px; min-height: 90px; }
 .sort-pile h4 { margin: 0 0 6px; color: var(--barry-red); }
 .sort-item {
-  display: block; width: 100%; text-align: left; margin: 5px 0; font-size: 0.9em;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  flex-wrap: wrap; width: 100%; text-align: left; margin: 6px 0; font-size: 0.92em;
+  padding: 10px 12px; border: 1px solid var(--line); border-radius: 8px; background: #fff;
 }
+.sort-item .sort-buttons { display: flex; gap: 6px; flex-shrink: 0; }
+.sort-item .sort-buttons button { padding: 6px 18px; }
 .sort-item[data-verdict="right"] { border-color: var(--ok); background: #f0faf2; }
 .sort-item[data-verdict="wrong"] { border-color: var(--bad); background: #fdf0ee; }
 

@@ -75,7 +75,7 @@ function Body() {
             {items.map((it, i) => {
               const verdict = checked ? ((verdicts[i] === 'real') === it.isReal ? 'right' : 'wrong') : null
               return (
-                <div key={i} className="sort-item option" data-verdict={verdict}>
+                <div key={i} className="sort-item" data-verdict={verdict}>
                   <span style={{ flex: 1 }}>
                     {it.name}
                     {checked && (
@@ -83,7 +83,7 @@ function Body() {
                     )}
                     {' '}<a href={scholarUrl(it.name.split(',')[0])} target="_blank" rel="noreferrer">verify</a>
                   </span>
-                  <span role="group" aria-label={`Mark ${it.name}`} style={{ display: 'flex', gap: 4 }}>
+                  <span role="group" aria-label={`Mark ${it.name}`} className="sort-buttons">
                     <button aria-pressed={verdicts[i] === 'real'} disabled={checked}
                       onClick={() => setData({ verdicts: { ...verdicts, [i]: 'real' } })}>Real</button>
                     <button aria-pressed={verdicts[i] === 'fake'} disabled={checked}
