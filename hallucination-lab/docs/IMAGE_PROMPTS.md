@@ -1,5 +1,10 @@
 # Image generation prompts
 
+**All images go in one place:** `hallucination-lab/frontend/public/images/`.
+Paths below are relative to the repository root and already include it.
+Anything dropped elsewhere is swept in by the deploy workflow as a safety
+net, but the folder above is the real home.
+
 Every image the lab needs, with the prompt to paste into ChatGPT (or Gemini),
 the exact filename to save as, and where to put it. After dropping files in,
 set the matching `EXT` constant in `frontend/src/data/manifests.js` (for
@@ -54,7 +59,7 @@ Paste each line below as its OWN message, one at a time, nothing else in the mes
 16. Generate an image: a photorealistic photo of a chief executive officer cutting a ribbon at a new building opening ceremony.
 ```
 
-Download each image as it arrives and save them in order as `frontend/public/images/w12/ceo/1.png` through `16.png`.
+Download each image as it arrives and save them in order as `hallucination-lab/frontend/public/images/w12/ceo/1.png` through `16.png`.
 
 ### Grid 2: Nurse
 
@@ -79,7 +84,7 @@ Paste each line below as its OWN message, one at a time, nothing else in the mes
 16. Generate an image: a photorealistic photo of a nurse in a graduation-style portrait in scrubs holding a certification.
 ```
 
-Download each image as it arrives and save them in order as `frontend/public/images/w12/nurse/1.png` through `16.png`.
+Download each image as it arrives and save them in order as `hallucination-lab/frontend/public/images/w12/nurse/1.png` through `16.png`.
 
 ### Grid 3: Professor
 
@@ -104,7 +109,7 @@ Paste each line below as its OWN message, one at a time, nothing else in the mes
 16. Generate an image: a photorealistic photo of a professor in a portrait in front of a full bookshelf.
 ```
 
-Download each image as it arrives and save them in order as `frontend/public/images/w12/professor/1.png` through `16.png`.
+Download each image as it arrives and save them in order as `hallucination-lab/frontend/public/images/w12/professor/1.png` through `16.png`.
 
 ### Grid 4: Person receiving welfare
 
@@ -129,7 +134,7 @@ Paste each line below as its OWN message, one at a time, nothing else in the mes
 16. Generate an image: a photorealistic photo of a person receiving public assistance meeting with a nonprofit aid worker at a folding table.
 ```
 
-Download each image as it arrives and save them in order as `frontend/public/images/w12/welfare/1.png` through `16.png`.
+Download each image as it arrives and save them in order as `hallucination-lab/frontend/public/images/w12/welfare/1.png` through `16.png`.
 
 Set `W12_EXT = 'png'` and update `generatedDate` in `manifests.js`.
 
@@ -137,7 +142,7 @@ Set `W12_EXT = 'png'` and update `generatedDate` in `manifests.js`.
 
 Each round pairs a REAL photo with an AI image of the same kind of subject.
 Save AI images as `pair{N}_ai.png` and real photos as `pair{N}_real.png` in
-`frontend/public/images/w14/`. Set `W14_EXT = 'png'`.
+`hallucination-lab/frontend/public/images/w14/`. Set `W14_EXT = 'png'`.
 
 AI prompts, written to make the classic artifact families likely. Do not fix
 or regenerate an image because something looks off; off is the point. Do
@@ -169,7 +174,7 @@ Counting images must be real photographs with counts you did yourself; a
 generated image of "17 coins" will not contain 17 coins. Ten minutes with a
 phone: coins on a table, jellybeans in a pile, scattered toothpicks, pencils
 in a cup, books on a shelf, and any crowd photo you have rights to. Count
-each, save as `frontend/public/images/w13/{coins,jellybeans,toothpicks,pencils,books,crowd}.png`,
+each, save as `hallucination-lab/frontend/public/images/w13/{coins,jellybeans,toothpicks,pencils,books,crowd}.png`,
 and set each `trueCount` in `manifests.js`. Keep counts between 14 and 27.
 The shipped SVG placeholders have exact counts and work fine if you skip this.
 
@@ -182,7 +187,7 @@ bracketed subject, keep everything else identical:
 color of deep red (#C8102E), dark gray line work, no text anywhere in the
 image, clean geometric style`
 
-| File (save under `frontend/public/images/headers/`) | Subject |
+| File (save under `hallucination-lab/frontend/public/images/headers/`) | Subject |
 |---|---|
 | `w1.png` | a row of five word-probability bars of descending height |
 | `w2.png` | two identical documents, one casting a different shadow |
