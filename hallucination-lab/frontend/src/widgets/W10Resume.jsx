@@ -45,7 +45,7 @@ function Body() {
         {loading ? 'Scoring ten times each...' : 'Score each resume 1 to 10, ten times each'}
       </button>
       {scoresA.length > 0 && (
-        <OutputPanel source={res.source} recordedDate={res.recordedDate}>
+        <OutputPanel source={res.source} recordedDate={res.recordedDate} provenance={res.provenance}>
           <p>Resume A scores: {scoresA.join(', ')} (mean {round(mean(scoresA))})</p>
           <p>Resume B scores: {scoresB.join(', ')} (mean {round(mean(scoresB))})</p>
           <Bars

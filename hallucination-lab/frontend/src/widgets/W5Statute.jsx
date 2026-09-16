@@ -66,7 +66,7 @@ function Body() {
       text = runObj.variants[recordedVariant(selected)] || runObj.variants.baseline
     }
     const mm = mismatchCount(text)
-    const patch = { [slot]: { text, source: r.source, recordedDate: r.recordedDate, mismatches: mm } }
+    const patch = { [slot]: { text, source: r.source, recordedDate: r.recordedDate, provenance: r.provenance, mismatches: mm } }
     if (slot === 'attempt') {
       patch.strokes = strokes + 1
       if (mm === 0 && selected.length > 0 && !solvedWith) {
@@ -90,7 +90,7 @@ function Body() {
           {baseline && (
             <>
               <Meter label="Baseline" count={baseline.mismatches} />
-              <OutputPanel source={baseline.source} recordedDate={baseline.recordedDate}>
+              <OutputPanel source={baseline.source} recordedDate={baseline.recordedDate} provenance={baseline.provenance}>
                 <MarkedText text={baseline.text} />
               </OutputPanel>
             </>
@@ -130,7 +130,7 @@ function Body() {
           {attempt && (
             <>
               <Meter label="This attempt" count={attempt.mismatches} />
-              <OutputPanel source={attempt.source} recordedDate={attempt.recordedDate}>
+              <OutputPanel source={attempt.source} recordedDate={attempt.recordedDate} provenance={attempt.provenance}>
                 <MarkedText text={attempt.text} />
               </OutputPanel>
               {attempt.mismatches > 0 && (

@@ -1,6 +1,7 @@
 {
   "widget": "w13",
   "recorded_date": "2026-09-14",
+  "provenance": "seed",
   "note": "Seed data authored during build. Model answers to 'How many items are in this image?' per image ID. True counts live in the image manifest. Replace with real vision captures if the gateway accepts images.",
   "runs": [
     {

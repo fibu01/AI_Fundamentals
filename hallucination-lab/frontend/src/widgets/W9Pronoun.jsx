@@ -90,7 +90,7 @@ function Body() {
         <div aria-live="polite">
           <p className="golf-score">Score: {score} of 10.</p>
           {res && (
-            <OutputPanel source={res.source} recordedDate={res.recordedDate}
+            <OutputPanel source={res.source} recordedDate={res.recordedDate} provenance={res.provenance}
               label="Probabilities from the Lab Model. No web access.">
               {'The uncomfortable part: most people score high, because the model’s stereotypes and ours come from the same place.'}
             </OutputPanel>

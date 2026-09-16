@@ -26,6 +26,7 @@ function pickRun(recorded) {
     ok: true,
     source: 'recorded',
     recordedDate: recorded.recorded_date,
+    provenance: recorded.provenance || 'seed',
     data: run,
   }
 }

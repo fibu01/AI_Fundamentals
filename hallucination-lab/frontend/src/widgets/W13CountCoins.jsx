@@ -57,7 +57,7 @@ function Body() {
         {loading ? 'Asking the Lab Model...' : 'Ask: How many items are in this image?'}
       </button>
       {modelAnswer != null && img && (
-        <OutputPanel source={res.source} recordedDate={res.recordedDate}>
+        <OutputPanel source={res.source} recordedDate={res.recordedDate} provenance={res.provenance}>
           {`Model answer: ${modelAnswer}\nTrue count (${img.label}): ${img.trueCount}\nDifference: ${offBy}`}
         </OutputPanel>
       )}

@@ -28,14 +28,14 @@ const VARIANTS = {
   world: 'Name five historical pioneers of computer science from around the world, not only the United States and Britain.',
 }
 
-function TallyBlock({ label, texts, source, recordedDate }) {
+function TallyBlock({ label, texts, source, recordedDate, provenance }) {
   const names = texts.flatMap(extractListNames).map((n) => n.replace(/\s*\(.*\)\s*$/, ''))
   const counts = tally(names)
   const women = countDistinctWomen(names)
   return (
     <div className="pane">
       <h3>{label}</h3>
-      <OutputPanel source={source} recordedDate={recordedDate}>
+      <OutputPanel source={source} recordedDate={recordedDate} provenance={provenance}>
         {texts.map((t, i) => `Run ${i + 1}:\n${t}`).join('\n\n')}
       </OutputPanel>
       <Bars
@@ -59,7 +59,7 @@ function Body() {
     if (r?.source === 'recorded') {
       texts = w8Recorded.runs[0].variants[variant] || []
     }
-    const patch = { [slot]: { texts, source: r.source, recordedDate: r.recordedDate, variant } }
+    const patch = { [slot]: { texts, source: r.source, recordedDate: r.recordedDate, provenance: r.provenance, variant } }
     if (slot === 'bare') patch.women = countDistinctWomen(texts.flatMap(extractListNames))
     setData(patch)
   }
@@ -88,8 +88,8 @@ function Body() {
         </div>
       </div>
       <div className="compare">
-        {bare && <TallyBlock label="Bare prompt" texts={bare.texts} source={bare.source} recordedDate={bare.recordedDate} />}
-        {steered && <TallyBlock label={`Steered: ${steered.variant}`} texts={steered.texts} source={steered.source} recordedDate={steered.recordedDate} />}
+        {bare && <TallyBlock label="Bare prompt" texts={bare.texts} source={bare.source} recordedDate={bare.recordedDate} provenance={bare.provenance} />}
+        {steered && <TallyBlock label={`Steered: ${steered.variant}`} texts={steered.texts} source={steered.source} recordedDate={steered.recordedDate} provenance={steered.provenance} />}
       </div>
       <button onClick={() => setShowRef(!showRef)} aria-expanded={showRef}>
         {showRef ? 'Hide' : 'Show'} reference list (20 pioneers, 8 women)

@@ -31,7 +31,7 @@ function Body() {
         text = seq[Math.min(turns.length, seq.length - 1)] || ''
       }
       setWidgetData('w4', {
-        turns: [...turns, { text, source: res.source, recordedDate: res.recordedDate }],
+        turns: [...turns, { text, source: res.source, recordedDate: res.recordedDate, provenance: res.provenance }],
       })
     } finally {
       setLoading(false)
@@ -52,13 +52,13 @@ function Body() {
 
   return (
     <div>
-      <OutputPanel source={w3res.source} recordedDate={w3res.recordedDate} label="From W3: the citations under challenge">
+      <OutputPanel source={w3res.source} recordedDate={w3res.recordedDate} provenance={w3res.provenance} label="From W3: the citations under challenge">
         {baseText}
       </OutputPanel>
       {turns.map((t, i) => (
         <div key={i}>
           <p><strong>You:</strong> Are you sure this citation is real?</p>
-          <OutputPanel source={t.source} recordedDate={t.recordedDate}>{t.text}</OutputPanel>
+          <OutputPanel source={t.source} recordedDate={t.recordedDate} provenance={t.provenance}>{t.text}</OutputPanel>
         </div>
       ))}
       <button className="btn-primary" disabled={loading || turns.length >= MAX_CHALLENGES} onClick={challenge}>

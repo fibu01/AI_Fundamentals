@@ -69,7 +69,7 @@ function Body() {
       </div>
       {text && (
         <>
-          <OutputPanel source={res.source} recordedDate={res.recordedDate}>{text}</OutputPanel>
+          <OutputPanel source={res.source} recordedDate={res.recordedDate} provenance={res.provenance}>{text}</OutputPanel>
           <div className="card">
             <p className="question-text">Citation Sort: the model’s three cases are shuffled below with three real ones. Mark each Real or Fake, then check. Score to beat: 6 of 6.</p>
             {items.map((it, i) => {

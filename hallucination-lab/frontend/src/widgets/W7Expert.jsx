@@ -26,7 +26,7 @@ function Body() {
       </button>
       {res && (
         <>
-          <OutputPanel source={res.source} recordedDate={res.recordedDate}>{text}</OutputPanel>
+          <OutputPanel source={res.source} recordedDate={res.recordedDate} provenance={res.provenance}>{text}</OutputPanel>
           {quote && (
             <p>
               <a

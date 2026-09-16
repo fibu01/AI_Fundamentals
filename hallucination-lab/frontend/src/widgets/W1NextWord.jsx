@@ -57,7 +57,7 @@ function Body() {
         </button>
       </div>
       {rows && (
-        <OutputPanel source={res.source} recordedDate={res.recordedDate}>
+        <OutputPanel source={res.source} recordedDate={res.recordedDate} provenance={res.provenance}>
           <Bars
             title={`Top five next-word candidates after "${stem}" at temperature ${temp.toFixed(1)}`}
             rows={rows.map(([tok, p]) => ({ label: `"${tok}"`, value: p, display: `${Math.round(p * 100)}%` }))}

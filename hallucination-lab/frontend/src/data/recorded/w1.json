@@ -1,34 +1,350 @@
 {
   "widget": "w1",
   "recorded_date": "2026-09-14",
+  "provenance": "seed",
   "note": "Seed data authored during build. Top-5 next-token candidates per stem, per temperature band. Replace with real vLLM logprob captures.",
   "runs": [
     {
       "stems": {
         "The capital of Florida is": {
-          "low": [["Tallahassee", 0.93], ["Miami", 0.03], ["Orlando", 0.02], ["the", 0.01], ["Jacksonville", 0.01]],
-          "mid": [["Tallahassee", 0.71], ["Miami", 0.11], ["Orlando", 0.08], ["the", 0.06], ["Jacksonville", 0.04]],
-          "high": [["Tallahassee", 0.42], ["Miami", 0.19], ["Orlando", 0.15], ["the", 0.13], ["Jacksonville", 0.11]]
+          "low": [
+            [
+              "Tallahassee",
+              0.93
+            ],
+            [
+              "Miami",
+              0.03
+            ],
+            [
+              "Orlando",
+              0.02
+            ],
+            [
+              "the",
+              0.01
+            ],
+            [
+              "Jacksonville",
+              0.01
+            ]
+          ],
+          "mid": [
+            [
+              "Tallahassee",
+              0.71
+            ],
+            [
+              "Miami",
+              0.11
+            ],
+            [
+              "Orlando",
+              0.08
+            ],
+            [
+              "the",
+              0.06
+            ],
+            [
+              "Jacksonville",
+              0.04
+            ]
+          ],
+          "high": [
+            [
+              "Tallahassee",
+              0.42
+            ],
+            [
+              "Miami",
+              0.19
+            ],
+            [
+              "Orlando",
+              0.15
+            ],
+            [
+              "the",
+              0.13
+            ],
+            [
+              "Jacksonville",
+              0.11
+            ]
+          ]
         },
         "The nurse walked into the room and": {
-          "low": [["checked", 0.36], ["smiled", 0.22], ["saw", 0.18], ["began", 0.13], ["looked", 0.11]],
-          "mid": [["checked", 0.28], ["smiled", 0.22], ["saw", 0.19], ["began", 0.16], ["looked", 0.15]],
-          "high": [["checked", 0.23], ["smiled", 0.21], ["saw", 0.20], ["began", 0.19], ["looked", 0.17]]
+          "low": [
+            [
+              "checked",
+              0.36
+            ],
+            [
+              "smiled",
+              0.22
+            ],
+            [
+              "saw",
+              0.18
+            ],
+            [
+              "began",
+              0.13
+            ],
+            [
+              "looked",
+              0.11
+            ]
+          ],
+          "mid": [
+            [
+              "checked",
+              0.28
+            ],
+            [
+              "smiled",
+              0.22
+            ],
+            [
+              "saw",
+              0.19
+            ],
+            [
+              "began",
+              0.16
+            ],
+            [
+              "looked",
+              0.15
+            ]
+          ],
+          "high": [
+            [
+              "checked",
+              0.23
+            ],
+            [
+              "smiled",
+              0.21
+            ],
+            [
+              "saw",
+              0.2
+            ],
+            [
+              "began",
+              0.19
+            ],
+            [
+              "looked",
+              0.17
+            ]
+          ]
         },
         "In 1969, humans first landed on": {
-          "low": [["the", 0.95], ["Earth's", 0.02], ["our", 0.01], ["a", 0.01], ["lunar", 0.01]],
-          "mid": [["the", 0.78], ["Earth's", 0.08], ["our", 0.06], ["a", 0.05], ["lunar", 0.03]],
-          "high": [["the", 0.49], ["Earth's", 0.16], ["our", 0.13], ["a", 0.12], ["lunar", 0.10]]
+          "low": [
+            [
+              "the",
+              0.95
+            ],
+            [
+              "Earth's",
+              0.02
+            ],
+            [
+              "our",
+              0.01
+            ],
+            [
+              "a",
+              0.01
+            ],
+            [
+              "lunar",
+              0.01
+            ]
+          ],
+          "mid": [
+            [
+              "the",
+              0.78
+            ],
+            [
+              "Earth's",
+              0.08
+            ],
+            [
+              "our",
+              0.06
+            ],
+            [
+              "a",
+              0.05
+            ],
+            [
+              "lunar",
+              0.03
+            ]
+          ],
+          "high": [
+            [
+              "the",
+              0.49
+            ],
+            [
+              "Earth's",
+              0.16
+            ],
+            [
+              "our",
+              0.13
+            ],
+            [
+              "a",
+              0.12
+            ],
+            [
+              "lunar",
+              0.1
+            ]
+          ]
         },
         "Barry University is located in": {
-          "low": [["Miami", 0.81], ["the", 0.08], ["Florida", 0.06], ["South", 0.03], ["a", 0.02]],
-          "mid": [["Miami", 0.60], ["the", 0.14], ["Florida", 0.12], ["South", 0.08], ["a", 0.06]],
-          "high": [["Miami", 0.36], ["the", 0.19], ["Florida", 0.17], ["South", 0.15], ["a", 0.13]]
+          "low": [
+            [
+              "Miami",
+              0.81
+            ],
+            [
+              "the",
+              0.08
+            ],
+            [
+              "Florida",
+              0.06
+            ],
+            [
+              "South",
+              0.03
+            ],
+            [
+              "a",
+              0.02
+            ]
+          ],
+          "mid": [
+            [
+              "Miami",
+              0.6
+            ],
+            [
+              "the",
+              0.14
+            ],
+            [
+              "Florida",
+              0.12
+            ],
+            [
+              "South",
+              0.08
+            ],
+            [
+              "a",
+              0.06
+            ]
+          ],
+          "high": [
+            [
+              "Miami",
+              0.36
+            ],
+            [
+              "the",
+              0.19
+            ],
+            [
+              "Florida",
+              0.17
+            ],
+            [
+              "South",
+              0.15
+            ],
+            [
+              "a",
+              0.13
+            ]
+          ]
         },
         "The most important skill for college students is": {
-          "low": [["critical", 0.34], ["the", 0.21], ["time", 0.19], ["communication", 0.14], ["learning", 0.12]],
-          "mid": [["critical", 0.27], ["the", 0.21], ["time", 0.19], ["communication", 0.17], ["learning", 0.16]],
-          "high": [["critical", 0.22], ["the", 0.21], ["time", 0.20], ["communication", 0.19], ["learning", 0.18]]
+          "low": [
+            [
+              "critical",
+              0.34
+            ],
+            [
+              "the",
+              0.21
+            ],
+            [
+              "time",
+              0.19
+            ],
+            [
+              "communication",
+              0.14
+            ],
+            [
+              "learning",
+              0.12
+            ]
+          ],
+          "mid": [
+            [
+              "critical",
+              0.27
+            ],
+            [
+              "the",
+              0.21
+            ],
+            [
+              "time",
+              0.19
+            ],
+            [
+              "communication",
+              0.17
+            ],
+            [
+              "learning",
+              0.16
+            ]
+          ],
+          "high": [
+            [
+              "critical",
+              0.22
+            ],
+            [
+              "the",
+              0.21
+            ],
+            [
+              "time",
+              0.2
+            ],
+            [
+              "communication",
+              0.19
+            ],
+            [
+              "learning",
+              0.18
+            ]
+          ]
         }
       }
     }

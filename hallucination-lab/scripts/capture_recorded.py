@@ -45,7 +45,8 @@ def post(base, widget, inputs):
 def capture(base, widget, runs):
     today = datetime.date.today().isoformat()
     note = f"Captured from the live Lab Model via capture_recorded.py on {today}."
-    out = {"widget": widget, "recorded_date": today, "note": note, "runs": []}
+    out = {"widget": widget, "recorded_date": today, "provenance": "captured",
+           "note": note, "runs": []}
 
     if widget == "w1":
         stems = {}

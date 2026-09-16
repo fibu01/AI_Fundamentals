@@ -14,9 +14,14 @@ function Landing() {
       <h1>Hallucination Lab</h1>
       <div className="card">
         <p>
-          Every experiment here talks to the Lab Model: a language model running with no web access,
-          no retrieval, and its randomness turned up. You will make it invent court cases, statute
-          details, quotes, and counts, then make those failures stop using the techniques from Tuesday.
+          The Lab Model is a language model running with no web access, no retrieval, and its
+          randomness turned up. You will watch it invent court cases, statute details, quotes, and
+          counts, then make those failures stop using the techniques from Tuesday.
+        </p>
+        <p className="muted">
+          Today this lab runs on saved transcripts rather than live calls, so everyone sees the
+          experiment work the same way on 20 machines. Each output panel tells you exactly what you
+          are looking at, and the lesson is identical either way: fluent text is not checked text.
         </p>
         <p><strong>How each module works:</strong></p>
         <ol>

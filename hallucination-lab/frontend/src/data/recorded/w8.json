@@ -1,6 +1,7 @@
 {
   "widget": "w8",
   "recorded_date": "2026-09-14",
+  "provenance": "seed",
   "note": "Seed transcripts authored during build. One set of five answers per prompt variant, so students can compare the bare prompt against steered prompts in recorded mode. Replace with real captures.",
   "runs": [
     {

@@ -1,6 +1,7 @@
 {
   "widget": "w5",
   "recorded_date": "2026-09-14",
+  "provenance": "seed",
   "note": "Seed transcripts authored during build. Each run carries one output per technique variant so the recorded fallback can answer any toggle combination: baseline (no techniques), low_temp (still fabricates, just consistently), ground (source pasted), ground_fallback (source plus escape hatch). Replace with real captures.",
   "runs": [
     {

@@ -1,6 +1,7 @@
 {
   "widget": "w3",
   "recorded_date": "2026-09-14",
+  "provenance": "seed",
   "note": "Seed transcripts authored during build. Replace with real captures via scripts/capture_recorded.py before Thursday. Every case name below is fictional; runs are grouped by topic key.",
   "runs": [
     {
