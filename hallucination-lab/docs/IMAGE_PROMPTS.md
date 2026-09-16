@@ -38,135 +38,166 @@ the class.
 
 ### Grid 1: CEO
 
-Paste each line below as its OWN message, one at a time, nothing else in the message. ChatGPT's image tool misreads a big numbered list with instructions as an edit request, so no setup message: just the bare prompts.
+Paste this whole block as one message. The opening lines are what stop ChatGPT waiting for a go-ahead between images.
 
 ```
-1. Generate an image: a photorealistic photo of a chief executive officer standing by the window of a corner office with a city skyline behind them.
-2. Generate an image: a photorealistic photo of a chief executive officer walking through a corporate lobby carrying a coffee and a phone.
-3. Generate an image: a photorealistic photo of a chief executive officer speaking at a podium during a shareholder meeting.
-4. Generate an image: a photorealistic photo of a chief executive officer seated at the head of a long boardroom table during a meeting.
-5. Generate an image: a photorealistic photo of a chief executive officer at their desk reviewing a printed quarterly report, candid angle.
-6. Generate an image: a photorealistic photo of a chief executive officer in a business-magazine style portrait with arms crossed, office in the background.
-7. Generate an image: a photorealistic photo of a chief executive officer stepping out of a black car in front of a corporate headquarters.
-8. Generate an image: a photorealistic photo of a chief executive officer on a video call at a tidy home office desk.
-9. Generate an image: a photorealistic photo of a chief executive officer touring a factory floor in business attire and a hard hat.
-10. Generate an image: a photorealistic photo of a chief executive officer ringing the opening bell at a stock exchange.
-11. Generate an image: a photorealistic photo of a chief executive officer being interviewed on the set of a business news program.
-12. Generate an image: a photorealistic photo of a chief executive officer reading a newspaper in an armchair in a corner office.
-13. Generate an image: a photorealistic photo of a chief executive officer addressing employees at a company all-hands meeting.
-14. Generate an image: a photorealistic photo of a chief executive officer in a formal headshot for an annual report, neutral gray background.
-15. Generate an image: a photorealistic photo of a chief executive officer working on a laptop in an airport business lounge.
-16. Generate an image: a photorealistic photo of a chief executive officer cutting a ribbon at a new building opening ceremony.
+You will generate 16 photorealistic images, one per message. do not wait for me to say go.. just go ahead and generate all 16 one at a time!
+
+Use the numbered prompts below in order, exactly as written.
+
+Do not add or change any description of the person: no gender, age, ethnicity, or diversity wording that is not in the prompt.
+
+Candid documentary photo style, no text or logos in the image. Start with prompt 1 then continue to Prompt 16.
+1. A photorealistic photo of a chief executive officer standing by the window of a corner office with a city skyline behind them.
+2. A photorealistic photo of a chief executive officer walking through a corporate lobby carrying a coffee and a phone.
+3. A photorealistic photo of a chief executive officer speaking at a podium during a shareholder meeting.
+4. A photorealistic photo of a chief executive officer seated at the head of a long boardroom table during a meeting.
+5. A photorealistic photo of a chief executive officer at their desk reviewing a printed quarterly report, candid angle.
+6. A photorealistic photo of a chief executive officer in a business-magazine style portrait with arms crossed, office in the background.
+7. A photorealistic photo of a chief executive officer stepping out of a black car in front of a corporate headquarters.
+8. A photorealistic photo of a chief executive officer on a video call at a tidy home office desk.
+9. A photorealistic photo of a chief executive officer touring a factory floor in business attire and a hard hat.
+10. A photorealistic photo of a chief executive officer ringing the opening bell at a stock exchange.
+11. A photorealistic photo of a chief executive officer being interviewed on the set of a business news program.
+12. A photorealistic photo of a chief executive officer reading a newspaper in an armchair in a corner office.
+13. A photorealistic photo of a chief executive officer addressing employees at a company all-hands meeting.
+14. A photorealistic photo of a chief executive officer in a formal headshot for an annual report, neutral gray background.
+15. A photorealistic photo of a chief executive officer working on a laptop in an airport business lounge.
+16. A photorealistic photo of a chief executive officer cutting a ribbon at a new building opening ceremony.
 ```
 
-Download each image as it arrives and save them in order as `hallucination-lab/frontend/public/images/w12/ceo/1.png` through `16.png`.
+Save the sixteen results in order as `hallucination-lab/frontend/public/images/w12/ceo/1.png` through `16.png`.
 
 ### Grid 2: Nurse
 
-Paste each line below as its OWN message, one at a time, nothing else in the message. ChatGPT's image tool misreads a big numbered list with instructions as an edit request, so no setup message: just the bare prompts.
+Paste this whole block as one message. The opening lines are what stop ChatGPT waiting for a go-ahead between images.
 
 ```
-1. Generate an image: a photorealistic photo of a nurse walking down a hospital corridor pushing a medication cart.
-2. Generate an image: a photorealistic photo of a nurse adjusting an IV drip beside a patient bed.
-3. Generate an image: a photorealistic photo of a nurse charting on a computer at a busy nurses' station.
-4. Generate an image: a photorealistic photo of a nurse taking a patient's blood pressure in an exam room.
-5. Generate an image: a photorealistic photo of a nurse in a pediatric ward handing a sticker to a young patient.
-6. Generate an image: a photorealistic photo of a nurse doing paperwork under a desk lamp on a quiet night shift.
-7. Generate an image: a photorealistic photo of a nurse in a portrait wearing scrubs and a stethoscope, hospital hallway behind.
-8. Generate an image: a photorealistic photo of a nurse checking a monitor next to a hospital bed.
-9. Generate an image: a photorealistic photo of a nurse wheeling a patient in a wheelchair toward an elevator.
-10. Generate an image: a photorealistic photo of a nurse drinking coffee in a staff break room, still in scrubs.
-11. Generate an image: a photorealistic photo of a nurse on a telehealth video call with a headset.
-12. Generate an image: a photorealistic photo of a nurse giving a vaccination at a community clinic table.
-13. Generate an image: a photorealistic photo of a nurse pushing through emergency department double doors.
-14. Generate an image: a photorealistic photo of a nurse reviewing a patient chart on a clipboard.
-15. Generate an image: a photorealistic photo of a nurse carrying a home-health bag up the steps of a house.
-16. Generate an image: a photorealistic photo of a nurse in a graduation-style portrait in scrubs holding a certification.
+You will generate 16 photorealistic images, one per message. do not wait for me to say go.. just go ahead and generate all 16 one at a time!
+
+Use the numbered prompts below in order, exactly as written.
+
+Do not add or change any description of the person: no gender, age, ethnicity, or diversity wording that is not in the prompt.
+
+Candid documentary photo style, no text or logos in the image. Start with prompt 1 then continue to Prompt 16.
+1. A photorealistic photo of a nurse walking down a hospital corridor pushing a medication cart.
+2. A photorealistic photo of a nurse adjusting an IV drip beside a patient bed.
+3. A photorealistic photo of a nurse charting on a computer at a busy nurses' station.
+4. A photorealistic photo of a nurse taking a patient's blood pressure in an exam room.
+5. A photorealistic photo of a nurse in a pediatric ward handing a sticker to a young patient.
+6. A photorealistic photo of a nurse doing paperwork under a desk lamp on a quiet night shift.
+7. A photorealistic photo of a nurse in a portrait wearing scrubs and a stethoscope, hospital hallway behind.
+8. A photorealistic photo of a nurse checking a monitor next to a hospital bed.
+9. A photorealistic photo of a nurse wheeling a patient in a wheelchair toward an elevator.
+10. A photorealistic photo of a nurse drinking coffee in a staff break room, still in scrubs.
+11. A photorealistic photo of a nurse on a telehealth video call with a headset.
+12. A photorealistic photo of a nurse giving a vaccination at a community clinic table.
+13. A photorealistic photo of a nurse pushing through emergency department double doors.
+14. A photorealistic photo of a nurse reviewing a patient chart on a clipboard.
+15. A photorealistic photo of a nurse carrying a home-health bag up the steps of a house.
+16. A photorealistic photo of a nurse in a graduation-style portrait in scrubs holding a certification.
 ```
 
-Download each image as it arrives and save them in order as `hallucination-lab/frontend/public/images/w12/nurse/1.png` through `16.png`.
+Save the sixteen results in order as `hallucination-lab/frontend/public/images/w12/nurse/1.png` through `16.png`.
 
 ### Grid 3: Professor
 
-Paste each line below as its OWN message, one at a time, nothing else in the message. ChatGPT's image tool misreads a big numbered list with instructions as an edit request, so no setup message: just the bare prompts.
+Paste this whole block as one message. The opening lines are what stop ChatGPT waiting for a go-ahead between images.
 
 ```
-1. Generate an image: a photorealistic photo of a professor lecturing at a whiteboard covered in diagrams in a university classroom.
-2. Generate an image: a photorealistic photo of a professor holding office hours across a desk stacked with books.
-3. Generate an image: a photorealistic photo of a professor leading a seminar discussion at a round table with students.
-4. Generate an image: a photorealistic photo of a professor grading a stack of papers in a campus coffee shop.
-5. Generate an image: a photorealistic photo of a professor in a white lab coat working at a research bench.
-6. Generate an image: a photorealistic photo of a professor walking across a university quad carrying a leather bag.
-7. Generate an image: a photorealistic photo of a professor presenting at an academic conference podium with a projector screen.
-8. Generate an image: a photorealistic photo of a professor searching the stacks of a university library.
-9. Generate an image: a photorealistic photo of a professor advising a single student in a small office.
-10. Generate an image: a photorealistic photo of a professor writing equations on a chalkboard, mid-lecture.
-11. Generate an image: a photorealistic photo of a professor in full academic regalia at a commencement ceremony.
-12. Generate an image: a photorealistic photo of a professor recording an online lecture at a desk with a microphone and camera.
-13. Generate an image: a photorealistic photo of a professor reading a journal article in an office armchair, bookshelves behind.
-14. Generate an image: a photorealistic photo of a professor doing field work outdoors with a notebook and equipment.
-15. Generate an image: a photorealistic photo of a professor speaking in a department faculty meeting.
-16. Generate an image: a photorealistic photo of a professor in a portrait in front of a full bookshelf.
+You will generate 16 photorealistic images, one per message. do not wait for me to say go.. just go ahead and generate all 16 one at a time!
+
+Use the numbered prompts below in order, exactly as written.
+
+Do not add or change any description of the person: no gender, age, ethnicity, or diversity wording that is not in the prompt.
+
+Candid documentary photo style, no text or logos in the image. Start with prompt 1 then continue to Prompt 16.
+1. A photorealistic photo of a professor lecturing at a whiteboard covered in diagrams in a university classroom.
+2. A photorealistic photo of a professor holding office hours across a desk stacked with books.
+3. A photorealistic photo of a professor leading a seminar discussion at a round table with students.
+4. A photorealistic photo of a professor grading a stack of papers in a campus coffee shop.
+5. A photorealistic photo of a professor in a white lab coat working at a research bench.
+6. A photorealistic photo of a professor walking across a university quad carrying a leather bag.
+7. A photorealistic photo of a professor presenting at an academic conference podium with a projector screen.
+8. A photorealistic photo of a professor searching the stacks of a university library.
+9. A photorealistic photo of a professor advising a single student in a small office.
+10. A photorealistic photo of a professor writing equations on a chalkboard, mid-lecture.
+11. A photorealistic photo of a professor in full academic regalia at a commencement ceremony.
+12. A photorealistic photo of a professor recording an online lecture at a desk with a microphone and camera.
+13. A photorealistic photo of a professor reading a journal article in an office armchair, bookshelves behind.
+14. A photorealistic photo of a professor doing field work outdoors with a notebook and equipment.
+15. A photorealistic photo of a professor speaking in a department faculty meeting.
+16. A photorealistic photo of a professor in a portrait in front of a full bookshelf.
 ```
 
-Download each image as it arrives and save them in order as `hallucination-lab/frontend/public/images/w12/professor/1.png` through `16.png`.
+Save the sixteen results in order as `hallucination-lab/frontend/public/images/w12/professor/1.png` through `16.png`.
 
 ### Grid 4: Person receiving welfare
 
-Paste each line below as its OWN message, one at a time, nothing else in the message. ChatGPT's image tool misreads a big numbered list with instructions as an edit request, so no setup message: just the bare prompts.
+Paste this whole block as one message. The opening lines are what stop ChatGPT waiting for a go-ahead between images.
 
 ```
-1. Generate an image: a photorealistic photo of a person receiving public assistance waiting in a chair at a government benefits office, holding paperwork.
-2. Generate an image: a photorealistic photo of a person receiving public assistance filling out application forms at a public services counter.
-3. Generate an image: a photorealistic photo of a person receiving public assistance talking with a caseworker across a desk.
-4. Generate an image: a photorealistic photo of a person receiving public assistance holding an envelope of documents outside a social services building.
-5. Generate an image: a photorealistic photo of a person receiving public assistance sitting in a waiting room holding a numbered ticket.
-6. Generate an image: a photorealistic photo of a person receiving public assistance reading a benefits letter at a kitchen table.
-7. Generate an image: a photorealistic photo of a person receiving public assistance using a public computer to apply for assistance online.
-8. Generate an image: a photorealistic photo of a person receiving public assistance standing in line at a community food pantry.
-9. Generate an image: a photorealistic photo of a person receiving public assistance on the phone while sorting through a folder of documents.
-10. Generate an image: a photorealistic photo of a person receiving public assistance at a bus stop with grocery bags.
-11. Generate an image: a photorealistic photo of a person receiving public assistance at a community assistance center intake desk.
-12. Generate an image: a photorealistic photo of a person receiving public assistance shopping for groceries and paying with an EBT card at checkout.
-13. Generate an image: a photorealistic photo of a person receiving public assistance with a child in a social services waiting area.
-14. Generate an image: a photorealistic photo of a person receiving public assistance receiving a document from a clerk at a service window.
-15. Generate an image: a photorealistic photo of a person receiving public assistance walking out of a government office holding a folder.
-16. Generate an image: a photorealistic photo of a person receiving public assistance meeting with a nonprofit aid worker at a folding table.
+You will generate 16 photorealistic images, one per message. do not wait for me to say go.. just go ahead and generate all 16 one at a time!
+
+Use the numbered prompts below in order, exactly as written.
+
+Do not add or change any description of the person: no gender, age, ethnicity, or diversity wording that is not in the prompt.
+
+Candid documentary photo style, no text or logos in the image. Start with prompt 1 then continue to Prompt 16.
+1. A photorealistic photo of a person receiving public assistance waiting in a chair at a government benefits office, holding paperwork.
+2. A photorealistic photo of a person receiving public assistance filling out application forms at a public services counter.
+3. A photorealistic photo of a person receiving public assistance talking with a caseworker across a desk.
+4. A photorealistic photo of a person receiving public assistance holding an envelope of documents outside a social services building.
+5. A photorealistic photo of a person receiving public assistance sitting in a waiting room holding a numbered ticket.
+6. A photorealistic photo of a person receiving public assistance reading a benefits letter at a kitchen table.
+7. A photorealistic photo of a person receiving public assistance using a public computer to apply for assistance online.
+8. A photorealistic photo of a person receiving public assistance standing in line at a community food pantry.
+9. A photorealistic photo of a person receiving public assistance on the phone while sorting through a folder of documents.
+10. A photorealistic photo of a person receiving public assistance at a bus stop with grocery bags.
+11. A photorealistic photo of a person receiving public assistance at a community assistance center intake desk.
+12. A photorealistic photo of a person receiving public assistance shopping for groceries and paying with an EBT card at checkout.
+13. A photorealistic photo of a person receiving public assistance with a child in a social services waiting area.
+14. A photorealistic photo of a person receiving public assistance receiving a document from a clerk at a service window.
+15. A photorealistic photo of a person receiving public assistance walking out of a government office holding a folder.
+16. A photorealistic photo of a person receiving public assistance meeting with a nonprofit aid worker at a folding table.
 ```
 
-Download each image as it arrives and save them in order as `hallucination-lab/frontend/public/images/w12/welfare/1.png` through `16.png`.
+Save the sixteen results in order as `hallucination-lab/frontend/public/images/w12/welfare/1.png` through `16.png`.
 
 Set `W12_EXT = 'png'` and update `generatedDate` in `manifests.js`.
 
-## W14: Spot the Fake (6 AI images + 6 real photos)
+## W14: Spot the Fake, the AI halves (6 images)
 
-Each round pairs a REAL photo with an AI image of the same kind of subject.
-Save AI images as `pair{N}_ai.png` and real photos as `pair{N}_real.png` in
-`hallucination-lab/frontend/public/images/w14/`. Set `W14_EXT = 'png'`.
+Paste this whole block as one message. Save the six results in order as
+`hallucination-lab/frontend/public/images/w14/pair1_ai` through `pair6_ai`
+(any image extension; the optimizer converts them).
 
-AI prompts, written to make the classic artifact families likely. Do not fix
-or regenerate an image because something looks off; off is the point. Do
-regenerate if the image is TOO obviously broken to be sporting.
+Do not retouch or regenerate because something looks slightly wrong. Wrong is
+the point: these are the images students have to catch.
 
-| Pair | AI prompt | Artifact it tends to produce |
-|---|---|---|
-| pair1 | `A candid photo of a smiling person waving at the camera with an open hand, fingers spread, outdoors in daylight` | Hands and fingers |
-| pair2 | `A photo of a small-town storefront with several signs, posters in the window, and text on the awning` | Garbled text |
-| pair3 | `A wide photo of an ornate interior staircase with railings, seen from the ground floor` | Impossible geometry |
-| pair4 | `A photo of a person adjusting their jacket in front of a large mirror, both the person and the reflection visible` | Reflections |
-| pair5 | `A close-up photo of two hands holding a fanned hand of playing cards at a table` | Hands plus card text |
-| pair6 | `A busy pedestrian street scene with many people walking, storefronts and buildings in the background` | Background faces and lines |
+```
+You will generate 6 photorealistic images, one per message. do not wait for me to say go.. just go ahead and generate all 6 one at a time!
 
-Real halves: use your own phone photos (fastest and safest), or public-domain
-photos from Wikimedia Commons (commons.wikimedia.org, filter by
-"Public domain" license) matching each subject: a person waving, a
-storefront, a staircase, a mirror shot, hands holding cards, a street crowd.
-Match the AI image's general look (color photo, similar framing) so the game
-is about artifacts, not photo quality.
+Use the numbered prompts below in order, exactly as written.
 
-After dropping images in, sanity-check `W14_PAIRS` in `manifests.js`: the
-`artifact` and `note` fields must describe what YOUR generated image actually
-shows, because they are revealed to students after each round.
+Do not correct anatomy, text, or reflections. Render each scene naturally.
+
+Candid documentary photo style, no watermarks.
+
+Start with prompt 1 then continue to Prompt 6.
+1. A candid photorealistic photo of a smiling person waving at the camera with an open hand, fingers spread wide, outdoors in daylight.
+2. A photorealistic photo of a small-town storefront with several hand-painted signs, posters in the window, and lettering on the awning.
+3. A wide photorealistic photo of an ornate interior staircase with iron railings and patterned tile, seen from the ground floor.
+4. A photorealistic photo of a person adjusting their jacket in front of a large mirror, with both the person and their reflection fully visible.
+5. A close-up photorealistic photo of two hands holding a fanned hand of playing cards at a table.
+6. A photorealistic photo of a busy pedestrian street scene with many people walking, storefronts and tall buildings in the background.
+```
+
+The six REAL halves cannot be generated. Shoot them on your phone or pull
+public-domain photos from Wikimedia Commons, matching each subject above:
+person waving, storefront, staircase, mirror, hands with cards, street crowd.
+Save as `pair1_real` through `pair6_real` in the same folder, matching the
+subject order.
 
 ## W13: Count the Coins (6 photos, do not generate these)
 
@@ -178,31 +209,37 @@ each, save as `hallucination-lab/frontend/public/images/w13/{coins,jellybeans,to
 and set each `trueCount` in `manifests.js`. Keep counts between 14 and 27.
 The shipped SVG placeholders have exact counts and work fine if you skip this.
 
-## Widget header illustrations (15 images, optional polish)
+## Module header illustrations (15 images, optional polish)
 
-One per module, same prompt skeleton so they read as a set. Replace the
-bracketed subject, keep everything else identical:
+One flat illustration per module. Missing headers are hidden automatically,
+so this set is pure polish and can wait. Paste as one message, then save the
+results in order as the filenames listed below the block, in
+`hallucination-lab/frontend/public/images/headers/`.
 
-`Minimal flat vector illustration of [SUBJECT], white background, one accent
-color of deep red (#C8102E), dark gray line work, no text anywhere in the
-image, clean geometric style`
+```
+You will generate 15 photorealistic images, one per message. do not wait for me to say go.. just go ahead and generate all 15 one at a time!
 
-| File (save under `hallucination-lab/frontend/public/images/headers/`) | Subject |
-|---|---|
-| `w1.png` | a row of five word-probability bars of descending height |
-| `w2.png` | two identical documents, one casting a different shadow |
-| `w3.png` | a gavel resting on a stack of court papers |
-| `w4.png` | a speech bubble containing a question mark, repeated three times in a row |
-| `w5.png` | a golf flag planted in an open law book |
-| `w7.png` | a portrait frame with a quotation mark inside |
-| `ttl.png` | three cards, one subtly different from the other two |
-| `w8.png` | a bar chart where one tall bar towers over many short ones |
-| `w9.png` | a balance scale weighing two speech bubbles |
-| `w10.png` | two identical resumes side by side |
-| `w11.png` | a map with one neighborhood highlighted and a magnifying glass |
-| `w12.png` | a four by four grid of empty portrait frames |
-| `w13.png` | scattered coins with a large question mark |
-| `w14.png` | a photograph splitting into pixel squares at one corner |
-| `fc.png` | a document with three sentences flagged in red |
+Use the numbered prompts below in order, exactly as written.
 
-The app hides any header image that is missing, so partial sets are fine.
+Every image: minimal flat vector illustration, plain white background, one accent color of deep red (#C8102E), dark gray line work, clean geometric style, and absolutely no text or lettering anywhere in the image.
+
+Start with prompt 1 then continue to Prompt 15.
+1. a row of five bar-chart bars of descending height
+2. two identical paper documents side by side, one casting a different shadow
+3. a gavel resting on a stack of court papers
+4. three identical speech bubbles in a row, each containing a question mark
+5. a golf flag planted in an open law book
+6. an oval portrait frame with a large quotation mark inside it
+7. three playing cards face up, one slightly different from the other two
+8. a bar chart where one very tall bar towers over six short ones
+9. a balance scale weighing two speech bubbles against each other
+10. two identical paper resumes side by side
+11. a city map grid with one neighborhood block highlighted and a magnifying glass over it
+12. a four by four grid of empty portrait picture frames
+13. a scattered pile of coins with a large question mark above them
+14. a photograph whose corner is dissolving into pixel squares
+15. a document page with three lines marked by red flags
+```
+
+Save in order as: `w1`, `w2`, `w3`, `w4`, `w5`, `w7`, `ttl`, `w8`, `w9`, `w10`, `w11`, `w12`, `w13`, `w14`, `fc`.
+
