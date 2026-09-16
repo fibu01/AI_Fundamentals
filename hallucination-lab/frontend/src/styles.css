@@ -323,3 +323,15 @@ input[type="text"] {
 .mismatch-meter { display: flex; align-items: center; gap: 10px; font-weight: 700; margin: 8px 0; }
 .mismatch-meter .count { font-size: 1.5em; color: var(--bad); }
 .mismatch-meter .count.zero { color: var(--ok); }
+
+/* Generated photos arrive at mixed aspect ratios, which pushed each cell's
+   tally buttons to a different height and broke the grid's rows. Lock the
+   thumbnail box so every cell's controls line up while tallying. */
+.img-grid .img-cell { display: flex; flex-direction: column; }
+.img-grid .img-cell > img,
+.img-grid .img-cell > button > img {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  width: 100%;
+  max-width: 100%;
+}
