@@ -34,7 +34,7 @@ export default function Questions({ widgetId, questions }) {
               {!chosen && <span className="one-shot-tag"> one answer, no retries</span>}
             </div>
             <div role="radiogroup" aria-labelledby={`${widgetId}-${q.id}-label`}>
-              {q.options.map((opt) => {
+              {q.options.map((opt, oi) => {
                 const showKey = instructorMode && correctKey === opt.key
                 return (
                   <button
@@ -45,7 +45,7 @@ export default function Questions({ widgetId, questions }) {
                     className={`option${showKey ? ' correct-key' : ''}`}
                     onClick={() => setAnswer(widgetId, q.id, opt.key)}
                   >
-                    <span className="marker">{opt.key.toUpperCase()}</span>
+                    <span className="marker">{String.fromCharCode(65 + oi)}</span>
                     <span>
                       {opt.label}
                       {showKey && <strong> (answer key)</strong>}
@@ -75,13 +75,14 @@ function ExplainPanel({ question, chosen, correctKey, widgetData }) {
   let verdict = null
   if (correctKey) {
     const right = chosen === correctKey
-    const label = question.options.find((o) => o.key === correctKey)?.label
+    const idx = question.options.findIndex((o) => o.key === correctKey)
+    const label = question.options[idx]?.label
     verdict = (
       <p className="verdict-line">
         <span className={`verdict ${right ? 'right' : 'wrong'}`}>
           {right ? 'Correct.' : 'Not quite.'}
         </span>{' '}
-        The answer is {correctKey.toUpperCase()}: {label}
+        The answer is {String.fromCharCode(65 + Math.max(0, idx))}: {label}
       </p>
     )
   } else {
