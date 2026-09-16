@@ -1,7 +1,8 @@
 import React from 'react'
 import OutputPanel from '../components/OutputPanel.jsx'
 import { useRun } from '../lib/useRun.js'
-import { W13_IMAGES, W13_EXT } from '../data/manifests.js'
+import { W13_IMAGES } from '../data/manifests.js'
+import LabImage from '../components/LabImage.jsx'
 import { SLIDES } from '../config.js'
 
 function Body() {
@@ -31,7 +32,7 @@ function Body() {
               onClick={() => setData({ picked: i.id, result: null, offBy: null })}
               style={{ padding: 4, width: '100%' }}
             >
-              <img src={`images/w13/${i.id}.${W13_EXT}`} alt={i.label} />
+              <LabImage base={`images/w13/${i.id}`} alt={i.label} />
               {i.label}
             </button>
           </div>

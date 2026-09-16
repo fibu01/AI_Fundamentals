@@ -1,0 +1,61 @@
+name: Deploy Hallucination Lab
+
+on:
+  push:
+    branches: [main, claude/keen-goodall-f0m7ce]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Pick up instructor images uploaded at the repo root
+        # Images get uploaded to frontend/public/images/... as well as the
+        # lab's own folder; fold both into the build so either path works.
+        run: |
+          if [ -d frontend/public/images ]; then
+            mkdir -p hallucination-lab/frontend/public/images
+            cp -r frontend/public/images/. hallucination-lab/frontend/public/images/
+          fi
+          find hallucination-lab/frontend/public/images -type f | wc -l
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: hallucination-lab/frontend/package-lock.json
+
+      - run: npm ci
+        working-directory: hallucination-lab/frontend
+
+      - run: npm run build
+        working-directory: hallucination-lab/frontend
+        env:
+          # No proxy behind a static host: every widget uses recorded runs.
+          VITE_STATIC_ONLY: '1'
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: hallucination-lab/frontend/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

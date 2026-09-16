@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useLab } from '../lib/store.jsx'
-import { W14_PAIRS, W14_EXT, W14_SECONDS } from '../data/manifests.js'
+import { W14_PAIRS, W14_SECONDS } from '../data/manifests.js'
 import { SLIDES } from '../config.js'
 
 // Head-to-head: each round shows a real photo and an AI image of the same
@@ -9,9 +9,15 @@ import { SLIDES } from '../config.js'
 
 const SIDES = W14_PAIRS.map(() => (Math.random() < 0.5 ? 'left' : 'right')) // real side per round, per session
 
+const EXTS = ['png', 'jpg', 'jpeg', 'webp', 'svg']
+
+// `src` is a base path with no extension: instructor photos land as PNG/JPG
+// over the semester while placeholders stay SVG, so resolve by trying each.
 function ZoomImage({ src, alt, onPick, disabled, state }) {
   const wrapRef = useRef(null)
   const lensRef = useRef(null)
+  const [extIdx, setExtIdx] = useState(0)
+  const resolved = `${src}.${EXTS[Math.min(extIdx, EXTS.length - 1)]}`
   function onMove(e) {
     const wrap = wrapRef.current
     const lens = lensRef.current
@@ -22,7 +28,7 @@ function ZoomImage({ src, alt, onPick, disabled, state }) {
     lens.style.display = 'block'
     lens.style.left = `${x - 70}px`
     lens.style.top = `${y - 70}px`
-    lens.style.backgroundImage = `url(${src})`
+    lens.style.backgroundImage = `url(${resolved})`
     lens.style.backgroundSize = `${rect.width * 2.5}px ${rect.height * 2.5}px`
     lens.style.backgroundPosition = `-${x * 2.5 - 70}px -${y * 2.5 - 70}px`
   }
@@ -31,7 +37,7 @@ function ZoomImage({ src, alt, onPick, disabled, state }) {
       aria-label={`${alt}. Pick this one as the real photo.`}>
       <div className="zoom-wrap" ref={wrapRef} onMouseMove={onMove}
         onMouseLeave={() => { if (lensRef.current) lensRef.current.style.display = 'none' }}>
-        <img src={src} alt={alt} />
+        <img src={resolved} alt={alt} onError={() => setExtIdx((i) => i + 1)} />
         <div className="zoom-lens" ref={lensRef} aria-hidden="true" />
       </div>
     </button>
@@ -93,8 +99,8 @@ function Body() {
     )
   }
 
-  const leftSrc = `images/w14/${pair.id}_${realSide === 'left' ? 'real' : 'ai'}.${W14_EXT}`
-  const rightSrc = `images/w14/${pair.id}_${realSide === 'right' ? 'real' : 'ai'}.${W14_EXT}`
+  const leftSrc = `images/w14/${pair.id}_${realSide === 'left' ? 'real' : 'ai'}`
+  const rightSrc = `images/w14/${pair.id}_${realSide === 'right' ? 'real' : 'ai'}`
   const state = (side) =>
     picked == null ? null : side === realSide ? 'right' : picked === side ? 'wrong' : null
 

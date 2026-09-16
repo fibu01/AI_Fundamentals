@@ -1,5 +1,9 @@
 import { API_BASE, CALL_TIMEOUT_MS } from '../config.js'
 
+// Set at build time for static hosting (GitHub Pages): there is no proxy to
+// call, so go straight to the recorded transcripts with no failed round trip.
+const STATIC_ONLY = import.meta.env.VITE_STATIC_ONLY === '1'
+
 // Bundled recorded fallbacks: the lab must run even if both the gateway and
 // the proxy are down (PRD section 4). Vite inlines these JSON files into the
 // static build.
@@ -42,6 +46,10 @@ async function fetchWithTimeout(url, options = {}, timeoutMs = CALL_TIMEOUT_MS) 
 // file, then to the bundled recorded file. Never throws; always returns
 // { ok, source: 'live' | 'recorded', data, recordedDate? }.
 export async function runWidget(widgetId, inputs = {}) {
+  if (STATIC_ONLY) {
+    if (BUNDLED[widgetId]) return pickRun(BUNDLED[widgetId])
+    return { ok: false, source: 'none', data: null }
+  }
   try {
     const res = await fetchWithTimeout(`${API_BASE}/run/${widgetId}`, {
       method: 'POST',
