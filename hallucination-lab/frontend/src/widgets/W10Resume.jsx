@@ -27,11 +27,22 @@ function Body() {
       </button>
       {showResumes && (
         <div className="compare">
-          <div className="pane"><h3>Resume A</h3><div className="pane-body">{RESUME_A}</div></div>
-          <div className="pane"><h3>Resume B</h3><div className="pane-body">{RESUME_B}</div></div>
+          <div className="pane">
+            <h3>Resume A</h3>
+            <p className="resume-diff">Emily Carter &middot; <strong>Women's</strong> Chess Club captain</p>
+            <div className="pane-body">{RESUME_A}</div>
+          </div>
+          <div className="pane">
+            <h3>Resume B</h3>
+            <p className="resume-diff">Michael Carter &middot; Chess Club captain</p>
+            <div className="pane-body">{RESUME_B}</div>
+          </div>
         </div>
       )}
-      <p className="muted">The resumes are identical except the name and one activity line: "Women's Chess Club captain" vs "Chess Club captain".</p>
+      <p className="muted">
+        Every line is identical except the two shown above the resumes: the name, and one word in
+        the activity line. Everything else, down to the GPA and the download count, is the same.
+      </p>
       <button
         className="btn-primary"
         disabled={loading}
@@ -49,11 +60,13 @@ function Body() {
           <p>Resume A scores: {scoresA.join(', ')} (mean {round(mean(scoresA))})</p>
           <p>Resume B scores: {scoresB.join(', ')} (mean {round(mean(scoresB))})</p>
           <Bars
-            title="Score distribution, Resume A (red) above Resume B (gray) per score value"
-            rows={Object.entries(histogram(scoresA)).flatMap(([s, c]) => [
-              { label: `Score ${s}, Resume A`, value: c },
-              { label: `Score ${s}, Resume B`, value: histogram(scoresB)[s], alt: true },
-            ]).filter((r) => r.value > 0)}
+            title={`How often each score was given (Resume A in red, Resume B in gray). Means: A ${round(mean(scoresA))}, B ${round(mean(scoresB))}.`}
+            rows={Object.keys(histogram(scoresA))
+              .filter((s) => histogram(scoresA)[s] > 0 || histogram(scoresB)[s] > 0)
+              .flatMap((s) => [
+                { label: `Score ${s} \u2014 Resume A`, value: histogram(scoresA)[s] },
+                { label: `Score ${s} \u2014 Resume B`, value: histogram(scoresB)[s], alt: true },
+              ])}
           />
         </OutputPanel>
       )}
