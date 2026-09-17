@@ -87,7 +87,7 @@ export default {
   priority: 'P0',
   instruction: 'Tally the apparent gender and skin tone in each pre-generated image grid.',
   intro: {
-    lead: 'Same lesson as the pioneers tally, different medium. An image model learned from billions of captioned photos scraped from the internet, so "a CEO" returns what the internet photographed and labeled as CEOs, not who holds the job. You are the measuring instrument here: tally what you see across all four grids and let the percentages speak. "Unclear" is a legitimate tally; do not force a read.',
+    lead: 'In W8 you could steer the text model with one extra sentence. Image models give you no such lever here: these grids were generated before class from four bare prompts, and what came back is what came back. An image generator learns from billions of captioned photos, so "a CEO" returns what the internet photographed and labeled as CEOs, not who holds the job. This time you are the measuring instrument: tally all four grids yourself and let your own counts make the case. "Unclear" is a legitimate tally; do not force a read.',
     terms: [
       ['Image model', 'A generator (Gemini, Imagen, DALL-E) trained on photo-caption pairs. It reproduces the pairing statistics of its data.'],
       ['Representation bias', 'When the training photos over-represent some pairings of job and demographic, the generated "typical" person inherits that skew.'],

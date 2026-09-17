@@ -152,7 +152,7 @@ export default {
   priority: 'P0',
   instruction: 'Get the model’s statute summary to zero invented numbers, in as few techniques as you can.',
   intro: {
-    lead: 'Naming a statute in your prompt does not hand the model the statute; it only sets the style of the answer. First run the bare question and count how many numbers the model invents. Then it is a game: apply techniques from Tuesday until the summary contains zero numbers the statute does not, using as few toggles as possible. Some toggles will not help at all. Finding out which ones fail, and why, is the experiment.',
+    lead: 'Naming a statute in your prompt does not hand the model the statute; it only sets the style of the answer. First run the bare question and count how many numbers the model invents. Then it is a game: apply techniques from Tuesday until the summary contains zero numbers the statute does not, using as few toggles as possible. Some toggles will not help at all. Finding out which ones fail, and why, is the experiment. One warning before you start: hitting zero on this meter does not mean the summary is correct. The meter only checks whether each number appears somewhere in the statute.',
     terms: [
       ['Grounding', 'Putting the actual source text inside the prompt so the model can copy from it instead of inventing. This is what Copilot and Gemini do with web results.'],
       ['Escape hatch', 'Explicit permission to answer "Information not found." Without it, models fill gaps rather than admit them.'],
@@ -215,7 +215,7 @@ export default {
       ],
       correct: 'c',
       explain: (d) =>
-        `Only grounding gives the model the missing text; every other toggle just changes how the fabrication sounds. Low temperature makes the wrong numbers consistent, not correct.${d.solvedWith ? ` You solved it with ${d.solvedWith.techniques.join(' + ')} against a par of ${PAR}.` : ' Keep playing until the meter reads zero; the export records how you solved it.'}`,
+        `Only grounding gives the model the missing text; every other toggle just changes how the fabrication sounds. Low temperature makes the wrong numbers consistent, not correct.${d.solvedWith ? ` You solved it with ${d.solvedWith.techniques.join(' + ')} against a par of ${PAR}.` : ' Keep playing until the meter reads zero; the export records how you solved it.'} Now the limit: a zero here means every number appeared somewhere in the statute, not that the summary says what the statute says. Grounding cuts invention; it does not certify the answer. You still have to read the source.`,
       slide: SLIDES.grounding,
     },
     {

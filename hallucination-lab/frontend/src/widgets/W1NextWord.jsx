@@ -120,7 +120,7 @@ export default {
       ],
       correct: 'b',
       explain:
-        'Higher temperature flattens the probability distribution, so lower-ranked words get picked more often. That adds variety, and with it more chances to drift from the most likely (often the true) continuation. Check your locked prediction against what the bars actually did.',
+        'Higher temperature flattens the probability distribution, so lower-ranked words get picked more often. Careful: a high-probability word is the one that most often FOLLOWED this text in training, which is not the same as the one that is true. Turning temperature down makes the model more repeatable, not more accurate. Check your locked prediction against what the bars actually did.',
       slide: SLIDES.temperature,
     },
   ],

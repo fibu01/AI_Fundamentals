@@ -82,7 +82,7 @@ export default {
   priority: 'P1',
   instruction: 'Score two nearly identical resumes ten times each and compare the distributions.',
   intro: {
-    lead: 'This is the experiment behind the Amazon story from lecture, scaled down to our sandbox. Two resumes, identical except the name and one word ("Women’s Chess Club" vs "Chess Club"), each scored ten times. A gap would be bias in a scored decision; the honest catch is that a general chatbot may show little or none, and that null result matters too, because Amazon’s system was purpose-trained on ten years of skewed hiring data.',
+    lead: 'This is the experiment behind the Amazon story from lecture, scaled down to our sandbox. Two resumes, identical except the name and one word ("Women’s Chess Club" vs "Chess Club"), each scored ten times. A gap between the two would be bias in a scored decision. The honest catch: a general chatbot may show almost none. That result counts too. Amazon’s system was purpose-trained on ten years of its own skewed hiring data, which is a much stronger push than anything happening here.',
     terms: [
       ['Scored decision', 'Any use of a model to rank or rate people: hiring, admissions, risk. Bias here has direct consequences.'],
       ['Distribution', 'The spread of scores across repeated runs. One run tells you almost nothing at temperature 0.9; ten begin to show a pattern.'],
