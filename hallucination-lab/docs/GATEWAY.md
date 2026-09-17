@@ -2,18 +2,33 @@
 
 Two independent channels, so work in progress can never reach students.
 
-| | Production | Preview |
-|---|---|---|
-| Who uses it | Students, in class | You, before class |
-| URL | https://fibu01.github.io/AI_Fundamentals/ | http://localhost:8100/ (wherever the proxy runs) |
-| Branch | `lab-stable-w4` (frozen) | `claude/keen-goodall-f0m7ce` |
-| Build | `npm run build` → `dist/`, `VITE_STATIC_ONLY=1` | `npm run build:preview` → `dist-preview/` |
-| Model calls | None. Bundled transcripts only. | Live, through the proxy |
-| Deploys on push | Yes, GitHub Actions | No |
+Three, not two, because the hosted preview and the live-model preview are
+different things:
 
-A push to the dev branch used to republish the student site. It no longer
-does: `.github/workflows/deploy-pages.yml` triggers only on `lab-stable-w4`
-and `main`. **To ship, merge the dev branch into `lab-stable-w4` and push.**
+| | Student site | Hosted preview | Live preview |
+|---|---|---|---|
+| Who uses it | Students, in class | You, reviewing a candidate | You, demonstrating a live call |
+| URL | https://fibu01.github.io/AI_Fundamentals/ | https://fibu01.github.io/AI_Fundamentals/preview/ | http://localhost:8100/ (wherever the proxy runs) |
+| Built from | `lab-stable-w4` (frozen) | `claude/keen-goodall-f0m7ce` | `claude/keen-goodall-f0m7ce` |
+| Build | `npm run build` → `dist/` | same, plus `VITE_BUILD_CHANNEL=preview` | `npm run build:preview` → `dist-preview/` |
+| Model calls | None. Bundled transcripts only. | None. Bundled transcripts only. | Live, through the proxy |
+| Banner | none | loud amber "PREVIEW BUILD" | none |
+
+**The student site's content always comes from `lab-stable-w4`, whatever is on
+the dev branch.** The workflow triggers from the dev branch only because the
+`github-pages` environment refuses deployments from any other branch — a push
+to `lab-stable-w4` builds fine and then fails at the deploy step. So the
+freeze is enforced by which branch the root is *built from*, which is stronger
+than enforcing it by trigger: a push to the dev branch cannot change what
+students see even by accident. It rebuilds the root from the frozen branch,
+byte-identical, and republishes `/preview/` from the candidate.
+
+Falling back is therefore just using the other URL. The two builds are
+separate directories in one artifact and neither can overwrite the other.
+
+**To ship a candidate:** merge the dev branch into `lab-stable-w4`, push it,
+then push anything to the dev branch (or run the workflow by hand) to rebuild
+the root from it.
 
 ## Do not put the gateway in front of students on Thursday
 
