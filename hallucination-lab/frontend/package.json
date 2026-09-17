@@ -7,10 +7,11 @@
     "dev": "vite",
     "build": "VITE_STATIC_ONLY=1 vite build",
     "preview": "vite preview",
-    "verify": "node tests/verify.mjs",
+    "verify": "npm run check:recorded && node tests/verify.mjs",
     "serve:dist": "python3 -m http.server 8300 --directory dist",
     "build:preview": "VITE_CALL_TIMEOUT_MS=90000 vite build --outDir dist-preview",
-    "serve:preview": "python3 -m http.server 8301 --directory dist-preview"
+    "serve:preview": "python3 -m http.server 8301 --directory dist-preview",
+    "check:recorded": "python3 ../scripts/check_recorded.py"
   },
   "dependencies": {
     "react": "^18.3.1",

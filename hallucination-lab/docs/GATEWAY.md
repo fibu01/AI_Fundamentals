@@ -61,6 +61,22 @@ Captured files land in `frontend/src/data/recorded/` with
 `"provenance": "captured"`. Expect this to take 20-40 minutes at current
 gateway speed.
 
+**Always check a capture before you ship it.** `npm run verify` now runs
+`scripts/check_recorded.py` first and fails if a transcript stops satisfying
+what its widget needs. Two real examples from the first capture against this
+gateway:
+
+- W7's key said the named publication does not exist. The seed invented one;
+  the live model named *Nursing Management* and *Nursing Outlook*, both real
+  journals. The question had to change, not the transcript.
+- Citation Sort dedupes by case name, and in 3 of 10 captured runs the model
+  listed the same invented case twice, which quietly turns a six-row game into
+  a four-row one. `scripts/topup_w3.py` drops those runs and re-rolls only the
+  topics that came up short, so you are not re-capturing all five topics to fix
+  one.
+
+A capture is not automatically better than a good seed. Read what came back.
+
 **`w5.json` is excluded from routine re-capture on purpose.** Its grounded
 variants carry a deliberate planted misattribution that the whole grounding
 lesson depends on, plus a `plantedErrors` block describing each one. A raw

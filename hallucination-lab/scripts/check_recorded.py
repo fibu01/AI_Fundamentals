@@ -80,12 +80,17 @@ def check(d):
             # fabricated pile is distinguishable from the real pile by shape.
             for i, r in enumerate(runs):
                 t = r.get("text", "")
-                names = CASE_RE.findall(t)
-                cites = CITE_RE.findall(t)
+                # Count UNIQUE names: buildSortItems dedupes by case name, so a
+                # transcript that lists the same fabricated case twice yields a
+                # four-row sort while the copy promises six. The model repeats
+                # itself often enough that this is the common failure.
+                names = set(CASE_RE.findall(t))
+                cites = set(CITE_RE.findall(t))
                 if len(names) < 3:
-                    fail(name, f"run {i} ({r.get('topic')}): {len(names)} 'X v. Y' case names, need 3")
+                    fail(name, f"run {i} ({r.get('topic')}): {len(names)} distinct 'X v. Y' case "
+                               f"names, need 3 (repeats collapse in the sort panel)")
                 if len(cites) < 3:
-                    fail(name, f"run {i} ({r.get('topic')}): {len(cites)} reporter citations, need 3")
+                    fail(name, f"run {i} ({r.get('topic')}): {len(cites)} distinct reporter citations, need 3")
                 if not r.get("topic"):
                     fail(name, f"run {i}: no topic, the widget selects transcripts by topic")
 
