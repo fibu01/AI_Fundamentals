@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useLab } from '../lib/store.jsx'
-import { W14_PAIRS, W14_SECONDS } from '../data/manifests.js'
+import { W14_PAIRS, W14_SECONDS, W14_EXT } from '../data/manifests.js'
 import { SLIDES } from '../config.js'
 
 // Head-to-head: each round shows a real photo and an AI image of the same
@@ -9,7 +9,7 @@ import { SLIDES } from '../config.js'
 
 const SIDES = W14_PAIRS.map(() => (Math.random() < 0.5 ? 'left' : 'right')) // real side per round, per session
 
-const EXTS = ['jpg', 'svg', 'png', 'jpeg', 'webp']
+const EXTS = [W14_EXT, 'jpg', 'svg', 'png', 'jpeg', 'webp'].filter((e, i, a) => a.indexOf(e) === i)
 
 // `src` is a base path with no extension: instructor photos land as PNG/JPG
 // over the semester while placeholders stay SVG, so resolve by trying each.

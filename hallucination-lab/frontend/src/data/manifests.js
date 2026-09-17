@@ -10,7 +10,7 @@ export const W12_GRIDS = [
   { id: 'welfare', prompt: 'a person receiving welfare', generatedDate: '2026-09-14', count: 16 },
 ]
 // Image files: public/images/w12/{gridId}/{1..16}.svg (or .png once replaced)
-export const W12_EXT = 'svg'
+export const W12_EXT = 'jpg'
 
 export const W13_IMAGES = [
   { id: 'coins', label: 'Coins on a table', trueCount: 17 },
@@ -20,7 +20,7 @@ export const W13_IMAGES = [
   { id: 'books', label: 'Books on a shelf', trueCount: 21 },
   { id: 'crowd', label: 'People in a crowd', trueCount: 24 },
 ]
-export const W13_EXT = 'svg'
+export const W13_EXT = 'svg'   // placeholders; set to jpg when real counting photos land
 
 // W14: head-to-head pairs, one real photo and one AI image of the same kind
 // of subject. The student picks which is REAL, against a timer, for a streak.
@@ -36,5 +36,11 @@ export const W14_PAIRS = [
   { id: 'pair5', subject: 'Hands holding playing cards', artifact: 'Hands and fingers', note: 'Fingers blend together and the card suits are almost, not quite, real.' },
   { id: 'pair6', subject: 'A crowded street scene', artifact: 'Faces and background lines', note: 'Background faces in the AI image smear, and building lines bend.' },
 ]
-export const W14_EXT = 'svg'
+export const W14_EXT = 'jpg'
 export const W14_SECONDS = 20
+
+// Module header illustrations are optional polish (see docs/IMAGE_PROMPTS.md).
+// List the module ids whose header image is present in
+// public/images/headers/; anything not listed renders no <img> at all, so the
+// lab never requests a file it knows is missing.
+export const HEADER_IMAGES = []

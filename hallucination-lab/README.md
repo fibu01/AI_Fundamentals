@@ -38,7 +38,24 @@ frontend/   Vite + React single-page app, state in memory only
 proxy/      FastAPI service: /api/run/{widget}, /api/recorded/{widget}, /api/health
 scripts/    capture_recorded.py (refresh fallback transcripts each semester)
             make_placeholders.py (regenerate placeholder images)
+            optimize_images.py (resize instructor photos for classroom bandwidth)
+            fetch_real_photos.py (W14 real halves from Wikimedia, licence-filtered)
+frontend/tests/verify.mjs   end-to-end student journeys, a11y and recorded-only checks
 ```
+
+## Verifying a build
+
+```
+cd frontend
+npm run build                    # production build
+npm run serve:dist &             # static server on :8300
+npm run verify                   # 34 checks: journeys, a11y, recorded-only
+```
+
+`verify` drives a real browser through a full student pass, a deliberately
+wrong pass, navigation stress, rapid clicking and a fresh session, and fails
+on any console error, any request to a model gateway, any unlabelled control,
+or any chart bar without a numeric label.
 
 ## Student URL
 
@@ -47,8 +64,12 @@ Once Pages is live the lab is at **https://fibu01.github.io/AI_Fundamentals/**
 widget runs from recorded transcripts; the live gateway path is only used when
 the proxy is deployed alongside the frontend on CRMDEVSRV03.
 
-Students finish on a results screen that downloads a `.txt` (and optional
-`.csv`) file stamped with their name for upload to Canvas.
+Students finish on a results screen with three options: **Save as PDF** (the
+submission path, via the browser print dialog and a print stylesheet), a
+self-contained `.html` page, and a `.csv` for grading. Each carries the
+student's name and a verification code derived from their answers, so an edit
+made to a submitted file does not match its code. The TXT export was removed:
+it was the easiest file to alter before upload.
 
 ## Quick start
 
@@ -79,6 +100,28 @@ proxy logs widget ID, latency, and success only.
 Create the LiteLLM virtual key scoped to the Lab Model alias with a spend cap
 in the gateway UI. Read the gateway URL from `/etc/litellm/config.yaml` on
 CRMDEVSRV03 at deploy time; nothing in this repo carries a key or hostname.
+
+## Security boundary, and what still needs testing
+
+The browser sends a widget id plus enumerated inputs; the proxy owns every
+prompt. Verified by inspection and by the boundary checks in this repo:
+unknown widget ids are rejected, per-widget input allowlists reject extra
+fields, and the technique flags, W1 stems, W3 topics, W8 variants and W13
+image ids are each validated against fixed sets. The gateway key never leaves
+the process (`/api/health` returns only a boolean), and the request log
+records widget id, latency and success, never student input.
+
+One gap to close before the gateway goes live: **W4 relays the W3 transcript
+through the browser**, so a crafted POST can inject chosen text as the
+assistant turn. The trailing user turn is always the fixed challenge string,
+so it is not a general chatbot, but it is injectable context. Replace the echo
+with a server-side handle (cache the W3 output under a short-lived token and
+accept only the token) before connecting the model.
+
+Needs retesting once the gateway is connected, none of it exercisable now:
+live prompt composition per technique toggle, logprob shape from vLLM for W1
+and W9, image input for W13, the 8 s latency target at 20 concurrent users,
+and the rate limiter under real load.
 
 ## Before Thursday
 

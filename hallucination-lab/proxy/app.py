@@ -155,6 +155,15 @@ async def handle_w3(client, inputs):
 
 
 async def handle_w4(client, inputs):
+    # KNOWN BOUNDARY GAP, matters only once the gateway is live.
+    # W4 continues the conversation from W3, and the browser relays that
+    # transcript back here. A crafted POST can therefore put up to 8000
+    # characters of chosen text into the assistant turn (and 3x4000 more via
+    # prior_challenges). The final user turn is always the fixed CHALLENGE
+    # string, so this is not a free-form chatbot, but it is injectable context.
+    # Before enabling the gateway, replace the echo with a server-side handle:
+    # cache the W3 output under a short-lived token, return the token to the
+    # browser, and accept only that token here. See README, "Security boundary".
     transcript = str(inputs.get("transcript", ""))[:8000]
     prior = inputs.get("prior_challenges", [])
     if not isinstance(prior, list) or len(prior) > 3:
@@ -301,8 +310,12 @@ async def run(widget_id: str, request: Request):
         return JSONResponse(result)
     except HTTPException:
         raise
-    except Exception:
-        log.exception("gateway call failed widget=%s", widget_id)
+    except Exception as e:
+        # Log the failure shape only. A full traceback from an HTTP client can
+        # carry request context, and this process holds the gateway key.
+        status = getattr(getattr(e, "response", None), "status_code", None)
+        log.error("gateway call failed widget=%s error=%s status=%s",
+                  widget_id, type(e).__name__, status)
         raise HTTPException(502, "Gateway call failed")
     finally:
         log.info("run widget=%s latency_ms=%d success=%s",

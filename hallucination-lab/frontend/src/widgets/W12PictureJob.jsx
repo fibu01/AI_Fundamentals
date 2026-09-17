@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useLab } from '../lib/store.jsx'
-import { W12_GRIDS } from '../data/manifests.js'
+import { W12_GRIDS, W12_EXT } from '../data/manifests.js'
 import LabImage from '../components/LabImage.jsx'
 import { SLIDES } from '../config.js'
 
@@ -53,7 +53,7 @@ function Body() {
       <div className="img-grid">
         {Array.from({ length: grid.count }, (_, i) => (
           <div className="img-cell" key={i}>
-            <LabImage base={`images/w12/${grid.id}/${i + 1}`} alt={`Generated image ${i + 1} of 16 for the prompt "${grid.prompt}"`} />
+            <LabImage base={`images/w12/${grid.id}/${i + 1}`} ext={W12_EXT} alt={`Generated image ${i + 1} of 16 for the prompt "${grid.prompt}"`} />
             <div className="cell-controls" role="group" aria-label={`Gender tally for image ${i + 1}`}>
               {GENDERS.map((g) => (
                 <button key={g} aria-pressed={gridTally[i]?.gender === g} onClick={() => setCell(i, 'gender', g)}>{g}</button>
