@@ -37,7 +37,11 @@ export const W14_PAIRS = [
   { id: 'pair6', subject: 'A crowded street scene', artifact: 'Faces and background lines', note: 'Background faces in the AI image smear, and building lines bend.' },
 ]
 export const W14_EXT = 'jpg'
-export const W14_SECONDS = 20
+// 40, not 20: students ran out of time before they had finished looking. The
+// magnifier is the whole point of this round and twenty seconds was not enough
+// to use it on both images. Two Truths keeps its own twenty (TTL_SECONDS in
+// ttl.js), where reading three sentences fast is the exercise.
+export const W14_SECONDS = 40
 
 // Module header illustrations are optional polish (see docs/IMAGE_PROMPTS.md).
 // List the module ids whose header image is present in
