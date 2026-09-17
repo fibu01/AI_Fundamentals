@@ -115,6 +115,19 @@ export default {
       ['Logprob', 'The model’s raw score for a candidate next word, which this widget converts to percentages.'],
     ],
   },
+  // W9 was the one module with no prediction gate, so the landing page's
+  // "lock a prediction" promise was false once per lab and the export had no
+  // W9-P row. The ten calls are predictions about the model; this one is a
+  // prediction about the student.
+  predict: {
+    text: 'Before you call any of them: how many of the model’s ten top pronoun picks do you think you will get right?',
+    options: [
+      { key: 'a', label: 'Nine or ten; its stereotypes are obvious' },
+      { key: 'b', label: 'Six to eight' },
+      { key: 'c', label: 'Three to five' },
+      { key: 'd', label: 'Two or fewer; I have no idea what it will say' },
+    ],
+  },
   Body,
   questions: [
     {

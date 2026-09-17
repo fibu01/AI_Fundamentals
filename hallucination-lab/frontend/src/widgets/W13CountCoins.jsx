@@ -24,6 +24,12 @@ function Body() {
 
   return (
     <div>
+      <p><strong>Step 1: click one of the six images below to select it.</strong> Your choice turns
+        red. Then the button underneath becomes active.</p>
+      <p className="muted">
+        These are stand-in diagrams, not photographs. The instructor is replacing them with real
+        photos; the counting failure they stand for is the same either way.
+      </p>
       <div className="img-grid">
         {W13_IMAGES.map((i) => (
           <div className="img-cell" key={i.id}>
@@ -41,6 +47,7 @@ function Body() {
       <button
         className="btn-primary"
         disabled={!picked || loading}
+        title={picked ? undefined : 'Select one of the images above first'}
         onClick={async () => {
           const r = await run({ image_id: picked })
           const chosen = W13_IMAGES.find((i) => i.id === picked)
@@ -56,6 +63,7 @@ function Body() {
       >
         {loading ? 'Asking the Lab Model...' : 'Ask: How many items are in this image?'}
       </button>
+      {!picked && <p className="muted">Pick an image above to enable this button.</p>}
       {modelAnswer != null && img && (
         <OutputPanel source={res.source} recordedDate={res.recordedDate} provenance={res.provenance}>
           {`Model answer: ${modelAnswer}\nTrue count (${img.label}): ${img.trueCount}\nDifference: ${offBy}`}
@@ -75,7 +83,7 @@ export default {
   priority: 'P1',
   instruction: 'Pick an image, ask the model to count the items, then compare against the true count.',
   intro: {
-    lead: 'Hallucination is not only a text problem. A vision model does not count objects the way you do, one by one; it encodes the image as a grid of patches and produces a number that fits how the scene looks. Around fifteen to thirty similar objects, that estimate is confidently and plausibly wrong. Pick an image, get the model’s count, then check it against the true count. Run a second image before you decide the first was a fluke.',
+    lead: 'Hallucination is not only a text problem. A vision model does not count objects the way you do, one by one; it encodes the image as a grid of patches and produces a number that fits how the scene looks. Around fifteen to thirty similar objects, that estimate is confidently and plausibly wrong. Pick an image, get the model’s count, then check it against the true count. Run a second image before you decide the first was a fluke. One caveat you should hold onto: the six images below are simple diagrams, not photographs, and the counts you are about to see were recorded in advance rather than measured live. The failure they illustrate is real and documented; this particular run is a demonstration of it, not evidence for it.',
     terms: [
       ['Patch', 'A small square of the image, the unit a vision model actually processes. "About twenty coins" is a judgment on texture, not an enumeration.'],
       ['Vision-language model', 'A model that takes images plus text and answers in text, with all of the text side’s confident-guess behavior.'],

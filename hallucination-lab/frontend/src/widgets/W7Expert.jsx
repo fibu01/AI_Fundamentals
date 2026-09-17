@@ -1,14 +1,20 @@
 import React from 'react'
 import OutputPanel from '../components/OutputPanel.jsx'
 import { useRun } from '../lib/useRun.js'
-import { FACULTY_NAME, FACULTY_FIELD, SLIDES } from '../config.js'
+import { useLab } from '../lib/store.jsx'
+import { FACULTY_NAME, FACULTY_NAME_IS_PLACEHOLDER, FACULTY_FIELD, SLIDES } from '../config.js'
+
+// The field name lands mid-title ("Journal of {{FACULTY_FIELD}} Education"),
+// so it has to arrive capitalised or the fabricated journal reads as a typo.
+const FIELD_TITLE = FACULTY_FIELD.charAt(0).toUpperCase() + FACULTY_FIELD.slice(1)
 
 function fillTemplate(text) {
-  return text.replaceAll('{{FACULTY_NAME}}', FACULTY_NAME).replaceAll('{{FACULTY_FIELD}}', FACULTY_FIELD)
+  return text.replaceAll('{{FACULTY_NAME}}', FACULTY_NAME).replaceAll('{{FACULTY_FIELD}}', FIELD_TITLE)
 }
 
 function Body() {
   const { data, run, loading } = useRun('w7')
+  const { instructorMode } = useLab()
   const res = data.result
   const text = res ? fillTemplate(res.data?.text || '') : ''
   // Pull the quoted string for the barry.edu site search.
@@ -17,9 +23,16 @@ function Body() {
 
   return (
     <div>
+      {instructorMode && FACULTY_NAME_IS_PLACEHOLDER && (
+        <p className="error-note">
+          Instructor: {FACULTY_NAME} is a stand-in. Set FACULTY_NAME in src/config.js and proxy/.env
+          to a colleague who has given permission, then set FACULTY_NAME_IS_PLACEHOLDER to false.
+        </p>
+      )}
       <p className="muted">
-        The named colleague agreed to this demo in advance. Everything the model says about them below is fabricated;
-        that is the point of the widget.
+        The colleague named below agreed in advance to be this demo's test subject. Your job after the
+        run is to go and look: search barry.edu and the journal the model names, and report what you
+        find. Do not decide either way before you search.
       </p>
       <button className="btn-primary" disabled={loading} onClick={() => run({})}>
         {loading ? 'Asking the Lab Model...' : `Ask for a direct quote from ${FACULTY_NAME}`}
@@ -48,11 +61,15 @@ export default {
   id: 'w7',
   label: 'W7',
   section: 'B. Hallucination',
-  title: 'Fabricated Expert',
+  // Renamed from "Fabricated Expert": the old title answered Q1 ("Did the
+  // quoted publication exist?") before the student ran anything.
+  title: 'The Expert Quote',
   priority: 'P0',
   instruction: 'Ask the model for a real professor’s quote, then search for the publication it names.',
   intro: {
-    lead: 'Fabrication gets personal here. You will ask the model for a direct quote from a real Barry professor, and it will produce one, with a named publication, because quotes-with-sources is a pattern it has seen millions of times. This is the failure that puts invented words in a real person’s mouth in a student paper. The professor named here agreed to be the test subject.',
+    lead: FACULTY_NAME_IS_PLACEHOLDER
+      ? 'This one gets personal. You will ask the model for a direct quote from a named professor in the nursing school, and then go and check whether the quote and the publication it names are real. Quotes-with-sources is a pattern the model has seen millions of times, so it can produce the shape of an attribution whether or not there is anything behind it. Note for this run: the name below is a stand-in, not a member of Barry faculty, because the colleague for this demo has not been confirmed yet. Everything else about the experiment is unchanged.'
+      : 'Fabrication gets personal here. You will ask the model for a direct quote from a real Barry professor, then go and check whether the quote and the publication it names exist. Quotes-with-sources is a pattern it has seen millions of times, so it can produce the shape of an attribution with nothing behind it. This is the failure that puts invented words in a real person’s mouth in a student paper. The professor named here agreed to be the test subject.',
     terms: [
       ['Attribution', 'Tying words to the specific person who said them. A model can generate the format of attribution without any of the fact.'],
       ['Defamation risk', 'Publishing invented statements as someone’s real words can harm their reputation; "the AI wrote it" is not a defense.'],

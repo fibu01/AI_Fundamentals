@@ -77,7 +77,10 @@ function Draft({ draft, flags, setFlags, revealed }) {
               ) : null
             )}
           </ul>
-          <p><strong>Instructor source list:</strong></p>
+          {/* Labelled "Instructor source list" in the student view, which read
+              as something students were not meant to use. It is exactly what
+              they should use. */}
+          <p><strong>Where to check these claims yourself:</strong></p>
           <ul>
             {draft.sources.map((src) => (
               <li key={src.url}><a href={src.url} target="_blank" rel="noreferrer">{src.label}</a></li>
@@ -113,6 +116,7 @@ function Body() {
   const { runData, setWidgetData } = useLab()
   const flags = runData.fc?.flags || {}
   const revealed = !!runData.fc?.revealed
+  const [armed, setArmed] = useState(false)
 
   function setFlags(draftId, draftFlags) {
     const nextFlags = { ...flags, [draftId]: draftFlags }
@@ -127,10 +131,23 @@ function Body() {
       {FC_DRAFTS.map((d) => (
         <Draft key={d.id} draft={d} flags={flags} setFlags={setFlags} revealed={revealed} />
       ))}
-      <button className="btn-primary" disabled={revealed} onClick={() => setWidgetData('fc', { revealed: true })}>
-        Reveal the planted errors
+      {/* One click used to reveal all three drafts at once, with nothing
+          between a student and the end of the exercise. Arm it first and say
+          what it costs. */}
+      <button className="btn-primary" disabled={revealed}
+        onClick={() => (armed ? setWidgetData('fc', { revealed: true }) : setArmed(true))}>
+        {armed ? 'Yes, reveal all three drafts now' : 'Reveal the planted errors'}
       </button>
-      {!revealed && <p className="muted">Flag everything you distrust in all three drafts before revealing.</p>}
+      {armed && !revealed && (
+        <button style={{ marginLeft: 8 }} onClick={() => setArmed(false)}>Not yet, keep reading</button>
+      )}
+      {!revealed && (
+        <p className={armed ? 'error-note' : 'muted'}>
+          {armed
+            ? 'This reveals the planted errors in all three drafts at once and cannot be undone. Anything you have not flagged yet counts as missed.'
+            : 'Flag everything you distrust in all three drafts before revealing.'}
+        </p>
+      )}
     </div>
   )
 }
@@ -143,8 +160,8 @@ const draftQuestion = (draft, n) => ({
   text: `${draft.title.split(':')[0]}: how many of the planted errors did you catch?`,
   options: [
     { key: '0to2', label: '0 to 2' },
-    { key: '3to4', label: '3 to 4' },
-    { key: 'all', label: 'All of them' },
+    { key: '3to4', label: plantedErrorCount(draft) > 4 ? `3 to ${plantedErrorCount(draft) - 1}` : '3' },
+    { key: 'all', label: `All ${plantedErrorCount(draft)} of them` },
   ],
   correct: (d) => (d.revealed ? caughtBucket(d.caught?.[draft.id] ?? 0, plantedErrorCount(draft)) : null),
   explain: (d) =>

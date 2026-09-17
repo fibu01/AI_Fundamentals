@@ -1,9 +1,13 @@
 // Per-semester configuration. Edit before each run of the lab.
 
 // W7 faculty name. PRD open decision 3: pick a willing Barry colleague and
-// get their permission first. The placeholder below makes the fabrication
-// obvious until a real name is set.
-export const FACULTY_NAME = 'Dr. Jane Facultyname (PLACEHOLDER, set in src/config.js)'
+// get their permission first, then set FACULTY_NAME here and in proxy/.env.
+// Until then the widget runs on an obviously fictional stand-in. The old
+// placeholder spelled its own file path into the model's fabricated quote,
+// which students saw. FACULTY_NAME_IS_PLACEHOLDER drives an instructor-only
+// banner instead; set it to false when a real name goes in.
+export const FACULTY_NAME = 'Dr. Ellen Marsh'
+export const FACULTY_NAME_IS_PLACEHOLDER = true
 export const FACULTY_FIELD = 'nursing'
 
 // Proxy base path. Same-origin '/api' works for the dev server and for the

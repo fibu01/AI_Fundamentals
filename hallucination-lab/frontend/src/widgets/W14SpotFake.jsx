@@ -107,7 +107,7 @@ function Body() {
   return (
     <div>
       <p className="golf-score">
-        Round {round + 1} of {W14_PAIRS.length}: {pair.subject}. Which one is the REAL photo?
+        Round {round + 1} of {W14_PAIRS.length}: {pair.subject}. Which one is the REAL photo?{' '}
         <span className="streak-chip">{results.filter((r) => r === 'hit').length} right</span>
       </p>
       <div className="timer-track" role="timer" aria-label={`${Math.max(0, timeLeft)} seconds left`}>
@@ -123,7 +123,11 @@ function Body() {
       {picked != null && (
         <div style={{ marginTop: 10, display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
           <span aria-live="polite">
-            {picked === 'timeout' ? 'Time.' : picked === realSide ? 'Right.' : 'Wrong.'} The {realSide} image is the real photo.
+            {/* "Wrong. The right image is the real photo." read as "the correct
+                image" half the time. Say which side in words that cannot be
+                mistaken for a verdict. */}
+            {picked === 'timeout' ? 'Time is up.' : picked === realSide ? 'Correct.' : 'Not that one.'}{' '}
+            The photograph is the one on the {realSide}-hand side.
             {' '}{pair.artifact}: {pair.note}
           </span>
           <button className="btn-primary" onClick={next}>
@@ -145,7 +149,7 @@ export default {
   priority: 'P0',
   instruction: 'Six timed rounds: a real photo against an AI image of the same subject; pick the real one.',
   intro: {
-    lead: 'The final skill: telling generated images from photographs, under time pressure, the way you will meet them in a feed. Each round pairs a real photo with an AI image of the same kind of subject. The tells cluster in the same places every time: hands and fingers, written text, reflections and shadows, and the geometry of background lines. Use the magnifier; those areas are where local texture stops agreeing with global structure.',
+    lead: 'The final skill: telling generated images from photographs, under time pressure, the way you will meet them in a feed. Each round pairs a real photo with an AI image of the same kind of subject. The tells tend to cluster in the same places: hands and fingers, written text, reflections and shadows, and the geometry of background lines. Tend to, not always. Each generation of these models fixes some of them, so a checklist that works today is not a test you can rely on next year. Use the magnifier; those areas are where local texture stops agreeing with global structure.',
     terms: [
       ['Artifact', 'A physical impossibility a generator leaves behind: a sixth finger, letters that almost spell, a reflection with no owner.'],
       ['Local vs global', 'Generators assemble patches that look right up close without a world model that keeps the whole scene consistent. Artifacts live at the seams.'],
@@ -183,10 +187,15 @@ export default {
         { key: 'text', label: 'Garbled text' },
         { key: 'geometry', label: 'Impossible geometry' },
         { key: 'reflections', label: 'Reflections and shadows' },
+        // Round 6's tell is "Faces and background lines", which had no option
+        // here, so a student whose best catch came from that round had nothing
+        // honest to pick.
+        { key: 'faces', label: 'Faces and background lines' },
+        { key: 'none', label: 'None of them; I was guessing' },
       ],
       correct: null,
       explain:
-        'All four families come from the same cause: locally plausible texture without a global model of objects, writing, or physics. Next time, deliberately check the family you used least; the tells rotate as models improve.',
+        'Every family on this list comes from the same cause: locally plausible texture without a global model of objects, writing, or physics. If you were guessing, that is the finding worth taking away. Next time, deliberately check the family you used least; the tells rotate as models improve, and none of them is a reliable test on its own.',
       slide: SLIDES.deepfakes,
     },
   ],

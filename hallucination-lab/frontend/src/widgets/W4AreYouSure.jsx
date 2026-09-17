@@ -62,7 +62,11 @@ function Body() {
         </div>
       ))}
       <button className="btn-primary" disabled={loading || turns.length >= MAX_CHALLENGES} onClick={challenge}>
-        {loading ? 'Asking...' : `Ask: Are you sure this citation is real? (${turns.length}/${MAX_CHALLENGES})`}
+        {loading
+          ? 'Asking...'
+          : turns.length >= MAX_CHALLENGES
+            ? `All ${MAX_CHALLENGES} challenges used`
+            : `Ask: Are you sure this citation is real? (challenge ${turns.length + 1} of ${MAX_CHALLENGES})`}
       </button>
       {turns.length > 0 && (
         <p className="muted" aria-live="polite">

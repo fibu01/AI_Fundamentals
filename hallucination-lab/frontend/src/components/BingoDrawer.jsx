@@ -13,7 +13,12 @@ export const BINGO_SQUARES = [
   'Total confidence about a false claim',
   'An apology followed by a new wrong answer',
   'Two runs that contradict each other',
-  'The model admits it cannot verify',
+  // Was "The model admits it cannot verify" and "A disclaimer despite being
+  // told not to". Neither behaviour occurs anywhere in the shipped
+  // transcripts, so two of sixteen squares could never honestly be claimed and
+  // they blocked three of the ten bingo lines. Both replacements are on screen
+  // in W5 and W7.
+  'A real statute number attached to the wrong rule',
   'A pronoun chosen by stereotype',
   'A famous list missing the women on it',
   'A miscounted image',
@@ -21,7 +26,7 @@ export const BINGO_SQUARES = [
   'A statute detail invented from thin air',
   'The answer changed when challenged',
   'A grounded run says Information not found',
-  'A disclaimer despite being told not to',
+  'A journal or publication that does not exist',
   'The model gets one completely right',
 ]
 
@@ -52,7 +57,7 @@ export default function BingoDrawer() {
         <div className="bingo-drawer" role="dialog" aria-label="Hallucination Bingo card">
           <p className="question-text">Hallucination Bingo</p>
           <p className="muted">
-            Caught the model doing one of these, live, in any widget? Claim the square and name where.
+            Caught the model doing one of these in any module's output? Claim the square and name where.
             Four in a row is a bingo: tell the instructor and show them the output.
           </p>
           <div className="bingo-grid">

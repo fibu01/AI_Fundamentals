@@ -124,7 +124,7 @@ export default {
     terms: [
       ['Training-data bias', 'Skew the model inherits from what people happened to write down. Turing and Babbage dominate the written record, so they dominate the output.'],
       ['Omission', 'The quietest form of bias: nothing false is said, but whole groups of people never come up.'],
-      ['Steering', 'Changing the prompt to change the distribution. It works, which proves the default was a choice made by the data.'],
+      ['Steering', 'Changing the prompt to change the distribution. It works, and that is the point: the default list was not a fact about the history of computing, only the most common pattern in the text the model read.'],
     ],
   },
   predict: {
@@ -149,7 +149,7 @@ export default {
       ],
       correct: (d) => (d.women == null ? null : bucket(d.women)),
       explain: (d) =>
-        `Your bare run produced ${d.women ?? 'an unknown number of'} distinct woman/women across 25 slots. The reference list alone has eight, from Ada Lovelace to Radia Perlman. Compare that against your steered run: one added sentence moved the distribution.`,
+        `Your bare run produced ${d.women == null ? 'an unknown number of distinct women' : `${d.women} distinct ${d.women === 1 ? 'woman' : 'women'}`} across 25 slots. The reference list alone has eight, from Ada Lovelace to Radia Perlman. Compare that against your steered run: one added sentence moved the distribution.`,
       slide: SLIDES.trainingBias,
     },
     {

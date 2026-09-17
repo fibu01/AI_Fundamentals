@@ -21,7 +21,7 @@ function highlightFabrications(text, fabricated) {
 }
 
 function Body() {
-  const { runData, setWidgetData, answers } = useLab()
+  const { runData, answers } = useLab()
   const revealed = !!runData.w2?.revealed || !!answers.w2?.q1
   const real = <p>{W2_REAL.text}</p>
   const fake = revealed
@@ -47,11 +47,11 @@ function Body() {
         </div>
       </div>
       {!revealed && <p className="muted">Answer Q1 below to reveal which is which.</p>}
-      {!revealed && (
-        <button onClick={() => setWidgetData('w2', { revealed: true })} className="sr-only">
-          Reveal answer
-        </button>
-      )}
+      {/* A .sr-only "Reveal answer" button used to sit here. It is visually
+          hidden but still focusable, so a keyboard or screen-reader user could
+          tab straight onto the answer to Q1 before answering it. Answering Q1
+          reveals both panes for everyone, so the shortcut was redundant as well
+          as leaky. */}
     </div>
   )
 }

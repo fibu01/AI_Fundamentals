@@ -12,6 +12,24 @@ export function extractCaseNames(text) {
   return [...new Set(names)]
 }
 
+// Full citations, not just party names. Citation Sort renders the model's
+// fabrications next to real cases; when the fabricated rows lost their reporter
+// numbers and the real rows kept theirs, three of six rows were identifiable at
+// a glance and the module taught that fakes look different. They do not.
+// Returns "Name v. Name, 361 So. 3d 884 (Fla. 2d DCA 2023)" where the reporter
+// span is present, and the bare name where it is not.
+export function extractCitations(text) {
+  return extractCaseNames(text).map((name) => {
+    // Look for the reporter span that follows this name in the source text:
+    // ", 361 So. 3d 884 (Fla. 2d DCA 2023)".
+    const at = text.indexOf(name)
+    if (at < 0) return { name, full: name }
+    const tail = text.slice(at + name.length, at + name.length + 80)
+    const m = tail.match(/^,?\s*(\d+\s+[A-Za-z.]+(?:\s+[A-Za-z0-9.]+){0,3}\s+\d+\s*\([^)]{1,40}\))/)
+    return { name, full: m ? `${name}, ${m[1]}` : name }
+  })
+}
+
 // Numbers worth checking against the statute: integers, decimals,
 // dollar figures with commas, section numbers like 692.203.
 export function extractNumbers(text) {

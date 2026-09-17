@@ -68,6 +68,21 @@ function Body() {
                 { label: `Score ${s} \u2014 Resume B`, value: histogram(scoresB)[s], alt: true },
               ])}
           />
+          {/* The honest framing of a null result was buried in the explain
+              panel, which only appears after the student has answered. A
+              student staring at two identical distributions in a module about
+              bias needs the interpretation at the moment the bars land. */}
+          <p>
+            <strong>
+              {Math.abs(mean(scoresA) - mean(scoresB)) < 0.25
+                ? 'Your run shows no meaningful gap. That is a result, not a failure.'
+                : `Your run shows a gap of ${round(Math.abs(mean(scoresA) - mean(scoresB)))} points between two resumes that differ by a name and one word.`}
+            </strong>{' '}
+            A general chatbot is not Amazon's 2018 screener, which was trained on ten years of that
+            one company's hiring outcomes. Ten runs on a tuned chatbot is a weak test, and a weak
+            test finding nothing does not clear the technique. It tells you this particular probe,
+            at this size, did not move the needle.
+          </p>
         </OutputPanel>
       )}
     </div>

@@ -49,6 +49,9 @@ function Body() {
       <p className="muted">
         16 images generated before class for the prompt "{grid.prompt}" (generated {grid.generatedDate}).
         Tally each image: apparent gender presentation and apparent skin tone. "Unclear" is a valid tally.
+        {gridId === 'ceo'
+          ? ' The question below asks for this grid\u2019s share, so finish this one.'
+          : ' A partial tally is enough here; you are looking for the direction of the skew, not a precise number.'}
       </p>
       <div className="img-grid">
         {Array.from({ length: grid.count }, (_, i) => (
@@ -85,9 +88,9 @@ export default {
   section: 'C. Bias from training data',
   title: 'Picture the Job',
   priority: 'P0',
-  instruction: 'Tally the apparent gender and skin tone in each pre-generated image grid.',
+  instruction: 'Tally the CEO grid, then compare it against at least one of the other three.',
   intro: {
-    lead: 'In W8 you could steer the text model with one extra sentence. Image models give you no such lever here: these grids were generated before class from four bare prompts, and what came back is what came back. An image generator learns from billions of captioned photos, so "a CEO" returns what the internet photographed and labeled as CEOs, not who holds the job. This time you are the measuring instrument: tally all four grids yourself and let your own counts make the case. "Unclear" is a legitimate tally; do not force a read.',
+    lead: 'In W8 you could steer the text model with one extra sentence. Image models give you no such lever here: these grids were generated before class from four bare prompts, and what came back is what came back. An image generator learns from billions of captioned photos, so "a CEO" returns what the internet photographed and labeled as CEOs, not who holds the job. This time you are the measuring instrument. Tally the CEO grid in full, because the question below asks for that number, then tally enough of at least one other grid to see whether the skew runs the same way. "Unclear" is a legitimate tally; do not force a read. The fourth prompt, "a person receiving welfare", is in here on purpose: it is where a generator\u2019s assumptions are hardest to look at and most worth measuring. You are recording what the model produced, not making a claim about any real person.',
     terms: [
       ['Image model', 'A generator (Gemini, Imagen, DALL-E) trained on photo-caption pairs. It reproduces the pairing statistics of its data.'],
       ['Representation bias', 'When the training photos over-represent some pairings of job and demographic, the generated "typical" person inherits that skew.'],

@@ -74,7 +74,7 @@ function Body() {
   return (
     <div>
       <p className="golf-score">
-        Round {round + 1} of {TTL_SETS.length}: {set.topic}
+        Round {round + 1} of {TTL_SETS.length}: {set.topic}{' '}
         <span className="streak-chip">{results.filter((r) => r === 'hit').length} caught</span>
       </p>
       <div className="timer-track" role="timer" aria-label={`${Math.max(0, timeLeft)} seconds left`}>
@@ -82,13 +82,22 @@ function Body() {
       </div>
       <p className="muted">{Math.max(0, timeLeft)} seconds. Two of these are true. Click the lie.</p>
       {set.statements.map((s, i) => {
-        let state = null
-        if (picked != null) state = s.lie ? 'lie' : picked === i ? 'truth' : null
+        // Colour marks what the statement IS, not which one the student went
+        // for: every row is labelled once the round closes, so red never lands
+        // on a true sentence and green never lands on the lie. The student's
+        // own pick is called out separately, in words.
+        const state = picked == null ? null : s.lie ? 'lie' : 'truth'
+        const mine = picked === i
         return (
           <button key={i} className="ttl-statement option" data-state={state}
+            style={mine && picked >= 0 ? { outline: '3px solid var(--barry-red)' } : undefined}
             disabled={picked != null} onClick={() => pick(i)}>
             {s.text}
-            {picked != null && s.lie && <strong> ← the lie. {s.why}</strong>}
+            {picked != null && (
+              s.lie
+                ? <strong> &larr; FALSE. {s.why}{mine ? ' You caught it.' : ''}</strong>
+                : <strong> &mdash; true.{mine ? ' You picked this one, so the lie got past you.' : ''}</strong>
+            )}
           </button>
         )
       })}

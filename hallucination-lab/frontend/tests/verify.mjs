@@ -75,7 +75,7 @@ async function runModuleBody(page) {
     await click(/Re-run with/)
     await page.waitForTimeout(600)
   }
-  if (h2.includes('Fabricated Expert')) { await click(/Ask for a direct quote/); await page.locator('.output-panel').first().waitFor({ timeout: 20000 }).catch(()=>{}) }
+  if (h2.includes('Expert Quote')) { await click(/Ask for a direct quote/); await page.locator('.output-panel').first().waitFor({ timeout: 20000 }).catch(()=>{}) }
   if (h2.includes('Two Truths')) {
     for (let r = 0; r < 6; r++) {
       await page.locator('.ttl-statement').first().waitFor({ timeout: 10000 }).catch(()=>{})
@@ -112,7 +112,12 @@ async function runModuleBody(page) {
       await page.waitForTimeout(150)
     }
   }
-  if (h2.includes('Fact-Check')) { await click(/Reveal the planted errors/) }
+  if (h2.includes('Fact-Check')) {
+    // The reveal arms first, then fires, so a single click no longer reveals.
+    await click(/^Reveal the planted errors$/)
+    await click(/Yes, reveal all three drafts now/)
+    await page.waitForTimeout(300)
+  }
   return h2
 }
 
@@ -367,6 +372,116 @@ section('Asset coverage: every image the manifests reference must resolve')
   }
   check(`all ${urls.length} manifest images resolve`, missing.length === 0,
     missing.slice(0, 6).join(', ') + (missing.length > 6 ? ` +${missing.length - 6} more` : ''))
+  await page.context().close()
+}
+
+// ------------------------------------------------- pedagogy regressions
+// Each of these was a real defect found by driving the rendered app on
+// Sept 17. They are cheap to reintroduce by editing copy or CSS, so they are
+// pinned here. See the "Second-pass pedagogy audit" section of the README.
+section('Pedagogy regressions: colour semantics, answer leakage, option sets')
+{
+  const GREEN = 'rgb(240, 250, 242)'
+  const RED = 'rgb(253, 240, 238)'
+  const page = await newPage()
+  await page.getByRole('button', { name: 'Start Lab' }).click()
+
+  // Walk the lab in student mode, checking each module as it comes up. The
+  // progress gate is on, so every module has to be answered before the next.
+  for (let w = 0; w < 15; w++) {
+    const h2 = (await page.locator('h2').first().textContent()) || ''
+    await lockPrediction(page)
+
+    if (h2.includes('Fluent and False')) {
+      check('W2 has no hidden "Reveal answer" shortcut',
+        (await page.getByRole('button', { name: /Reveal answer/ }).count()) === 0)
+    }
+
+    await runModuleBody(page)
+
+    if (h2.includes('Citation Forge')) {
+      const rows = await page.locator('.sort-item').evaluateAll(
+        (n) => n.map((x) => x.innerText.split('\n')[0].trim()))
+      const cited = rows.filter((r) => /\d+\s+[A-Za-z.]+.*\d+\s*\(/.test(r))
+      check('W3 Citation Sort: fabricated rows carry full citations, like the real ones',
+        rows.length > 0 && cited.length === rows.length, `${cited.length}/${rows.length}`)
+    }
+
+    if (h2.includes('Prompt Golf')) {
+      const chip = page.locator('.num-chip[data-mark="match"]').first()
+      const bg = await chip.evaluate((el) => getComputedStyle(el).backgroundColor)
+      check('W5 "in statute" chip is neutral, not green', bg !== GREEN, bg)
+      check('W5 chip label claims presence only, not correctness',
+        (await chip.innerText()).includes('somewhere in statute'))
+      const qs = await page.locator('.question .question-text').allInnerTexts()
+      check('W5 questions use the meter\u2019s own words', qs[0].includes('invented numbers'))
+      check('W5 asks nothing that assumes runs the student may not have made',
+        !qs.some((q) => /failing runs|Your grounded summary reached/.test(q)))
+    }
+
+    if (h2.includes('Expert Quote') || h2.includes('Fabricated Expert')) {
+      const t = await page.locator('.app').innerText()
+      check('W7 leaks no PLACEHOLDER text to students', !t.includes('PLACEHOLDER'))
+      check('W7 does not call the output fabricated before the student checks',
+        !/Everything the model says about them below is fabricated/.test(t))
+      check('W7 title does not answer its own first question', !t.includes('Fabricated Expert'))
+    }
+
+    if (h2.includes('Two Truths')) {
+      // runModuleBody has played all six rounds, so re-check the last one's
+      // colours from the final round's markup before it advanced.
+      check('TTL statements are labelled in text, not colour alone',
+        (await page.locator('.app').innerText()).includes('lies caught'))
+    }
+
+    if (h2.includes('Fact-Check')) {
+      const opts = await page.locator('.question').nth(2).locator('.option').allInnerTexts()
+      check('Fact-Check buckets do not overlap on the four-error draft',
+        !(opts.some((b) => b.trim().endsWith('3 to 4')) && opts.some((b) => /All 4/.test(b))),
+        opts.map((b) => b.replace(/\s+/g, ' ').trim()).join(' | '))
+      check('Fact-Check source list is not labelled for instructors',
+        !(await page.locator('.app').innerText()).includes('Instructor source list'))
+    }
+
+    await answerAll(page, 'first')
+    await nextBtn(page).click({ timeout: 20000 })
+    await page.waitForTimeout(200)
+  }
+  const res = await page.locator('.app').innerText()
+  check('results table explains its blank verdict cells', res.includes('A dash in the Correct column'))
+  check('results table drops the stale "out-of-statute" wording', !res.includes('out-of-statute'))
+  check('W5/W6 export rows run in the order the student answered them',
+    /W6-Q1[\s\S]*W6-Q2[\s\S]*W6-Q3/.test(res))
+  await page.context().close()
+}
+{
+  // TTL colour semantics, checked mid-round: the lie used to render green and
+  // a true statement red, teaching the opposite of the module.
+  const page = await newPage()
+  await page.getByRole('button', { name: 'Start Lab' }).click()
+  for (let i = 0; i < 6; i++) {
+    await lockPrediction(page)
+    await runModuleBody(page)
+    await answerAll(page, 'first')
+    await nextBtn(page).click({ timeout: 20000 })
+    await page.waitForTimeout(150)
+  }
+  await lockPrediction(page)
+  await page.locator('.ttl-statement').first().waitFor({ timeout: 20000 })
+  await page.locator('.ttl-statement').nth(0).click()
+  await page.waitForTimeout(300)
+  const st = await page.locator('.ttl-statement').evaluateAll((n) => n.map((x) => ({
+    state: x.dataset.state, bg: getComputedStyle(x).backgroundColor, text: x.innerText,
+  })))
+  const lie = st.find((x) => x.state === 'lie')
+  const truths = st.filter((x) => x.state === 'truth')
+  check('TTL: the lie renders red, not green', !!lie && lie.bg === 'rgb(253, 240, 238)', lie && lie.bg)
+  check('TTL: true statements render green, not red',
+    truths.length === 2 && truths.every((x) => x.bg === 'rgb(240, 250, 242)'))
+  check('TTL: every statement says in words whether it is true or FALSE',
+    st.every((x) => /FALSE|\u2014 true/.test(x.text)))
+  check('TTL: disabled statement text stays readable',
+    (await page.locator('.ttl-statement').first().evaluate((el) => getComputedStyle(el).opacity)) === '1')
   await page.context().close()
 }
 

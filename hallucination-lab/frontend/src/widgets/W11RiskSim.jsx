@@ -75,6 +75,14 @@ function Body() {
         With identical true offense rates, false positives sit at {pct(s.fprA)} in A and {pct(s.fprB)} in B.
         Move one patrol slider and watch the false positives move with it.
       </p>
+      {Math.abs(patrolA - patrolB) > 0.01 && (
+        <p className="muted">
+          Notice the neighborhood you did <em>not</em> touch moved too, in the opposite direction. The
+          score ranks every resident against one shared threshold, so piling arrest records into one
+          neighborhood pushes the other one below the line. Neither number is measuring crime. Both are
+          measuring where the patrols went.
+        </p>
+      )}
     </div>
   )
 }

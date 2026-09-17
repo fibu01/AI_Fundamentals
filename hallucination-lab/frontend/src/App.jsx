@@ -31,13 +31,14 @@ function Landing() {
           <li>Answer the questions. One answer each, no retries, so run the experiment first.</li>
         </ol>
         <p>
-          Three of the modules are games with timers and streaks, and the Bingo card in the corner
+          Two of the modules are timed games with streaks, two more are scored games without a clock,
+          and the Bingo card in the corner
           follows you the whole session: claim a square whenever you catch the model doing one of the
           sixteen behaviors on it, and call a bingo out loud.
         </p>
         <p className="error-note">
-          Progress lives in this browser tab only. Do not close it until the end, where you download your
-          results file and upload it to Canvas. Closing early loses everything.
+          Progress lives in this browser tab only. Do not close it until the end, where you save your
+          results as a PDF and upload that file to Canvas. Closing early loses everything.
         </p>
       </div>
       <label className="field-label" htmlFor="student-name">Your name (you can also enter it at the end)</label>

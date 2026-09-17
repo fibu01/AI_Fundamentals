@@ -49,7 +49,7 @@ LAB_MODEL = os.environ.get("LAB_MODEL", "gemma-4-27b-it")
 VISION_ENABLED = os.environ.get("VISION_ENABLED", "0") == "1"
 RECORDED_DIR = Path(os.environ.get("RECORDED_DIR", HERE.parent / "frontend" / "src" / "data" / "recorded"))
 STATIC_DIR = os.environ.get("STATIC_DIR", str(HERE.parent / "frontend" / "dist"))
-FACULTY_NAME = os.environ.get("FACULTY_NAME", "Dr. Jane Facultyname (PLACEHOLDER)")
+FACULTY_NAME = os.environ.get("FACULTY_NAME", "Dr. Ellen Marsh")
 FACULTY_FIELD = os.environ.get("FACULTY_FIELD", "nursing")
 RATE_LIMIT_PER_MIN = int(os.environ.get("RATE_LIMIT_PER_MIN", "60"))
 IMAGES_DIR = HERE.parent / "frontend" / "public" / "images"

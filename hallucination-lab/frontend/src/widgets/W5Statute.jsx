@@ -32,7 +32,10 @@ function MarkedText({ text }) {
     parts.push(text.slice(cursor, n.index))
     parts.push(
       <span key={i} className="num-chip" data-mark={ok ? 'match' : 'mismatch'} style={{ cursor: 'default' }}>
-        {n.raw}<span className="mark-text">{ok ? 'in statute' : 'NOT in statute'}</span>
+        {/* "somewhere" is the whole claim: the check is presence, not fit. The
+            old "in statute" label, in green, read as "this figure is correct"
+            on numbers the summary had attached to the wrong rule. */}
+        {n.raw}<span className="mark-text">{ok ? 'somewhere in statute' : 'NOWHERE in statute'}</span>
       </span>
     )
     cursor = n.index + n.raw.length
@@ -78,12 +81,19 @@ function Body() {
   async function runWith(selected, slot) {
     const r = await run({ techniques: selected })
     let text = r?.data?.text || ''
+    let pinnedIndex = data.runIndex ?? null
     if (r?.source === 'recorded') {
-      const runObj = w5Recorded.runs[Math.floor(Math.random() * w5Recorded.runs.length)]
+      // Pin the transcript on the first run of the module. Drawing a fresh one
+      // per attempt meant the baseline and the technique runs came from
+      // different transcripts, so the student was not comparing like with like
+      // and an inert toggle appeared to change the output.
+      pinnedIndex = data.runIndex ?? Math.floor(Math.random() * w5Recorded.runs.length)
+      const runObj = w5Recorded.runs[pinnedIndex]
       text = runObj.variants[recordedVariant(selected)] || runObj.variants.baseline
     }
     const mm = mismatchCount(text)
     const patch = { [slot]: { text, source: r.source, recordedDate: r.recordedDate, provenance: r.provenance, mismatches: mm } }
+    if (pinnedIndex != null) patch.runIndex = pinnedIndex
     if (slot === 'attempt') {
       patch.strokes = strokes + 1
       if (mm === 0 && selected.length > 0 && !solvedWith) {
@@ -175,7 +185,7 @@ export default {
     terms: [
       ['Grounding', 'Putting the actual source text inside the prompt so the model can copy from it instead of inventing. This is what Copilot and Gemini do with web results.'],
       ['Escape hatch', 'Explicit permission to answer "Information not found." Without it, models fill gaps rather than admit them.'],
-      ['Mismatch', 'A number in the model’s summary that appears nowhere in the statute. The meter counts them automatically.'],
+      ['Invented number', 'A number in the model’s summary that appears nowhere in the statute. The meter counts these automatically. It cannot catch a real statute number quoted for the wrong rule, which is why you still have to read the source.'],
     ],
   },
   predict: {
@@ -192,7 +202,7 @@ export default {
     {
       id: 'q1',
       rowLabel: 'W5-Q1',
-      text: 'How many out-of-statute numbers did your BASELINE run contain?',
+      text: 'How many invented numbers did your BASELINE run contain?',
       options: [
         { key: '0', label: '0' },
         { key: '1', label: '1' },
@@ -204,7 +214,7 @@ export default {
       explain: (d) =>
         d.baselineMismatches == null
           ? 'Run the baseline first.'
-          : `The meter counted ${d.baselineMismatches} out-of-statute number(s) in your baseline. Remember the check is presence-only: a real statute number quoted for the wrong rule still shows as "in statute," so the meter understates the damage if anything.`,
+          : `The meter counted ${d.baselineMismatches} invented number(s) in your baseline. Remember the check is presence-only: a real statute number quoted for the wrong rule still shows as "in statute," so the meter understates the damage if anything.`,
       slide: SLIDES.fabrication,
     },
     {
@@ -225,7 +235,7 @@ export default {
     {
       id: 'q3',
       rowLabel: 'W6-Q1',
-      text: 'Which technique actually eliminated the mismatches?',
+      text: 'Which technique actually drove the invented numbers to zero?',
       options: [
         { key: 'a', label: 'Low temperature' },
         { key: 'b', label: 'Demanding checkable citations' },
@@ -238,9 +248,24 @@ export default {
       slide: SLIDES.grounding,
     },
     {
+      id: 'q4',
+      rowLabel: 'W6-Q2',
+      text: 'Between the bare baseline and the run that cleared the meter, what changed?',
+      options: [
+        { key: 'a', label: 'The model' },
+        { key: 'b', label: 'The temperature' },
+        { key: 'c', label: 'The prompt supplied the source and forbade outside facts' },
+        { key: 'd', label: 'The question' },
+      ],
+      correct: 'c',
+      explain:
+        'Same model, same question, same temperature. The only thing that changed is that the prompt carried the statute text itself. Add the escape hatch on top and "Information not found" becomes an acceptable answer instead of a gap the model fills. That is the verification-friendly way to use any AI tool.',
+      slide: SLIDES.grounding,
+    },
+    {
       id: 'q5',
       rowLabel: 'W6-Q3',
-      text: 'Your grounded summary reached zero invented numbers. Read it line by line against the statute on the right. Is every statement it makes actually correct?',
+      text: 'Take the run that cleared the meter and read its summary line by line against the statute on the right. Is every statement it makes actually correct?',
       options: [
         { key: 'a', label: 'Yes, zero invented numbers means the summary is correct' },
         { key: 'b', label: 'No, at least one real number is attached to the wrong rule' },
@@ -250,21 +275,6 @@ export default {
       correct: 'b',
       explain:
         'The grounded summary misstates the residential exception: the statute measures that distance from a military installation, and the summary attaches it to a critical infrastructure facility (or changes the mileage). Every figure in it is a real statute number, so the meter reads zero and the summary is still wrong. This is the limit of grounding. It stops the model inventing facts; it does not make the model read carefully. Checking the source yourself is the only step that catches this, and no prompt removes it.',
-      slide: SLIDES.grounding,
-    },
-    {
-      id: 'q4',
-      rowLabel: 'W6-Q2',
-      text: 'What changed between your failing runs and the passing run?',
-      options: [
-        { key: 'a', label: 'The model' },
-        { key: 'b', label: 'The temperature' },
-        { key: 'c', label: 'The prompt supplied the source and forbade outside facts' },
-        { key: 'd', label: 'The question' },
-      ],
-      correct: 'c',
-      explain:
-        'Same model, same question. The prompt carried the statute and an instruction to stay inside it, and the escape hatch made "Information not found" an acceptable answer. That combination is the verification-friendly way to use any AI tool.',
       slide: SLIDES.grounding,
     },
   ],

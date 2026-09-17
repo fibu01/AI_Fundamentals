@@ -170,7 +170,10 @@ button:disabled { opacity: 0.45; cursor: not-allowed; }
   border: 2px solid var(--barry-red); border-radius: 6px;
   background: #fdf2f4; font-weight: 700; cursor: pointer;
 }
-.num-chip[data-mark="match"] { border-color: var(--ok); background: #f0faf2; }
+/* Neutral, not green: "in statute" means the digits occur somewhere in the
+   text, never that the number was attached to the right rule. Green read as
+   "this part is correct" on numbers that were flatly wrong in context. */
+.num-chip[data-mark="match"] { border-color: #9a9a9a; background: #f4f4f4; color: var(--ink); }
 .num-chip[data-mark="mismatch"] { border-color: var(--bad); background: #fdf0ee; }
 .num-chip .mark-text { font-size: 0.75em; margin-left: 4px; font-weight: 600; }
 
@@ -306,8 +309,8 @@ input[type="text"] {
 .timer-track { height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; margin: 6px 0; }
 .timer-fill { height: 100%; background: var(--barry-red); transition: width 0.25s linear; }
 .streak-chip {
-  display: inline-block; background: #fdf2f4; border: 1px solid var(--barry-red);
-  color: var(--barry-red-dark); font-weight: 700; border-radius: 14px; padding: 2px 12px; margin: 0 4px;
+  display: inline-block; margin-left: 10px; background: #fdf2f4; border: 1px solid var(--barry-red);
+  color: var(--barry-red-dark); font-weight: 700; border-radius: 14px; padding: 2px 12px;
 }
 .golf-score { font-size: 1.1em; font-weight: 700; }
 
@@ -332,8 +335,13 @@ input[type="text"] {
 .pair-choice[data-state="wrong"] { outline: 4px solid var(--bad); }
 
 .ttl-statement { display: block; width: 100%; text-align: left; margin: 6px 0; padding: 10px 14px; }
-.ttl-statement[data-state="lie"] { border-color: var(--ok); background: #f0faf2; }
-.ttl-statement[data-state="truth"] { border-color: var(--bad); background: #fdf0ee; }
+/* Colour has to track true/false here, not "the square you were hunting".
+   The lie used to render green and a true statement red, which taught the
+   opposite of the module. Red marks the false statement; green marks a
+   statement that checked out. Both carry text as well as colour. */
+.ttl-statement[data-state="lie"] { border-color: var(--bad); background: #fdf0ee; }
+.ttl-statement[data-state="truth"] { border-color: var(--ok); background: #f0faf2; }
+.ttl-statement:disabled { opacity: 1; color: var(--ink); }
 
 .mismatch-meter { display: flex; align-items: center; gap: 10px; font-weight: 700; margin: 8px 0; }
 .mismatch-meter .count { font-size: 1.5em; color: var(--bad); }

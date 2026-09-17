@@ -49,7 +49,7 @@ frontend/tests/verify.mjs   end-to-end student journeys, a11y and recorded-only 
 cd frontend
 npm run build                    # production build
 npm run serve:dist &             # static server on :8300
-npm run verify                   # 34 checks: journeys, a11y, recorded-only
+npm run verify                   # 35 checks: journeys, a11y, recorded-only
 ```
 
 `verify` drives a real browser through a full student pass, a deliberately
@@ -131,7 +131,9 @@ and the rate limiter under real load.
    rebuild the frontend. The shipped transcripts are authored seeds and are
    marked as such in each JSON's note field; replace them with real captures.
 3. Set the W7 faculty name in `frontend/src/config.js` AND `proxy/.env`, with
-   that colleague's permission (PRD open decision 3).
+   that colleague's permission (PRD open decision 3), and set
+   `FACULTY_NAME_IS_PLACEHOLDER = false`. Until then the widget names the
+   fictional `Dr. Ellen Marsh` and says so in its intro.
 4. Generate the images: every prompt, filename, and warning is in
    `docs/IMAGE_PROMPTS.md` (W12 grids, W14 real-vs-AI pairs, optional W13
    photos and header illustrations). Keep `frontend/src/data/manifests.js`
@@ -153,6 +155,61 @@ and the rate limiter under real load.
 Re-capture each semester: recorded transcripts, the statute text in
 `frontend/src/data/statute.js` and `proxy/content/statute_692203.txt` (update
 the capture date), and the W2 real paragraph.
+
+## Second-pass pedagogy audit, Sept 17
+
+The whole lab was driven in a real browser, module by module and visual state
+by visual state, and the defects below were fixed rather than reported. What
+the screen showed is what was audited, not the source or the copy in isolation.
+
+Rules the audit enforced, which any future edit has to keep:
+
+- **Colour tracks truth, not intent.** Green means the statement, number, or
+  image is true or real. Red means false or fabricated. Two Truths and a Lie
+  used to paint the lie green and a true statement red. The W5 number chips
+  used to paint "in statute" green on figures the summary had attached to the
+  wrong rule; that mark is now neutral grey and reads "somewhere in statute",
+  which is all the check can actually prove.
+- **A game may not be winnable by formatting.** Citation Sort showed the
+  model's fabricated cases as bare party names next to fully cited real ones,
+  so three of six rows were identifiable at a glance and the module taught the
+  opposite of its own thesis. Every row now carries a full reporter citation.
+- **No question may assert something the student's own run did not do.** The
+  two W5 grounding questions asserted "your grounded summary reached zero" and
+  "your failing runs", neither guaranteed.
+- **Every option set must contain the honest answer.** W14's artifact question
+  omitted round 6's family and had no "I was guessing"; the Fact-Check buckets
+  let "3 to 4" and "All of them" both be true at four of four planted errors.
+- **Nothing student-facing may leak a developer note or an answer.** W7 printed
+  "(PLACEHOLDER, set in src/config.js)" into the model's fabricated quote, said
+  "everything below is fabricated" before the run that asked students to find
+  out, and was titled "Fabricated Expert" above a question asking whether the
+  publication existed. W2 carried a screen-reader-only "Reveal answer" button
+  that a keyboard user could tab onto before answering Q1.
+- **A null or counter-intuitive result gets its framing on screen, at the
+  moment it appears**, not in an explain panel that opens after the answer is
+  locked. W10's identical resume distributions and W11's untouched neighborhood
+  improving both do now.
+
+Open items the audit found but did not fix, because they are yours to decide:
+
+1. Every recorded transcript is an authored seed, labeled as such in each
+   output panel and in the JSON note fields. Replace with real captures
+   (`scripts/capture_recorded.py`) once the gateway is up.
+2. The W13 counting images are placeholders and say so on the image itself.
+   The module claims a vision model miscounts photographs; it currently
+   demonstrates it against flat vector shapes. Swap in six real photos and set
+   `trueCount` from an actual count.
+3. W7's faculty name is the fictional `Dr. Ellen Marsh`. Set FACULTY_NAME and
+   FACULTY_NAME_IS_PLACEHOLDER in `src/config.js` and `proxy/.env` once a
+   colleague agrees; the intro text switches automatically.
+4. In Citation Sort the real pile is US Supreme Court and the fabricated pile
+   is Florida DCA. With citations restored this is much weaker than it was,
+   but a student who notices the court level still has a shortcut. Adding
+   Florida appellate cases to `realcases.js` would close it.
+5. Red is both the selected-state colour (`aria-pressed`) and the error colour.
+   No module currently depends on telling them apart, but the collision is
+   there if new UI is added.
 
 ## Deviations from the PRD, with reasons
 

@@ -111,7 +111,9 @@ export default {
     },
     {
       id: 'q2',
-      text: 'Raising temperature made the output:',
+      // The widget shows a probability distribution, never two sampled
+      // outputs, so "made the output:" asked about something not on screen.
+      text: 'You watched the top word’s share shrink as the temperature rose. What does that do to the text the model actually writes?',
       options: [
         { key: 'a', label: 'More accurate' },
         { key: 'b', label: 'More varied and less predictable' },
