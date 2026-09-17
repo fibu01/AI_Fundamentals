@@ -63,6 +63,62 @@ jobs:
       # Requires Pages to be enabled once by the repo owner:
       # Settings > Pages > Source: GitHub Actions. The workflow token cannot
       # turn it on itself.
+      # ---- preview channel -------------------------------------------------
+      # GitHub Pages serves one site per repo, so the candidate build ships as
+      # a subdirectory of the same site: students stay on the root URL and the
+      # preview lives at /preview/. Every step here is continue-on-error, so a
+      # broken dev branch can never stop the student site from deploying. If
+      # these steps fail the root build still ships and /preview/ is simply
+      # absent or stale.
+      - name: Check out the dev branch for the preview build
+        continue-on-error: true
+        uses: actions/checkout@v4
+        with:
+          ref: claude/keen-goodall-f0m7ce
+          path: preview-src
+
+      - name: Collect instructor images for the preview build
+        continue-on-error: true
+        run: |
+          DEST=preview-src/hallucination-lab/frontend/public/images
+          mkdir -p "$DEST"
+          for SRC in preview-src/frontend/public/images preview-src/images preview-src; do
+            for GRID in w12 w13 w14 headers; do
+              if [ -d "$SRC/$GRID" ] && [ "$SRC/$GRID" != "$DEST/$GRID" ]; then
+                mkdir -p "$DEST/$GRID"
+                cp -r "$SRC/$GRID/." "$DEST/$GRID/"
+              fi
+            done
+          done
+
+      - name: Build the preview
+        continue-on-error: true
+        working-directory: preview-src/hallucination-lab/frontend
+        env:
+          VITE_STATIC_ONLY: '1'
+          VITE_BUILD_CHANNEL: preview
+        run: npm ci && npx vite build
+
+      - name: Publish the preview under /preview/
+        continue-on-error: true
+        run: |
+          SRC=preview-src/hallucination-lab/frontend/dist
+          if [ -d "$SRC" ]; then
+            rm -rf hallucination-lab/frontend/dist/preview
+            cp -r "$SRC" hallucination-lab/frontend/dist/preview
+            echo "preview published, $(find hallucination-lab/frontend/dist/preview -type f | wc -l) files"
+          else
+            echo "preview build produced nothing; the student site ships without it"
+          fi
+
+      - name: Confirm the student build is untouched
+        run: |
+          test -f hallucination-lab/frontend/dist/index.html
+          if grep -rq "PREVIEW BUILD" hallucination-lab/frontend/dist/assets/*.js; then
+            echo "::error::the preview banner leaked into the student build"; exit 1
+          fi
+          echo "student build intact"
+
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
