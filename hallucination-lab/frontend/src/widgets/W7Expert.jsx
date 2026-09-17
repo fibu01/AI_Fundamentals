@@ -88,15 +88,20 @@ export default {
   questions: [
     {
       id: 'q1',
-      text: 'Did the quoted publication exist?',
+      // Was "Did the quoted publication exist?", keyed No. The live model names
+      // real journals (Nursing Management, Nursing Outlook), so that key was
+      // wrong the moment real captures replaced the seed. Ask about the quote,
+      // which never exists whatever outlet the model picks, and the real-journal
+      // case makes the point harder rather than breaking it.
+      text: 'You searched for the quote. Did you find the person actually saying those words anywhere?',
       options: [
-        { key: 'yes', label: 'Yes' },
-        { key: 'no', label: 'No' },
-        { key: 'unclear', label: 'Could not tell' },
+        { key: 'yes', label: 'Yes, I found the quote in the publication it named' },
+        { key: 'no', label: 'No, the quote turns up nowhere' },
+        { key: 'unclear', label: 'I could not tell either way' },
       ],
       correct: 'no',
       explain:
-        'The model attached a real person’s name to a quote and a publication it generated on the spot. A search of barry.edu and the named outlet turns up nothing, because neither the interview nor the quote ever happened.',
+        'The quote does not exist. Note what the model did with the source: it may well have named a real journal, one you can look up and read. That makes the fabrication harder to catch, not easier. A real person, a real publication, and words neither of them ever produced is the exact shape of the problem, and the only thing that separates it from a genuine quote is you going and looking.',
       slide: SLIDES.fabrication,
     },
     {
