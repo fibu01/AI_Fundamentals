@@ -98,7 +98,41 @@ lesson depends on, plus a `plantedErrors` block describing each one. A raw
 capture would lose that and `npm run verify` will fail. If you do re-capture
 W5, re-plant one mistake per grounded variant and update `plantedErrors`.
 
-## Running the preview channel
+## Running the lab with real model calls
+
+The hosted lab is static. There is nowhere on GitHub Pages to keep the API key
+except inside the public JavaScript bundle, so the hosted URLs never call the
+gateway, including `/preview/`. Live calls need the proxy running somewhere,
+and the launcher scripts do that on your own machine in one command.
+
+Windows (PowerShell):
+
+```powershell
+cd $HOME\Documents
+git clone https://github.com/fibu01/AI_Fundamentals.git
+cd AI_Fundamentals
+git checkout claude/keen-goodall-f0m7ce
+cd hallucination-lab
+$env:GATEWAY_API_KEY = "sk-..."
+.\scripts\run_live_preview.ps1
+```
+
+macOS or Linux:
+
+```bash
+git clone https://github.com/fibu01/AI_Fundamentals.git
+cd AI_Fundamentals && git checkout claude/keen-goodall-f0m7ce
+cd hallucination-lab
+GATEWAY_API_KEY=sk-... ./scripts/run_live_preview.sh
+```
+
+Both open http://localhost:8100/. They need Node 20+ and Python 3.11+; the
+script names whichever is missing and stops. An output panel reads **Live run**
+when the call reached the model, against **Recorded from the Lab Model** or
+**Example transcript** when it did not, so there is no guessing about which
+path a widget took.
+
+## Serving the preview channel by hand
 
 ```
 cd frontend && npm run build:preview          # -> dist-preview/, live mode
