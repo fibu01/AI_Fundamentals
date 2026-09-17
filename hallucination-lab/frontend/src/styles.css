@@ -385,3 +385,13 @@ input[type="text"] {
   .summary-table tr { break-inside: avoid; }
   a { text-decoration: none; color: inherit; }
 }
+
+/* Preview channel only: never rendered on the student site. Deliberately loud,
+   because the whole point is that you can tell the two builds apart at a
+   glance when both are open in tabs. */
+.preview-banner {
+  background: #b8860b; color: #fff; font-weight: 700; text-align: center;
+  padding: 8px 14px; border-radius: 8px; margin-bottom: 12px;
+}
+.preview-banner a { color: #fff; }
+@media print { .preview-banner { display: none; } }

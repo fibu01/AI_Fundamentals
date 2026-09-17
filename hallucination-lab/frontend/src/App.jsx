@@ -104,10 +104,20 @@ function WidgetPage({ widget, position, total }) {
   )
 }
 
+// Set only by the preview build (VITE_BUILD_CHANNEL=preview). The student
+// site never sets it, so this banner cannot appear there.
+const PREVIEW_CHANNEL = import.meta.env.VITE_BUILD_CHANNEL === 'preview'
+
 export default function App() {
   const { started, index, instructorMode } = useLab()
   return (
     <div className={`app${instructorMode ? ' instructor' : ''}`}>
+      {PREVIEW_CHANNEL && (
+        <div className="preview-banner">
+          PREVIEW BUILD &mdash; not the student site. The version students use is at{' '}
+          <a href="../">the main lab URL</a>.
+        </div>
+      )}
       {instructorMode && (
         <div className="instructor-banner">
           Instructor mode: answer keys visible, predictions and progress gates off, answers re-clickable.
