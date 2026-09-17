@@ -20,6 +20,40 @@ ROOT="$PWD"
 # listens on all interfaces, not just loopback.
 if [ -n "${CODESPACES:-}${GITPOD_WORKSPACE_ID:-}" ]; then : "${HOST:=0.0.0.0}"; else : "${HOST:=127.0.0.1}"; fi
 
+# Codespaces manages node through nvm, which only lands on PATH for login
+# shells. A codespace created before .devcontainer existed has no node at all
+# until the container is rebuilt. Find it rather than dying on "npm: command
+# not found" halfway through.
+if ! command -v npm >/dev/null 2>&1; then
+  for d in "${NVM_DIR:-}" /usr/local/share/nvm "$HOME/.nvm"; do
+    [ -n "$d" ] && [ -s "$d/nvm.sh" ] || continue
+    export NVM_DIR="$d"
+    # shellcheck disable=SC1091
+    . "$d/nvm.sh" >/dev/null 2>&1 || true
+    command -v npm >/dev/null 2>&1 && break
+  done
+fi
+if ! command -v npm >/dev/null 2>&1; then
+  for b in /usr/local/share/nvm/versions/node/*/bin /usr/local/nvm/versions/node/*/bin; do
+    [ -x "$b/npm" ] && PATH="$b:$PATH" && export PATH && break
+  done
+fi
+if ! command -v npm >/dev/null 2>&1; then
+  cat >&2 <<'ERR'
+node/npm not found.
+
+In a Codespace this usually means the container predates .devcontainer/.
+Either rebuild it (F1 -> "Codespaces: Rebuild Container", a few minutes), or
+install node for this session:
+
+  curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - && sudo apt-get install -y nodejs
+
+Elsewhere: install Node 20+ from https://nodejs.org
+ERR
+  exit 1
+fi
+echo "==> node $(node --version), npm $(npm --version)"
+
 if [ -z "${GATEWAY_API_KEY:-}" ] && [ -f proxy/.env ]; then
   set -a; . ./proxy/.env; set +a
 fi
