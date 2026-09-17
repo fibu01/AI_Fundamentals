@@ -138,16 +138,15 @@ export default {
   questions: [
     {
       id: 'q1',
-      text: 'Look only at the three cases the Lab Model wrote in the output panel above. How many of those three turned out to be real?',
+      text: 'Before you clicked Check, could you tell the invented citations from the real ones just by reading them?',
       options: [
-        { key: '0', label: '0' },
-        { key: '1', label: '1' },
-        { key: '2', label: '2' },
-        { key: '3', label: '3' },
+        { key: 'a', label: 'Yes, the fake ones read differently' },
+        { key: 'b', label: 'I guessed, and some guesses happened to be right' },
+        { key: 'c', label: 'No, they all read like real citations' },
       ],
-      correct: '0',
+      correct: null,
       explain: (d) =>
-        `All three of the Lab Model's cases are invented: it generates citations from patterns in legal writing, not from any record of decided cases. The three real cases in the sort did not come from the model at all. The lab supplied them, so the sort had something genuine to compare against. Your sort score was ${d.sortScore ?? 'not recorded'} of 6. The useful question is whether the invented ones LOOKED any less real to you before you checked.`,
+        `Whatever you answered, here is what the reveal showed: all three of the Lab Model's cases were invented, and the three genuine ones came from a list the lab supplied, not from the model. You scored ${d.sortScore ?? 'an unrecorded number'} of 6. The model builds citations from patterns in legal writing, so an invented one carries the same volume, reporter and page structure as a real one. Reading more carefully does not separate them. Opening the docket does.`,
       slide: SLIDES.fabrication,
     },
     {

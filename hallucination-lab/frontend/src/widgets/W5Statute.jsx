@@ -45,8 +45,25 @@ function Meter({ label, count }) {
   return (
     <p className="mismatch-meter">
       {label}: <span className={`count${count === 0 ? ' zero' : ''}`}>{count}</span>{' '}
-      number(s) the statute does not contain
+      invented number(s) &mdash; figures that appear nowhere in the statute
     </p>
+  )
+}
+
+// Reaching zero is where the misreading lives: the meter only asks whether
+// each figure appears somewhere in the statute, never whether it was attached
+// to the right rule. Say so at the moment the student sees the zero.
+function ZeroCaveat() {
+  return (
+    <div className="card" style={{ borderLeftColor: 'var(--warn-border, #b8860b)' }}>
+      <p><strong>Zero invented numbers. Now read the summary against the statute anyway.</strong></p>
+      <p>
+        This meter checks one narrow thing: does each figure appear somewhere in the statute text?
+        It cannot tell whether a real number was attached to the right rule. Grounding stopped the
+        model inventing figures. It did not make the summary true, and at least one statement on the
+        left is still wrong. Find it.
+      </p>
+    </div>
   )
 }
 
@@ -111,9 +128,9 @@ function Body() {
       {baseline && (
         <div className="card">
           <p className="question-text golf-score">
-            Prompt Golf: get the summary to ZERO out-of-statute numbers. Par: {PAR} techniques.
+            Prompt Golf: drive the invented numbers to ZERO. Par: {PAR} techniques.
             {solvedWith
-              ? ` Solved with ${solvedWith.techniques.length} technique(s) in ${solvedWith.strokes} run(s): ${solvedWith.techniques.join(', ')}.`
+              ? ` Meter cleared with ${solvedWith.techniques.length} technique(s) in ${solvedWith.strokes} run(s): ${solvedWith.techniques.join(', ')}. Clearing the meter is not the same as a correct summary.`
               : ` Runs so far: ${strokes}.`}
           </p>
           <TechniquePanel
@@ -133,8 +150,10 @@ function Body() {
               <OutputPanel source={attempt.source} recordedDate={attempt.recordedDate} provenance={attempt.provenance}>
                 <MarkedText text={attempt.text} />
               </OutputPanel>
-              {attempt.mismatches > 0 && (
+              {attempt.mismatches > 0 ? (
                 <p className="muted">Still leaking invented numbers. Not every technique attacks this failure; think about which one gives the model the text it is missing.</p>
+              ) : (
+                <ZeroCaveat />
               )}
             </>
           )}
@@ -150,7 +169,7 @@ export default {
   section: 'B. Hallucination',
   title: 'Statute vs Summary: Prompt Golf',
   priority: 'P0',
-  instruction: 'Get the model’s statute summary to zero invented numbers, in as few techniques as you can.',
+  instruction: 'Drive the invented numbers to zero in as few techniques as you can, then check whether the summary is actually right.',
   intro: {
     lead: 'Naming a statute in your prompt does not hand the model the statute; it only sets the style of the answer. First run the bare question and count how many numbers the model invents. Then it is a game: apply techniques from Tuesday until the summary contains zero numbers the statute does not, using as few toggles as possible. Some toggles will not help at all. Finding out which ones fail, and why, is the experiment. One warning before you start: hitting zero on this meter does not mean the summary is correct. The meter only checks whether each number appears somewhere in the statute.',
     terms: [
@@ -216,6 +235,21 @@ export default {
       correct: 'c',
       explain: (d) =>
         `Only grounding gives the model the missing text; every other toggle just changes how the fabrication sounds. Low temperature makes the wrong numbers consistent, not correct.${d.solvedWith ? ` You solved it with ${d.solvedWith.techniques.join(' + ')} against a par of ${PAR}.` : ' Keep playing until the meter reads zero; the export records how you solved it.'} Now the limit: a zero here means every number appeared somewhere in the statute, not that the summary says what the statute says. Grounding cuts invention; it does not certify the answer. You still have to read the source.`,
+      slide: SLIDES.grounding,
+    },
+    {
+      id: 'q5',
+      rowLabel: 'W6-Q3',
+      text: 'Your grounded summary reached zero invented numbers. Read it line by line against the statute on the right. Is every statement it makes actually correct?',
+      options: [
+        { key: 'a', label: 'Yes, zero invented numbers means the summary is correct' },
+        { key: 'b', label: 'No, at least one real number is attached to the wrong rule' },
+        { key: 'c', label: 'No, it invented a number the meter missed' },
+        { key: 'd', label: 'Impossible to tell without a lawyer' },
+      ],
+      correct: 'b',
+      explain:
+        'The grounded summary misstates the residential exception: the statute measures that distance from a military installation, and the summary attaches it to a critical infrastructure facility (or changes the mileage). Every figure in it is a real statute number, so the meter reads zero and the summary is still wrong. This is the limit of grounding. It stops the model inventing facts; it does not make the model read carefully. Checking the source yourself is the only step that catches this, and no prompt removes it.',
       slide: SLIDES.grounding,
     },
     {
