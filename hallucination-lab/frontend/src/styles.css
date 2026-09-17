@@ -359,3 +359,21 @@ input[type="text"] {
   background: #fdf2f4; border-left: 3px solid var(--barry-red);
   font-size: 0.92em;
 }
+
+/* Print / Save as PDF: the results page is the submission artifact, so the
+   printed copy drops every control and keeps only the record. */
+.print-header { display: none; }
+
+@media print {
+  .no-print, .bingo-fab, .bingo-drawer, .instructor-banner { display: none !important; }
+  .print-header { display: block; }
+  .app { max-width: none; padding: 0; font-size: 11pt; }
+  body { background: #fff; }
+  h1 { font-size: 16pt; }
+  h2 { font-size: 13pt; }
+  .card { break-inside: avoid; background: #fff; }
+  .summary-table { font-size: 9pt; }
+  .summary-table th { background: #f2f2f2 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .summary-table tr { break-inside: avoid; }
+  a { text-decoration: none; color: inherit; }
+}

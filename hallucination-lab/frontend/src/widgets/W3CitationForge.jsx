@@ -71,7 +71,13 @@ function Body() {
         <>
           <OutputPanel source={res.source} recordedDate={res.recordedDate} provenance={res.provenance}>{text}</OutputPanel>
           <div className="card">
-            <p className="question-text">Citation Sort: the model’s three cases are shuffled below with three real ones. Mark each Real or Fake, then check. Score to beat: 6 of 6.</p>
+            <p className="question-text">Citation Sort</p>
+            <p>
+              The six rows below come from two places: the <strong>three cases the Lab Model just
+              wrote above</strong>, shuffled with <strong>three real cases the lab supplied</strong>
+              (actual U.S. Supreme Court decisions). Mark each Real or Fake, then check.
+              Score to beat: 6 of 6.
+            </p>
             {items.map((it, i) => {
               const verdict = checked ? ((verdicts[i] === 'real') === it.isReal ? 'right' : 'wrong') : null
               return (
@@ -132,7 +138,7 @@ export default {
   questions: [
     {
       id: 'q1',
-      text: 'How many of the MODEL’s three cases survived verification in a real docket or reporter?',
+      text: 'Look only at the three cases the Lab Model wrote in the output panel above. How many of those three turned out to be real?',
       options: [
         { key: '0', label: '0' },
         { key: '1', label: '1' },
@@ -141,7 +147,7 @@ export default {
       ],
       correct: '0',
       explain: (d) =>
-        `The Lab Model generates citations from patterns, not records, so its cases do not exist. If one of yours actually checked out, tell the instructor: that is a rare event worth examining at the front. Your sort score was ${d.sortScore ?? 'not recorded'} of 6; notice whether the fakes FELT different from the real ones before you verified. One tell in this build: the real cases are U.S. Supreme Court citations and the fakes are Florida So. 3d citations, a shortcut that will not exist outside this lab.`,
+        `All three of the Lab Model's cases are invented: it generates citations from patterns in legal writing, not from any record of decided cases. The three real cases in the sort did not come from the model at all. The lab supplied them, so the sort had something genuine to compare against. Your sort score was ${d.sortScore ?? 'not recorded'} of 6. The useful question is whether the invented ones LOOKED any less real to you before you checked.`,
       slide: SLIDES.fabrication,
     },
     {
