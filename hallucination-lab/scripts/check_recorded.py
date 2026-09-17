@@ -95,10 +95,25 @@ def check(d):
                     fail(name, f"run {i}: no topic, the widget selects transcripts by topic")
 
         elif name == "w4":
+            # Mirrors classifyChallengeReply in frontend/src/lib/utils.js.
+            ADMIT = re.compile(r"cannot verify|can't verify|do not know|don't know|"
+                               r"not able to confirm|may not exist|i made that up|not a real|"
+                               r"not real|hallucinat|fabricat|made (them|that|it) up|"
+                               r"no such (case|decision)")
             for i, r in enumerate(runs):
                 turns = r.get("turns") or []
                 if len(turns) < 3:
                     fail(name, f"run {i}: {len(turns)} challenge turns, widget asks 3")
+                # Q1 is keyed "apologized and either restated the same case or
+                # produced a new one, without checking anything". If a captured
+                # model actually backs down on every challenge, that key is
+                # wrong and the module is teaching something that did not
+                # happen. Better behaviour from the model is good news and a
+                # content change, not something to paper over.
+                if turns and all(ADMIT.search(t.lower()) for t in turns):
+                    fail(name, f"run {i}: the model admits it cannot verify on every challenge. "
+                               "Q1's answer key says it re-asserts without checking; re-key the "
+                               "question or keep the seed.")
 
         elif name == "w5":
             for i, r in enumerate(runs):
