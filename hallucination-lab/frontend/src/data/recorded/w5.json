@@ -1,0 +1,52 @@
+{
+ "widget": "w5",
+ "recorded_date": "2026-09-14",
+ "provenance": "seed",
+ "note": "Seed transcripts authored during build. Each run carries one output per technique variant so the recorded fallback can answer any toggle combination: baseline (no techniques), low_temp (still fabricates, just consistently), ground (source pasted), ground_fallback (source plus escape hatch). Replace with real captures. Every grounded variant carries exactly one deliberate misattribution in the residential exception: a real statute number bound to the wrong rule, so the number meter reads zero while the summary is still wrong. plantedErrors describes each one so the widget can show the student the comparison instead of making them hunt blind. If you re-record these, keep one planted error per grounded variant and update plantedErrors to match, or the module loses its point.",
+ "runs": [
+  {
+   "variants": {
+    "baseline": "Florida Statute 692.203 restricts the purchase of real property by foreign principals from countries of concern. Key provisions:\n\n1. Foreign principals may not own or acquire any interest in real property within 20 miles of a military installation or critical infrastructure facility in Florida.\n\n2. A natural person holding a valid non-tourist visa may purchase one residential property of up to 5 acres, provided it is at least 10 miles from any military installation.\n\n3. Foreign principals who owned qualifying property before July 1, 2023 may keep it but must register with the Department of Commerce; late registration carries a civil penalty of $500 per day.\n\n4. Property acquired by inheritance must be divested within 2 years.\n\n5. Violations are a first-degree misdemeanor for the buyer and the seller.",
+    "low_temp": "Florida Statute 692.203 restricts foreign ownership of real property near sensitive facilities:\n\n1. Foreign principals from countries of concern may not acquire real property within 10 miles of a military installation or critical infrastructure facility.\n\n2. A natural person with a valid visa may purchase one residential property of up to 5 acres if it is at least 15 miles from a military installation.\n\n3. Owners must register with the Department of Commerce within 60 days; late registration carries a $500 daily penalty.\n\n4. Property acquired by devise or descent must be divested within 3 years.\n\n5. Violations are a second-degree misdemeanor.",
+    "ground": "Based on the source text provided:\n\n1. A foreign principal may not own or acquire any interest in real property on or within 10 miles of any military installation or critical infrastructure facility in Florida (subsection 1).\n\n2. Residential exception: a foreign principal who is a natural person may purchase one residential real property up to 2 acres in size, if the parcel is not on or within 5 miles of any critical infrastructure facility and the person holds a qualifying visa or asylum documentation (subsection 4).\n\n3. Property owned before July 1, 2023 may be retained but no additional property may be acquired (subsection 2). Late registration carries a civil penalty of $1,000 for each day late (subsection 3(b)).\n\n4. Property acquired by devise or descent must be divested within 3 years (subsection 5).\n\n5. Violations by buyer or seller are second-degree misdemeanors (subsections 8 and 9).",
+    "ground_fallback": "From the source text:\n\n1. Prohibition: real property on or within 10 miles of any military installation or critical infrastructure facility (subsection 1).\n\n2. Residential exception: one residential property up to 2 acres, not on or within 5 miles of any critical infrastructure facility, for a natural person holding a current verified non-tourist visa or asylum documentation (subsection 4).\n\n3. Registration: pre-July 1, 2023 interests had to be registered by December 31, 2023 (late after January 31, 2024); new qualifying acquisitions within 30 days; late filing carries a $1,000 daily civil penalty (subsection 3).\n\n4. Divestment period for property acquired by devise, descent, or debt collection: 3 years (subsection 5).\n\n5. Regarding agricultural land and lease arrangements under this section: Information not found."
+   },
+   "plantedErrors": {
+    "ground": {
+     "claim": "not on or within 5 miles of any critical infrastructure facility",
+     "statute": "(4)(a) The parcel is not on or within 5 miles of any military installation in this state.",
+     "where": "subsection (4)(a), the residential exception",
+     "why": "The 5-mile figure is real and it is in the statute, but it applies only to military installations. Critical infrastructure facilities are covered by the 10-mile rule in subsection (1), and the residential exception does not mention them at all. Every number here is genuine; one of them is pointed at the wrong thing."
+    },
+    "ground_fallback": {
+     "claim": "not on or within 5 miles of any critical infrastructure facility",
+     "statute": "(4)(a) The parcel is not on or within 5 miles of any military installation in this state.",
+     "where": "subsection (4)(a), the residential exception",
+     "why": "The 5-mile figure is real and it is in the statute, but it applies only to military installations. Critical infrastructure facilities are covered by the 10-mile rule in subsection (1), and the residential exception does not mention them at all. Every number here is genuine; one of them is pointed at the wrong thing."
+    }
+   }
+  },
+  {
+   "variants": {
+    "baseline": "Summary of Florida Statute 692.203 (foreign ownership of real property):\n\nThe statute bars foreign principals from countries of concern from owning or acquiring real property located within 10 miles of any military installation or within 25 miles of critical infrastructure such as power plants, seaports, and water treatment facilities.\n\nResidential exception: an individual with a lawful visa may buy a single residential parcel no larger than 1 acre, so long as it sits more than 5 miles from a military installation.\n\nRegistration: affected owners had to register with the Florida Department of State by June 30, 2024. The daily fine for late registration is $1,000.\n\nEnforcement: noncompliant property may be forfeited to the state, and a knowing violation is a third-degree felony.",
+    "low_temp": "Florida Statute 692.203 addresses foreign ownership of real property near sensitive sites:\n\n1. Prohibition: foreign principals cannot purchase real property within 10 miles of military installations or critical infrastructure facilities.\n\n2. Residential carve-out: a foreign national with a valid work or student visa may purchase one home on up to 2 acres, but only if the property is more than 10 miles from a military installation.\n\n3. Grandfathering: property owned before January 1, 2023 may be retained but must be registered within 90 days.\n\n4. Penalties: unregistered owners face fines of $1,000 per day, and the purchase itself is a second-degree misdemeanor.",
+    "ground": "Using only the source text:\n\n1. A foreign principal may not directly or indirectly own or acquire any interest, except a de minimus indirect interest, in real property on or within 10 miles of any military installation or critical infrastructure facility (subsection 1).\n\n2. A foreign principal who is a natural person may purchase one residential real property up to 2 acres if the parcel is not on or within 10 miles of any military installation and the buyer holds a qualifying visa or asylum documentation (subsection 4).\n\n3. Late registration with the Department of Commerce carries a civil penalty of $1,000 for each day late (subsection 3(b)).\n\n4. Property acquired by devise or descent on or after July 1, 2023 must be divested within 3 years (subsection 5).\n\n5. Buyer and seller violations are misdemeanors of the second degree (subsections 8 and 9).",
+    "ground_fallback": "From the source text only:\n\n1. Core rule: no ownership or acquisition of real property on or within 10 miles of any military installation or critical infrastructure facility (subsection 1).\n\n2. Residential exception: one residential property, up to 2 acres, not on or within 10 miles of any military installation, purchased in the name of a natural person holding a qualifying visa or asylum documentation (subsection 4).\n\n3. Registration deadline for pre-July 2023 interests: December 31, 2023, considered late after January 31, 2024; penalty $1,000 per day (subsection 3(b)).\n\n4. Whether the statute defines a list of countries of concern: Information not found in the source text.\n\n5. Violations are second-degree misdemeanors for both buyer and seller (subsections 8 and 9)."
+   },
+   "plantedErrors": {
+    "ground": {
+     "claim": "not on or within 10 miles of any military installation",
+     "statute": "(4)(a) The parcel is not on or within 5 miles of any military installation in this state.",
+     "where": "subsection (4)(a), the residential exception",
+     "why": "10 miles is a real figure from this statute, but it belongs to the general prohibition in subsection (1). The residential exception uses 5 miles. The summary swapped one real number for another real number and the meter, which only asks whether a figure appears anywhere in the text, saw nothing wrong."
+    },
+    "ground_fallback": {
+     "claim": "not on or within 10 miles of any military installation",
+     "statute": "(4)(a) The parcel is not on or within 5 miles of any military installation in this state.",
+     "where": "subsection (4)(a), the residential exception",
+     "why": "10 miles is a real figure from this statute, but it belongs to the general prohibition in subsection (1). The residential exception uses 5 miles. The summary swapped one real number for another real number and the meter, which only asks whether a figure appears anywhere in the text, saw nothing wrong."
+    }
+   }
+  }
+ ]
+}

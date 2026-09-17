@@ -1,0 +1,33 @@
+{
+  "widget": "w8",
+  "recorded_date": "2026-09-14",
+  "provenance": "seed",
+  "note": "Seed transcripts authored during build. One set of five answers per prompt variant, so students can compare the bare prompt against steered prompts in recorded mode. Replace with real captures.",
+  "runs": [
+    {
+      "variants": {
+        "bare": [
+          "Five historical pioneers of computer science:\n1. Alan Turing\n2. Charles Babbage\n3. John von Neumann\n4. Ada Lovelace\n5. Claude Shannon",
+          "Here are five pioneers of computer science:\n1. Alan Turing\n2. John von Neumann\n3. Charles Babbage\n4. Donald Knuth\n5. Dennis Ritchie",
+          "Five historical pioneers of computer science:\n1. Charles Babbage\n2. Alan Turing\n3. Claude Shannon\n4. John McCarthy\n5. Edsger Dijkstra",
+          "1. Alan Turing\n2. Charles Babbage\n3. Ada Lovelace\n4. John von Neumann\n5. Tim Berners-Lee",
+          "Five pioneers of computer science:\n1. Alan Turing\n2. John von Neumann\n3. Claude Shannon\n4. Charles Babbage\n5. Ken Thompson"
+        ],
+        "women": [
+          "Five historical pioneers of computer science, including at least two women:\n1. Ada Lovelace\n2. Grace Hopper\n3. Alan Turing\n4. Charles Babbage\n5. Margaret Hamilton",
+          "1. Grace Hopper\n2. Ada Lovelace\n3. Alan Turing\n4. Katherine Johnson\n5. John von Neumann",
+          "Five pioneers, including at least two women:\n1. Ada Lovelace\n2. Alan Turing\n3. Grace Hopper\n4. Jean Bartik\n5. Claude Shannon",
+          "1. Ada Lovelace\n2. Grace Hopper\n3. Barbara Liskov\n4. Charles Babbage\n5. Alan Turing",
+          "Five historical pioneers of computer science:\n1. Grace Hopper\n2. Ada Lovelace\n3. Margaret Hamilton\n4. Alan Turing\n5. John von Neumann"
+        ],
+        "world": [
+          "Five pioneers of computer science from around the world:\n1. Alan Turing (United Kingdom)\n2. Konrad Zuse (Germany)\n3. John von Neumann (Hungary/United States)\n4. Alexey Lyapunov (Soviet Union)\n5. Ada Lovelace (United Kingdom)",
+          "1. Konrad Zuse (Germany)\n2. Alan Turing (United Kingdom)\n3. Sergei Lebedev (Soviet Union)\n4. Claude Shannon (United States)\n5. Edsger Dijkstra (Netherlands)",
+          "Five international pioneers of computer science:\n1. Alan Turing (UK)\n2. Konrad Zuse (Germany)\n3. John von Neumann (Hungary)\n4. Edsger Dijkstra (Netherlands)\n5. Niklaus Wirth (Switzerland)",
+          "1. Alan Turing (United Kingdom)\n2. Konrad Zuse (Germany)\n3. Andrey Kolmogorov (Soviet Union)\n4. Charles Babbage (United Kingdom)\n5. Grace Hopper (United States)",
+          "Five pioneers from around the world:\n1. Konrad Zuse (Germany)\n2. Alan Turing (United Kingdom)\n3. Sergei Lebedev (Soviet Union)\n4. Niklaus Wirth (Switzerland)\n5. John von Neumann (Hungary/United States)"
+        ]
+      }
+    }
+  ]
+}
