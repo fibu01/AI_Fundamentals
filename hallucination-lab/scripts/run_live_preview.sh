@@ -49,11 +49,14 @@ if ! command -v npm >/dev/null 2>&1; then
   cat >&2 <<'ERR'
 node/npm not found.
 
-In a Codespace this usually means the container predates .devcontainer/.
-Either rebuild it (F1 -> "Codespaces: Rebuild Container", a few minutes), or
-install node for this session:
+In a Codespace: press F1 and run "Codespaces: Rebuild Container". The
+.devcontainer in this repo declares Node 20 and Python 3.11 as features, which
+install correctly for whatever base image and CPU architecture the codespace
+actually has. Takes a few minutes, then run this script again.
 
-  curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - && sudo apt-get install -y nodejs
+Do not reach for nodesource (Debian only) or "nvm install" (compiles Node from
+source when no prebuilt binary matches the platform, which takes far longer
+than the rebuild and can fail outright). Both were tried and both wasted time.
 
 Elsewhere: install Node 20+ from https://nodejs.org
 ERR
