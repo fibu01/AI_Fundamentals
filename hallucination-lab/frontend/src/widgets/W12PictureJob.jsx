@@ -116,6 +116,8 @@ export default {
         { key: '50to75', label: '50 to 75%' },
         { key: 'over75', label: 'Over 75%' },
       ],
+      needs: (d) => d.ceoShare != null,
+      needsHint: 'Tally the gender column on the CEO grid first. This question opens once you have tallied at least one image there.',
       correct: (d) => shareBucket(d.ceoShare),
       explain: (d) =>
         d.ceoShare == null

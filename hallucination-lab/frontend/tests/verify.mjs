@@ -375,6 +375,63 @@ section('Asset coverage: every image the manifests reference must resolve')
   await page.context().close()
 }
 
+// ------------------------------------------------- one-shot answers vs runs
+section('Run-dependent questions stay shut until the run exists')
+{
+  // Answers lock on the first click. A question scored against a run the
+  // student has not made yet burns that single answer for nothing.
+  const page = await newPage()
+  await page.getByRole('button', { name: 'Start Lab' }).click()
+  for (let i = 0; i < 4; i++) {
+    await lockPrediction(page)
+    await runModuleBody(page)
+    await answerAll(page, 'first')
+    await nextBtn(page).click({ timeout: 20000 })
+    await page.waitForTimeout(150)
+  }
+  await page.locator('h2', { hasText: 'Prompt Golf' }).waitFor({ timeout: 10000 })
+  await lockPrediction(page)
+  const q1 = page.locator('.question').first()
+  check('W5 Q1 is not answerable before the baseline has been run',
+    await q1.locator('.option').first().isDisabled())
+  check('W5 Q1 says what it is waiting for',
+    /Run the bare question first/.test(await q1.innerText()))
+  check('Next explains that a run is outstanding, not just an answer',
+    /still waiting on a run/.test(await page.locator('.app').innerText()))
+
+  await page.getByRole('button', { name: /Run the bare question/ }).click()
+  await page.locator('.mismatch-meter').first().waitFor({ timeout: 20000 })
+  check('W5 Q1 opens once the baseline exists',
+    !(await q1.locator('.option').first().isDisabled()))
+  const q3 = page.locator('.question').nth(2)
+  check('W5 questions about the cleared run stay shut until it is cleared',
+    await q3.locator('.option').first().isDisabled())
+  await page.context().close()
+}
+
+// ------------------------------------------------- W5 transcript integrity
+section('W5 recorded transcripts: every grounded variant carries one documented mistake')
+{
+  const w5 = (await import('../src/data/recorded/w5.json', { with: { type: 'json' } })).default
+  const problems = []
+  for (const [i, r] of w5.runs.entries()) {
+    for (const v of ['ground', 'ground_fallback']) {
+      const text = r.variants[v]
+      const pe = r.plantedErrors?.[v]
+      if (!text) { problems.push(`run${i}/${v}: missing variant`); continue }
+      if (!pe) { problems.push(`run${i}/${v}: no plantedErrors entry`); continue }
+      for (const f of ['claim', 'statute', 'where', 'why']) {
+        if (!pe[f]) problems.push(`run${i}/${v}: plantedErrors.${f} empty`)
+      }
+      if (pe.claim && !text.includes(pe.claim)) {
+        problems.push(`run${i}/${v}: claim not present in the transcript`)
+      }
+    }
+  }
+  check(`all ${w5.runs.length * 2} grounded variants document their planted mistake`,
+    problems.length === 0, problems.join('; '))
+}
+
 // ------------------------------------------------- pedagogy regressions
 // Each of these was a real defect found by driving the rendered app on
 // Sept 17. They are cheap to reintroduce by editing copy or CSS, so they are
@@ -408,6 +465,29 @@ section('Pedagogy regressions: colour semantics, answer leakage, option sets')
     }
 
     if (h2.includes('Prompt Golf')) {
+      // The zero state must never tell a student to hunt for a mistake unaided,
+      // and must never claim one it cannot show them.
+      const cav = page.locator('.card', { hasText: 'That is not the same as a correct summary' }).last()
+      if (await cav.count()) {
+        const cavText = await cav.innerText()
+        check('W5 zero state does not send the student on a blind hunt', !/Find it\./.test(cavText))
+        check('W5 zero state names the sentence to check', /residential exception/.test(cavText))
+        check('W5 zero state offers the comparison on demand',
+          (await page.getByRole('button', { name: /Show me the two lines side by side/ }).count()) === 1)
+        await page.getByRole('button', { name: /Show me the two lines side by side/ }).click()
+        await page.waitForTimeout(200)
+        const opened = await cav.innerText()
+        const claim = (opened.match(/\u201c([^\u201d]+)\u201d/) || [])[1] || ''
+        const body = (await page.locator('.output-body').last().innerText())
+          .replace(/(somewhere|NOWHERE) in statute/g, '').replace(/\s+/g, ' ')
+        check('W5 the quoted mistake is really in the model output this student saw',
+          !!claim && body.includes(claim.replace(/\s+/g, ' ')), claim)
+        check('W5 shows the statute line beside it',
+          /not on or within 5 miles of any military installation/.test(opened))
+      }
+      const sb = (await page.locator('.mismatch-meter').last().innerText()).replace(/\s+/g, ' ')
+      check('W5 restates the baseline count beside the questions that ask for it',
+        /your baseline run: \d+ invented number/i.test(sb), sb)
       const chip = page.locator('.num-chip[data-mark="match"]').first()
       const bg = await chip.evaluate((el) => getComputedStyle(el).backgroundColor)
       check('W5 "in statute" chip is neutral, not green', bg !== GREEN, bg)

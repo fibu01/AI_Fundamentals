@@ -190,6 +190,29 @@ Rules the audit enforced, which any future edit has to keep:
   moment it appears**, not in an explain panel that opens after the answer is
   locked. W10's identical resume distributions and W11's untouched neighborhood
   improving both do now.
+- **Never grade a student on finding something the lab hid from them.** W5's
+  zero state told students "at least one statement is still wrong. Find it."
+  and then auto-graded a one-shot question on it: a hunt through 1,200 words of
+  statute for a subtle misattribution, with no way to self-check and a penalty
+  for failing. One of the four grounded transcripts had no planted mistake at
+  all, so those students were hunting for nothing. Every grounded variant now
+  carries exactly one documented mistake (`plantedErrors` in
+  `data/recorded/w5.json`), the zero state names the subsection it lives in and
+  opens the model's line beside the statute's on request, and the question is
+  comprehension about that comparison rather than a test of who spotted it. If
+  you re-record these transcripts, keep one planted mistake per grounded
+  variant and update `plantedErrors`; `npm run verify` fails if a variant loses
+  its entry or the quoted claim stops matching the text.
+- **A one-shot question may not open before the run it scores.** Every
+  question whose answer key is computed from run data now declares `needs` and
+  `needsHint` (see `components/Questions.jsx`): its options stay disabled, it
+  says what it is waiting for, and the Next button explains that a run is
+  outstanding rather than just an unanswered question. Before this a student
+  could spend their single answer on "how many invented numbers did your
+  baseline contain?" before running anything.
+- **Ask only for numbers that are on the same screen as the question.** W5's
+  first question asks for the baseline count while the page has scrolled to the
+  latest attempt, so both counts are now restated directly above the questions.
 
 Open items the audit found but did not fix, because they are yours to decide:
 

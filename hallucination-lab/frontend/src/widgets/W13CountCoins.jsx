@@ -108,6 +108,8 @@ export default {
         { key: 'off1to2', label: 'Off by 1 to 2' },
         { key: 'off3plus', label: 'Off by 3 or more' },
       ],
+      needs: (d) => d.offBy != null,
+      needsHint: 'Pick an image and run the count first. This question opens once the model has answered.',
       correct: (d) => offBucket(d.offBy),
       explain: (d) =>
         d.offBy == null

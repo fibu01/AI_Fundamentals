@@ -51,9 +51,15 @@ function Landing() {
 }
 
 function WidgetPage({ widget, position, total }) {
-  const { index, setIndex, answers, predictions, instructorMode } = useLab()
+  const { index, setIndex, answers, predictions, runData, instructorMode } = useLab()
   const widgetAnswers = answers[widget.id] || {}
   const allAnswered = widget.questions.every((q) => widgetAnswers[q.id])
+  // Some questions stay shut until the experiment they ask about has been run,
+  // so "answer everything to continue" is not the whole story.
+  const widgetRun = runData[widget.id] || {}
+  const waitingOnRun = widget.questions.some(
+    (q) => !widgetAnswers[q.id] && q.needs && !q.needs(widgetRun)
+  )
   const canNext = allAnswered || instructorMode
   const Body = widget.Body
 
@@ -77,7 +83,9 @@ function WidgetPage({ widget, position, total }) {
         <button
           className="btn-primary"
           disabled={!canNext}
-          title={canNext ? undefined : 'Answer every question on this widget to continue'}
+          title={canNext ? undefined : waitingOnRun
+            ? 'Run the experiment, then answer every question on this widget'
+            : 'Answer every question on this widget to continue'}
           onClick={() => setIndex(index + 1)}
         >
           {position === total ? 'Finish and download my results' : 'Next'}
@@ -87,7 +95,9 @@ function WidgetPage({ widget, position, total }) {
         <p className="muted">
           {!predictions[widget.id] && widget.predict
             ? 'Lock a prediction to open the experiment; Next unlocks once every question is answered.'
-            : 'Next unlocks once every question on this widget is answered.'}
+            : waitingOnRun
+              ? 'One or more questions below are still waiting on a run. Do the experiment first, then answer them; Next unlocks after that.'
+              : 'Next unlocks once every question on this widget is answered.'}
         </p>
       )}
     </div>

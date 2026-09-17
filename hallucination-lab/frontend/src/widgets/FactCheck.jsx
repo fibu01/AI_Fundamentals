@@ -163,6 +163,8 @@ const draftQuestion = (draft, n) => ({
     { key: '3to4', label: plantedErrorCount(draft) > 4 ? `3 to ${plantedErrorCount(draft) - 1}` : '3' },
     { key: 'all', label: `All ${plantedErrorCount(draft)} of them` },
   ],
+  needs: (d) => !!d.revealed,
+  needsHint: 'Flag what you distrust in all three drafts, then reveal the planted errors. This question opens once you do.',
   correct: (d) => (d.revealed ? caughtBucket(d.caught?.[draft.id] ?? 0, plantedErrorCount(draft)) : null),
   explain: (d) =>
     d.revealed

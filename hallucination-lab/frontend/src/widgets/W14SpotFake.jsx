@@ -174,6 +174,8 @@ export default {
         { key: '3to4', label: '3 to 4' },
         { key: '5to6', label: '5 to 6' },
       ],
+      needs: (d) => (d.round ?? 0) >= W14_PAIRS.length,
+      needsHint: 'Play all six rounds first. This question opens when the game ends.',
       correct: (d) => (d.round >= W14_PAIRS.length ? scoreBucket(d.score ?? 0) : null),
       explain: (d) =>
         `You identified ${d.score ?? 0} of 6 real photos, best streak ${d.streak ?? 0}. Generators improve every few months, so treat today’s tells as a habit of looking, not a permanent checklist.`,

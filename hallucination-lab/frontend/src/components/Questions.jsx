@@ -27,12 +27,19 @@ export default function Questions({ widgetId, questions }) {
         const chosen = widgetAnswers[q.id]
         const locked = !!chosen && !instructorMode
         const correctKey = getCorrectKey(q, widgetData)
+        // Answers are one-shot, so a question about a run the student has not
+        // made yet costs them their single answer for nothing and is scored
+        // against data that does not exist. `needs` holds it shut until the
+        // experiment has produced what the question asks about.
+        const waitingFor = !chosen && q.needs && !q.needs(widgetData) ? q.needsHint : null
         return (
           <div className="question" key={q.id}>
             <div className="question-text" id={`${widgetId}-${q.id}-label`}>
               Q{qi + 1}. {q.text}
-              {!chosen && <span className="one-shot-tag"> one answer, no retries</span>}
+              {!chosen && !waitingFor && <span className="one-shot-tag"> one answer, no retries</span>}
+              {waitingFor && <span className="one-shot-tag"> waiting on your run</span>}
             </div>
+            {waitingFor && <p className="muted">{waitingFor}</p>}
             <div role="radiogroup" aria-labelledby={`${widgetId}-${q.id}-label`}>
               {q.options.map((opt, oi) => {
                 const showKey = instructorMode && correctKey === opt.key
@@ -41,7 +48,7 @@ export default function Questions({ widgetId, questions }) {
                     key={opt.key}
                     role="radio"
                     aria-checked={chosen === opt.key}
-                    disabled={locked && chosen !== opt.key}
+                    disabled={(locked && chosen !== opt.key) || !!waitingFor}
                     className={`option${showKey ? ' correct-key' : ''}`}
                     onClick={() => setAnswer(widgetId, q.id, opt.key)}
                   >

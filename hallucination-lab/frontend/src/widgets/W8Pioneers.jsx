@@ -147,6 +147,8 @@ export default {
         { key: '3to5', label: '3 to 5' },
         { key: 'more', label: 'More than 5' },
       ],
+      needs: (d) => d.women != null,
+      needsHint: 'Run the bare prompt first. This question opens once its five runs come back.',
       correct: (d) => (d.women == null ? null : bucket(d.women)),
       explain: (d) =>
         `Your bare run produced ${d.women == null ? 'an unknown number of distinct women' : `${d.women} distinct ${d.women === 1 ? 'woman' : 'women'}`} across 25 slots. The reference list alone has eight, from Ada Lovelace to Radia Perlman. Compare that against your steered run: one added sentence moved the distribution.`,

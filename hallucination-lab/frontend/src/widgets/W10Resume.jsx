@@ -117,6 +117,8 @@ export default {
   questions: [
     {
       id: 'q1',
+      needs: (d) => d.meanA != null && d.meanB != null,
+      needsHint: 'Score both resumes first. This question opens once the ten runs each come back.',
       text: 'Did the scores differ?',
       options: [
         { key: 'yes', label: 'Yes' },

@@ -55,18 +55,73 @@ function Meter({ label, count }) {
 
 // Reaching zero is where the misreading lives: the meter only asks whether
 // each figure appears somewhere in the statute, never whether it was attached
-// to the right rule. Say so at the moment the student sees the zero.
-function ZeroCaveat() {
+// to the right rule.
+//
+// This used to say "at least one statement is still wrong. Find it." and stop
+// there, with a graded one-shot question waiting. That is a hunt through 1,200
+// words of statute for a subtle misattribution, with no way to check yourself
+// and a penalty for failing, which is a trap rather than a lesson. The point
+// is that a clean meter does not certify a summary; students learn that faster
+// by being shown the discrepancy than by failing to find it. So: look first if
+// you want to, then open the comparison. Nothing is graded on finding it.
+function ZeroCaveat({ planted }) {
+  const [shown, setShown] = React.useState(false)
   return (
     <div className="card" style={{ borderLeftColor: 'var(--warn-border, #b8860b)' }}>
-      <p><strong>Zero invented numbers. Now read the summary against the statute anyway.</strong></p>
+      <p><strong>Zero invented numbers. That is not the same as a correct summary.</strong></p>
       <p>
-        This meter checks one narrow thing: does each figure appear somewhere in the statute text?
+        The meter checks one narrow thing: does each figure appear somewhere in the statute text?
         It cannot tell whether a real number was attached to the right rule. Grounding stopped the
-        model inventing figures. It did not make the summary true, and at least one statement on the
-        left is still wrong. Find it.
+        model inventing figures; it did not make the model read carefully.
       </p>
+      {planted ? (
+        <>
+          <p>
+            There is exactly one such mistake in this summary, in{' '}
+            <strong>{planted.where}</strong>. Try to spot it before you open the comparison, but you
+            are not graded on finding it, so open it whenever you like.
+          </p>
+          {!shown ? (
+            <button onClick={() => setShown(true)}>Show me the two lines side by side</button>
+          ) : (
+            <div className="compare" style={{ marginTop: 10 }}>
+              <div className="pane">
+                <h4 style={{ margin: '0 0 6px' }}>What the model wrote</h4>
+                <p style={{ margin: 0 }}>&ldquo;{planted.claim}&rdquo;</p>
+              </div>
+              <div className="pane">
+                <h4 style={{ margin: '0 0 6px' }}>What the statute says</h4>
+                <p style={{ margin: 0 }}>{planted.statute}</p>
+              </div>
+            </div>
+          )}
+          {shown && <p style={{ marginBottom: 0 }}>{planted.why}</p>}
+        </>
+      ) : (
+        <p style={{ marginBottom: 0 }}>
+          Read the summary line by line against the statute on the right before you trust it. A
+          right number cited for the wrong rule passes this meter every time.
+        </p>
+      )}
     </div>
+  )
+}
+
+// The questions ask about numbers the student saw further up a long page. Keep
+// both counts next to the questions so answering is reading, not recall.
+function Scoreboard({ baseline, attempt }) {
+  if (baseline == null) return null
+  return (
+    <p className="mismatch-meter" style={{ flexWrap: 'wrap' }}>
+      For the questions below &mdash; your baseline run:{' '}
+      <span className={`count${baseline === 0 ? ' zero' : ''}`}>{baseline}</span> invented number(s).
+      {attempt != null && (
+        <>
+          {' '}Your latest attempt:{' '}
+          <span className={`count${attempt === 0 ? ' zero' : ''}`}>{attempt}</span>.
+        </>
+      )}
+    </p>
   )
 }
 
@@ -82,6 +137,7 @@ function Body() {
     const r = await run({ techniques: selected })
     let text = r?.data?.text || ''
     let pinnedIndex = data.runIndex ?? null
+    let planted = null
     if (r?.source === 'recorded') {
       // Pin the transcript on the first run of the module. Drawing a fresh one
       // per attempt meant the baseline and the technique runs came from
@@ -89,10 +145,14 @@ function Body() {
       // and an inert toggle appeared to change the output.
       pinnedIndex = data.runIndex ?? Math.floor(Math.random() * w5Recorded.runs.length)
       const runObj = w5Recorded.runs[pinnedIndex]
-      text = runObj.variants[recordedVariant(selected)] || runObj.variants.baseline
+      const variant = recordedVariant(selected)
+      text = runObj.variants[variant] || runObj.variants.baseline
+      // Only the grounded variants carry a documented planted error. A live
+      // run carries none, and the caveat must not claim one that is not there.
+      planted = runObj.plantedErrors?.[variant] || null
     }
     const mm = mismatchCount(text)
-    const patch = { [slot]: { text, source: r.source, recordedDate: r.recordedDate, provenance: r.provenance, mismatches: mm } }
+    const patch = { [slot]: { text, source: r.source, recordedDate: r.recordedDate, provenance: r.provenance, mismatches: mm, planted } }
     if (pinnedIndex != null) patch.runIndex = pinnedIndex
     if (slot === 'attempt') {
       patch.strokes = strokes + 1
@@ -163,12 +223,16 @@ function Body() {
               {attempt.mismatches > 0 ? (
                 <p className="muted">Still leaking invented numbers. Not every technique attacks this failure; think about which one gives the model the text it is missing.</p>
               ) : (
-                <ZeroCaveat />
+                <ZeroCaveat planted={attempt.planted} />
               )}
             </>
           )}
         </div>
       )}
+      <Scoreboard
+        baseline={baseline ? baseline.mismatches : null}
+        attempt={attempt ? attempt.mismatches : null}
+      />
     </div>
   )
 }
@@ -202,6 +266,8 @@ export default {
     {
       id: 'q1',
       rowLabel: 'W5-Q1',
+      needs: (d) => d.baselineMismatches != null,
+      needsHint: 'Run the bare question first. This question opens once the baseline meter has a number in it.',
       text: 'How many invented numbers did your BASELINE run contain?',
       options: [
         { key: '0', label: '0' },
@@ -235,6 +301,8 @@ export default {
     {
       id: 'q3',
       rowLabel: 'W6-Q1',
+      needs: (d) => !!d.solvedWith,
+      needsHint: 'Play the game first: toggle techniques and re-run until the meter reads zero. This question opens then.',
       text: 'Which technique actually drove the invented numbers to zero?',
       options: [
         { key: 'a', label: 'Low temperature' },
@@ -250,6 +318,8 @@ export default {
     {
       id: 'q4',
       rowLabel: 'W6-Q2',
+      needs: (d) => !!d.solvedWith,
+      needsHint: 'This one opens once a run has cleared the meter, so you have both halves to compare.',
       text: 'Between the bare baseline and the run that cleared the meter, what changed?',
       options: [
         { key: 'a', label: 'The model' },
@@ -265,16 +335,24 @@ export default {
     {
       id: 'q5',
       rowLabel: 'W6-Q3',
-      text: 'Take the run that cleared the meter and read its summary line by line against the statute on the right. Is every statement it makes actually correct?',
+      needs: (d) => !!d.solvedWith,
+      needsHint: 'This one opens once a run has cleared the meter and the comparison above is on screen.',
+      text: 'Your grounded run reached zero invented numbers, and the comparison above shows one of its statements is still wrong. What does that tell you about the meter?',
       options: [
-        { key: 'a', label: 'Yes, zero invented numbers means the summary is correct' },
-        { key: 'b', label: 'No, at least one real number is attached to the wrong rule' },
-        { key: 'c', label: 'No, it invented a number the meter missed' },
-        { key: 'd', label: 'Impossible to tell without a lawyer' },
+        { key: 'a', label: 'Nothing; zero on the meter still means the summary is correct' },
+        { key: 'b', label: 'A number can be real and still be attached to the wrong rule, and the meter cannot see that' },
+        { key: 'c', label: 'The meter missed a number the model invented' },
+        { key: 'd', label: 'The statute is too complicated to summarize at all' },
       ],
-      correct: 'b',
-      explain:
-        'The grounded summary misstates the residential exception: the statute measures that distance from a military installation, and the summary attaches it to a critical infrastructure facility (or changes the mileage). Every figure in it is a real statute number, so the meter reads zero and the summary is still wrong. This is the limit of grounding. It stops the model inventing facts; it does not make the model read carefully. Checking the source yourself is the only step that catches this, and no prompt removes it.',
+      // Unscored when no planted error is documented: a live run has none, and
+      // marking a student wrong for a mistake that is not on their screen is
+      // exactly the trap this question used to be.
+      correct: (d) => (d.attempt?.planted ? 'b' : null),
+      explain: (d) =>
+        (d.attempt?.planted
+          ? `The summary said "${d.attempt.planted.claim}". ${d.attempt.planted.why} `
+          : 'Compare each figure against the rule it is attached to, not just against the statute as a whole. ') +
+        'That is the limit of grounding, and it is the reason this module exists. Grounding stops the model inventing facts; it does not make the model read carefully, and no prompt you can write removes the step where you check the source yourself. You were not asked to find this one unaided, because catching it is a skill you build with practice, not a test you pass on the first try. The habit is what transfers: when an AI hands you a number, find the sentence in the source that the number came from.',
       slide: SLIDES.grounding,
     },
   ],

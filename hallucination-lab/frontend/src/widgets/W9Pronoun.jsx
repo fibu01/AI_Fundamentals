@@ -134,6 +134,8 @@ export default {
       id: 'q1',
       text: 'Which occupation had the strongest tilt toward "she"?',
       options: OCCUPATIONS.map((o) => ({ key: o, label: o })),
+      needs: (d) => !!d.sheTilt,
+      needsHint: 'Lock all ten calls and run the batch first. This question opens once you have the model’s numbers.',
       correct: (d) => d.sheTilt || null,
       explain: (d) =>
         d.sheTilt

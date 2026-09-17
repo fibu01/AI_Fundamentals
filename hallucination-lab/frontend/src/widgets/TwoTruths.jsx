@@ -150,6 +150,8 @@ export default {
         { key: '3to4', label: '3 to 4' },
         { key: '5to6', label: '5 to 6' },
       ],
+      needs: (d) => (d.round ?? 0) >= TTL_SETS.length,
+      needsHint: 'Play all six rounds first. This question opens when the game ends.',
       correct: (d) => (d.round >= TTL_SETS.length ? scoreBucket(d.score ?? 0) : null),
       explain: (d) =>
         `You caught ${d.score ?? 0} of 6 against your prediction. Whatever the score, notice which rounds you got right for the wrong reason: a guess that happens to land is not verification.`,
