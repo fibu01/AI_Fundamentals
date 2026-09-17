@@ -16,6 +16,9 @@ ROOT="$PWD"
 : "${GATEWAY_BASE_URL:=https://ai-gateway.barry.edu/v1}"
 : "${LAB_MODEL:=gemma-4-31b-it}"
 : "${PORT:=8100}"
+# Codespaces and other remote containers forward a port only if the server
+# listens on all interfaces, not just loopback.
+if [ -n "${CODESPACES:-}${GITPOD_WORKSPACE_ID:-}" ]; then : "${HOST:=0.0.0.0}"; else : "${HOST:=127.0.0.1}"; fi
 
 if [ -z "${GATEWAY_API_KEY:-}" ] && [ -f proxy/.env ]; then
   set -a; . ./proxy/.env; set +a
@@ -51,7 +54,7 @@ python3 -m pip install -q -r requirements.txt
 
 echo "==> starting the proxy on :$PORT"
 set -a; . ./.env; set +a
-python3 -m uvicorn app:app --port "$PORT" &
+python3 -m uvicorn app:app --host "$HOST" --port "$PORT" &
 PROXY_PID=$!
 trap 'kill $PROXY_PID 2>/dev/null || true' EXIT INT TERM
 
@@ -60,12 +63,18 @@ for _ in $(seq 1 30); do
   if curl -fsS "http://localhost:$PORT/api/health" >/dev/null 2>&1; then break; fi
 done
 
+if [ -n "${CODESPACE_NAME:-}" ]; then
+  PUBLIC_URL="https://${CODESPACE_NAME}-${PORT}.${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN:-app.github.dev}/"
+  echo
+  echo "Codespace detected. Open the PORTS tab, set port $PORT visibility to Public,"
+  echo "then share this URL:"
+fi
 echo
 curl -s "http://localhost:$PORT/api/health"; echo
 cat <<MSG
 
-  Live preview:  http://localhost:$PORT/
-  Instructor:    http://localhost:$PORT/?mode=instructor
+  Live preview:  ${PUBLIC_URL:-http://localhost:$PORT/}
+  Instructor:    ${PUBLIC_URL:-http://localhost:$PORT/}?mode=instructor
 
   Output panels say "Live run" when the call reached the model. This gateway
   runs at about 5.5 tokens/second, so W7 takes roughly 12 seconds and W3 or W5

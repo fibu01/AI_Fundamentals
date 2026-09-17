@@ -98,7 +98,29 @@ lesson depends on, plus a `plantedErrors` block describing each one. A raw
 capture would lose that and `npm run verify` will fail. If you do re-capture
 W5, re-plant one mistake per grounded variant and update `plantedErrors`.
 
-## Running the lab with real model calls
+## Live model calls on GitHub, no local machine
+
+GitHub Pages serves static files, so no hosted URL can call the gateway: the
+key would have to sit in the public JavaScript bundle. Codespaces runs a
+backend, so it can.
+
+1. On https://github.com/fibu01/AI_Fundamentals, switch to branch
+   `claude/keen-goodall-f0m7ce`, then **Code, Codespaces, Create codespace on
+   this branch**. First build takes two or three minutes and installs
+   everything.
+2. In its terminal:
+   ```
+   cd hallucination-lab
+   GATEWAY_API_KEY=sk-... ./scripts/run_live_preview.sh
+   ```
+3. The script prints an `https://<name>-8100.app.github.dev/` URL. Open it. To
+   let anyone else reach it, set port 8100 to **Public** in the PORTS tab.
+
+That URL runs the real proxy, so panels read **Live run**. The key stays in the
+Codespace environment and never enters the browser bundle. The Codespace stops
+on idle and Codespaces bills by the hour, so shut it down when you are done.
+
+## Running the lab with real model calls, locally
 
 The hosted lab is static. There is nowhere on GitHub Pages to keep the API key
 except inside the public JavaScript bundle, so the hosted URLs never call the
