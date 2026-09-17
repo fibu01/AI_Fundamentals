@@ -45,6 +45,12 @@ log = logging.getLogger("lab-proxy")
 HERE = Path(__file__).resolve().parent
 GATEWAY_BASE_URL = os.environ.get("GATEWAY_BASE_URL", "").rstrip("/")
 GATEWAY_API_KEY = os.environ.get("GATEWAY_API_KEY", "")
+# The Barry gateway returns roughly 5.5 tokens/second on gemma-4-31b-it, so a
+# 200-token answer takes ~37s and a full W3 citation set takes longer. 30s cut
+# those off mid-generation and returned 502. This ceiling is for the capture
+# script and instructor use; the browser has its own 10s timeout and falls
+# back to a recorded transcript long before this fires.
+GATEWAY_TIMEOUT_S = float(os.environ.get("GATEWAY_TIMEOUT_S", "180"))
 LAB_MODEL = os.environ.get("LAB_MODEL", "gemma-4-27b-it")
 VISION_ENABLED = os.environ.get("VISION_ENABLED", "0") == "1"
 RECORDED_DIR = Path(os.environ.get("RECORDED_DIR", HERE.parent / "frontend" / "src" / "data" / "recorded"))
@@ -84,7 +90,7 @@ async def gateway_chat(client: httpx.AsyncClient, messages, temperature=None, to
             "top_p": T.DEFAULT_TOP_P if top_p is None else top_p,
             "max_tokens": T.DEFAULT_MAX_TOKENS if max_tokens is None else max_tokens,
         },
-        timeout=30.0,
+        timeout=GATEWAY_TIMEOUT_S,
     )
     resp.raise_for_status()
     return resp.json()["choices"][0]["message"]["content"]
@@ -102,7 +108,7 @@ async def gateway_next_token_logprobs(client: httpx.AsyncClient, prompt: str, te
             "temperature": temperature,
             "logprobs": top_k,
         },
-        timeout=30.0,
+        timeout=GATEWAY_TIMEOUT_S,
     )
     resp.raise_for_status()
     data = resp.json()["choices"][0]["logprobs"]

@@ -1,0 +1,96 @@
+# Gateway and the two channels
+
+Two independent channels, so work in progress can never reach students.
+
+| | Production | Preview |
+|---|---|---|
+| Who uses it | Students, in class | You, before class |
+| URL | https://fibu01.github.io/AI_Fundamentals/ | http://localhost:8100/ (wherever the proxy runs) |
+| Branch | `lab-stable-w4` (frozen) | `claude/keen-goodall-f0m7ce` |
+| Build | `npm run build` → `dist/`, `VITE_STATIC_ONLY=1` | `npm run build:preview` → `dist-preview/` |
+| Model calls | None. Bundled transcripts only. | Live, through the proxy |
+| Deploys on push | Yes, GitHub Actions | No |
+
+A push to the dev branch used to republish the student site. It no longer
+does: `.github/workflows/deploy-pages.yml` triggers only on `lab-stable-w4`
+and `main`. **To ship, merge the dev branch into `lab-stable-w4` and push.**
+
+## Do not put the gateway in front of students on Thursday
+
+Measured against `https://ai-gateway.barry.edu/v1`, model `gemma-4-31b-it`,
+on the day of class:
+
+| Output length | Wall time | Rate |
+|---|---|---|
+| 60 tokens | 11.5 s | 5.2 tok/s |
+| 200 tokens | 36.6 s | 5.5 tok/s |
+| 220 tokens | 39.9 s | 5.5 tok/s |
+
+Linear, and repeatable across runs. The browser's own timeout is 10 s
+(`CALL_TIMEOUT_MS` in `src/config.js`), so in a live build essentially every
+widget would spin for ten seconds and then fall back to a recorded transcript
+anyway. Some widgets are far worse than one call:
+
+- W8 runs the prompt 5 times, twice (bare and steered) — 10 calls.
+- W9 scores 10 occupation stems.
+- W10 scores each resume 10 times — 20 calls.
+- W5 grounded sends the full statute as context before generating.
+
+At ~12 s per short call that is several minutes per widget, per student, with
+20 students sharing one gateway. The lab is built to survive exactly this
+(every widget falls back), but the honest call is: **run Thursday on the
+static build.** Nothing about the lesson depends on the call being live; every
+output panel already says whether it is a live run or a transcript.
+
+## What the gateway is genuinely worth right now
+
+Replacing the authored seed transcripts with real captures. Students then read
+output the Lab Model actually produced, the panels say "captured" rather than
+"example", and none of it is exposed to class-time latency. That is what
+`scripts/capture_recorded.py` does.
+
+```
+cd proxy && cp .env.example .env     # fill in GATEWAY_BASE_URL and GATEWAY_API_KEY
+set -a; . ./.env; set +a
+python3 -m uvicorn app:app --port 8100
+cd ../scripts && python3 capture_recorded.py --runs 3
+cd ../frontend && npm run build && npm run verify
+```
+
+Captured files land in `frontend/src/data/recorded/` with
+`"provenance": "captured"`. Expect this to take 20-40 minutes at current
+gateway speed.
+
+**`w5.json` is excluded from routine re-capture on purpose.** Its grounded
+variants carry a deliberate planted misattribution that the whole grounding
+lesson depends on, plus a `plantedErrors` block describing each one. A raw
+capture would lose that and `npm run verify` will fail. If you do re-capture
+W5, re-plant one mistake per grounded variant and update `plantedErrors`.
+
+## Running the preview channel
+
+```
+cd frontend && npm run build:preview          # -> dist-preview/, live mode
+cd ../proxy
+set -a; . ./.env; set +a                      # STATIC_DIR=../frontend/dist-preview
+python3 -m uvicorn app:app --port 8100
+```
+
+Then open `http://localhost:8100/`. The proxy serves the preview build at `/`
+and the API at `/api`, same origin, so no CORS setup is needed. Check
+`http://localhost:8100/api/health` first: it must report
+`gateway_configured: true` and the model you expect.
+
+`GATEWAY_TIMEOUT_S` (default 180) is the proxy's ceiling for a gateway call.
+It is deliberately far above the browser's 10 s so the capture script can
+finish long generations; it does not change what students experience.
+
+## The security boundary is unchanged
+
+The browser holds no key and sends no prompt. It sends a widget id plus the
+fields on that widget's allowlist; the proxy fills the approved template from
+`proxy/templates.py` and forwards. That is as true in the preview channel as
+in production. Do not put `GATEWAY_API_KEY` into anything under `frontend/` —
+Vite inlines `VITE_*` variables into the bundle, which ships to the browser.
+
+`proxy/.env` is gitignored. Keep it that way.

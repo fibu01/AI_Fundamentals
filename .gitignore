@@ -11,3 +11,4 @@ nohup.out
 # are real content (their item counts are the widget's answer key), so they
 # were missing from the deployed site while still present locally.
 # Regenerate placeholders with scripts/make_placeholders.py if they are lost.
+dist-preview/
