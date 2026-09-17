@@ -1,14 +1,19 @@
 name: Deploy Hallucination Lab
 
-# Production only. lab-stable-w4 is the branch students hit at
-# https://fibu01.github.io/AI_Fundamentals/ and it is frozen at the verified
-# Week 4 build. Development happens on claude/keen-goodall-f0m7ce, which
-# deliberately does NOT deploy: a push there used to republish the live site,
-# so any work in progress went straight to the students' URL. To ship, merge
-# the dev branch into lab-stable-w4 and push that.
+# The github-pages environment only permits deployments from this branch, so
+# the trigger lives here. The CONTENT of the student site does not: the root of
+# the site is always built from lab-stable-w4, whatever is on this branch. That
+# is what keeps work in progress away from students while still letting this
+# branch publish a candidate at /preview/ for review.
+#
+#   https://fibu01.github.io/AI_Fundamentals/          <- lab-stable-w4, students
+#   https://fibu01.github.io/AI_Fundamentals/preview/  <- this branch, review
+#
+# To ship: merge this branch into lab-stable-w4, then push anything here (or
+# run this workflow by hand) to rebuild the root from it.
 on:
   push:
-    branches: [main, lab-stable-w4]
+    branches: [main, claude/keen-goodall-f0m7ce]
   workflow_dispatch:
 
 permissions:
@@ -20,53 +25,90 @@ concurrency:
   group: pages
   cancel-in-progress: false
 
+env:
+  STUDENT_BRANCH: lab-stable-w4
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out the candidate (this branch)
+        uses: actions/checkout@v4
+        with:
+          path: preview-src
 
-      - name: Collect instructor images from anywhere in the repo
-        # Uploads have landed in several places over the week (repo root,
-        # frontend/public/images, and the lab's own folder). Fold every known
-        # location into the build so a drop in any of them ships.
-        run: |
-          DEST=hallucination-lab/frontend/public/images
-          mkdir -p "$DEST"
-          for SRC in frontend/public/images images .; do
-            for GRID in w12 w13 w14 headers; do
-              if [ -d "$SRC/$GRID" ] && [ "$SRC/$GRID" != "$DEST/$GRID" ]; then
-                echo "collecting $SRC/$GRID"
-                mkdir -p "$DEST/$GRID"
-                cp -r "$SRC/$GRID/." "$DEST/$GRID/"
-              fi
-            done
-          done
-          echo "image files in build:"
-          find "$DEST" -type f \( -name '*.png' -o -name '*.jpg' -o -name '*.jpeg' -o -name '*.webp' \) | wc -l
+      - name: Check out the frozen student branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.STUDENT_BRANCH }}
+          path: student-src
 
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: npm
-          cache-dependency-path: hallucination-lab/frontend/package-lock.json
 
-      - run: npm ci
-        working-directory: hallucination-lab/frontend
+      # Uploads have landed in several places over the week (repo root,
+      # frontend/public/images, and the lab's own folder). Fold every known
+      # location into whichever tree is being built.
+      - name: Collect instructor images
+        run: |
+          collect() {
+            ROOT="$1"
+            DEST="$ROOT/hallucination-lab/frontend/public/images"
+            mkdir -p "$DEST"
+            for SRC in "$ROOT/frontend/public/images" "$ROOT/images" "$ROOT"; do
+              for GRID in w12 w13 w14 headers; do
+                if [ -d "$SRC/$GRID" ] && [ "$SRC/$GRID" != "$DEST/$GRID" ]; then
+                  mkdir -p "$DEST/$GRID"
+                  cp -r "$SRC/$GRID/." "$DEST/$GRID/"
+                fi
+              done
+            done
+            echo "$ROOT: $(find "$DEST" -type f \( -name '*.png' -o -name '*.jpg' -o -name '*.jpeg' -o -name '*.webp' \) | wc -l) image files"
+          }
+          collect student-src
+          collect preview-src
 
-      - run: npm run build
-        working-directory: hallucination-lab/frontend
+      # The student build is not allowed to fail quietly. If it breaks, the
+      # whole job fails and nothing is published, so the previous deployment
+      # stays live rather than being replaced by something half-built.
+      - name: Build the student site from ${{ env.STUDENT_BRANCH }}
+        working-directory: student-src/hallucination-lab/frontend
         env:
-          # No proxy behind a static host: every widget uses recorded runs.
           VITE_STATIC_ONLY: '1'
+        run: npm ci && npm run build
 
-      # Requires Pages to be enabled once by the repo owner:
-      # Settings > Pages > Source: GitHub Actions. The workflow token cannot
-      # turn it on itself.
+      # The candidate may fail without taking the student site down with it.
+      - name: Build the preview from this branch
+        id: preview
+        continue-on-error: true
+        working-directory: preview-src/hallucination-lab/frontend
+        env:
+          VITE_STATIC_ONLY: '1'
+          VITE_BUILD_CHANNEL: preview
+        run: npm ci && npx vite build
+
+      - name: Assemble the site
+        run: |
+          SITE=student-src/hallucination-lab/frontend/dist
+          test -f "$SITE/index.html" || { echo "::error::student build missing"; exit 1; }
+          PREV=preview-src/hallucination-lab/frontend/dist
+          if [ -d "$PREV" ]; then
+            rm -rf "$SITE/preview"
+            cp -r "$PREV" "$SITE/preview"
+            echo "preview published: $(find "$SITE/preview" -type f | wc -l) files"
+          else
+            echo "::warning::preview build produced nothing; shipping the student site alone"
+          fi
+          if grep -rq "PREVIEW BUILD" "$SITE"/assets/*.js; then
+            echo "::error::the preview banner leaked into the student build"; exit 1
+          fi
+          echo "student site built from ${STUDENT_BRANCH}, banner not present"
+
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: hallucination-lab/frontend/dist
+          path: student-src/hallucination-lab/frontend/dist
 
   deploy:
     needs: build
