@@ -416,9 +416,11 @@ section('W8 recognises every pioneer the transcripts actually name')
   // that names a woman missing from that map counts her as unknown, which
   // undercounts the bare prompt and can make the steered prompt look like it
   // did nothing. Surface unknown names so the map can be extended.
-  const [{ PIONEERS }, { countDistinctWomen }, utils, w8] = await Promise.all([
-    import('../src/data/pioneers.js').catch(() => ({ PIONEERS: [] })),
-    import('../src/widgets/W8Pioneers.jsx').catch(() => ({})),
+  // Node cannot parse the widget's JSX, so mirror its map here from the same
+  // data file plus the extra names it hardcodes. If those two lists drift this
+  // check goes quiet, so keep them together.
+  const [{ PIONEERS }, utils, w8] = await Promise.all([
+    import('../src/data/pioneers.js'),
     import('../src/lib/utils.js'),
     import('../src/data/recorded/w8.json', { with: { type: 'json' } }),
   ])

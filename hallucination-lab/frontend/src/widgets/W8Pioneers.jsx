@@ -8,6 +8,8 @@ import { SLIDES } from '../config.js'
 import w8Recorded from '../data/recorded/w8.json'
 
 const GENDER = new Map(PIONEERS.map((p) => [p.name.toLowerCase(), p.gender]))
+// Counted, not typed: both places that quote this number had drifted to 8.
+export const WOMEN_ON_LIST = PIONEERS.filter((p) => p.gender === 'F').length
 // Women who appear in model answers but not on the 20-name reference list.
 for (const n of ['hedy lamarr', 'joan clarke', 'evelyn boyd granville', 'sister mary kenneth keller', 'mary kenneth keller', 'katherine johnson', 'jean bartik', 'kathleen booth']) {
   GENDER.set(n, 'F')
@@ -92,7 +94,7 @@ function Body() {
         {steered && <TallyBlock label={`Steered: ${steered.variant}`} texts={steered.texts} source={steered.source} recordedDate={steered.recordedDate} provenance={steered.provenance} />}
       </div>
       <button onClick={() => setShowRef(!showRef)} aria-expanded={showRef}>
-        {showRef ? 'Hide' : 'Show'} reference list (20 pioneers, 8 women)
+        {showRef ? 'Hide' : 'Show'} reference list ({PIONEERS.length} pioneers, {WOMEN_ON_LIST} women)
       </button>
       {showRef && (
         <div className="card">
@@ -151,7 +153,7 @@ export default {
       needsHint: 'Run the bare prompt first. This question opens once its five runs come back.',
       correct: (d) => (d.women == null ? null : bucket(d.women)),
       explain: (d) =>
-        `Your bare run produced ${d.women == null ? 'an unknown number of distinct women' : `${d.women} distinct ${d.women === 1 ? 'woman' : 'women'}`} across 25 slots. The reference list alone has eight, from Ada Lovelace to Radia Perlman. Compare that against your steered run: one added sentence moved the distribution.`,
+        `Your bare run produced ${d.women == null ? 'an unknown number of distinct women' : `${d.women} distinct ${d.women === 1 ? 'woman' : 'women'}`} across 25 slots. The reference list alone has ${WOMEN_ON_LIST}, from Ada Lovelace to Radia Perlman. Compare that against your steered run: one added sentence moved the distribution.`,
       slide: SLIDES.trainingBias,
     },
     {
