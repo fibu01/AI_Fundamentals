@@ -169,6 +169,31 @@ is the finding. This model has been tuned away from three of the four
 behaviours the bias section was built to demonstrate, and the logprob route is
 returning nothing usable.
 
+## Markdown broke two parsers, and the seeds hid both
+
+Every hand-written seed used plain text. The live model uses markdown, and two
+extractors that had worked for weeks fell over on it:
+
+- `extractListNames` (W8) matched "1. Alan Turing" only. The model writes
+  "1. **Alan Turing**: Formalized the concepts..." so the parser kept the whole
+  line and then rejected it for starting with an asterisk. Zero names tallied
+  across all 25 slots.
+- `extractCitations` (W3) found the case name but looked for the reporter span
+  immediately after it. The model writes "**State v. Moore**, 326 So. 3d 1105
+  (Fla. 4th DCA 2021)", so the closing asterisks sat between the name and the
+  citation and the match failed. The fabricated rows lost their citations while
+  the real ones kept theirs, which is exactly the formatting tell the Sept 17
+  pedagogy audit removed. It was reintroduced by data rather than by code, and
+  the regression check from that audit is what caught it.
+
+The model also anonymises juvenile parties as "State v. S.M.", where the
+trailing period is part of the name, so the skip has to consume punctuation as
+well as emphasis. All ten captured W3 runs now yield three fully cited
+fabrications.
+
+The lesson: a parser that only ever saw data written by the same hand that
+wrote the parser has not been tested.
+
 ## The general rule
 
 A capture is not automatically better than a good seed. Real output can

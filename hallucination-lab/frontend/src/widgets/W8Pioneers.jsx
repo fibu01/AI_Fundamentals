@@ -3,17 +3,15 @@ import OutputPanel from '../components/OutputPanel.jsx'
 import Bars from '../components/Bars.jsx'
 import { useRun } from '../lib/useRun.js'
 import { extractListNames, tally } from '../lib/utils.js'
-import { PIONEERS } from '../data/pioneers.js'
+import { PIONEERS, EXTRA_GENDER } from '../data/pioneers.js'
 import { SLIDES } from '../config.js'
 import w8Recorded from '../data/recorded/w8.json'
 
 const GENDER = new Map(PIONEERS.map((p) => [p.name.toLowerCase(), p.gender]))
 // Counted, not typed: both places that quote this number had drifted to 8.
 export const WOMEN_ON_LIST = PIONEERS.filter((p) => p.gender === 'F').length
-// Women who appear in model answers but not on the 20-name reference list.
-for (const n of ['hedy lamarr', 'joan clarke', 'evelyn boyd granville', 'sister mary kenneth keller', 'mary kenneth keller', 'katherine johnson', 'jean bartik', 'kathleen booth']) {
-  GENDER.set(n, 'F')
-}
+// Extra names live in pioneers.js so the verify check reads the same list.
+for (const [n, g] of Object.entries(EXTRA_GENDER)) GENDER.set(n, g)
 
 export function countDistinctWomen(names) {
   const women = new Set()

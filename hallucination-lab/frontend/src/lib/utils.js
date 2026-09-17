@@ -24,7 +24,15 @@ export function extractCitations(text) {
     // ", 361 So. 3d 884 (Fla. 2d DCA 2023)".
     const at = text.indexOf(name)
     if (at < 0) return { name, full: name }
-    const tail = text.slice(at + name.length, at + name.length + 80)
+    // The live model bolds the case name: "1. **State v. Moore**, 326 So. 3d
+    // 1105 (Fla. 4th DCA 2021)." The reporter span sits behind the closing
+    // asterisks, so without skipping emphasis the tail never matched and the
+    // fabricated rows lost their citations, which is precisely the formatting
+    // tell the sort panel must not have.
+    // Skip markdown emphasis and the period the model leaves on anonymised
+    // party names ("State v. S.M., 358 So. 3d 1120 (Fla. 2d DCA 2023)"), where
+    // extractCaseNames has already trimmed the trailing dot off the name.
+    const tail = text.slice(at + name.length, at + name.length + 90).replace(/^[*_\s.,]+/, '')
     const m = tail.match(/^,?\s*(\d+\s+[A-Za-z.]+(?:\s+[A-Za-z0-9.]+){0,3}\s+\d+\s*\([^)]{1,40}\))/)
     return { name, full: m ? `${name}, ${m[1]}` : name }
   })

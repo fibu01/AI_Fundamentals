@@ -22,3 +22,28 @@ export const PIONEERS = [
   { name: 'Tim Berners-Lee', gender: 'M', era: '1990s', note: 'World Wide Web' },
   { name: 'Vint Cerf', gender: 'M', era: '1970s', note: 'TCP/IP' },
 ]
+
+// Names the model produces that are not on the 20-name reference list above.
+// W8 counts distinct women, so a woman missing here is counted as unknown and
+// the tally silently undersells the bias; a man missing here is harmless but
+// leaves the verify check unable to tell the two cases apart. Keep both lists
+// here rather than inside the widget: verify.mjs reads this file, and when the
+// lists lived in two places they drifted.
+export const EXTRA_GENDER = {
+  // Women who show up in model answers but are not on the reference list.
+  'hedy lamarr': 'F',
+  'joan clarke': 'F',
+  'evelyn boyd granville': 'F',
+  'sister mary kenneth keller': 'F',
+  'mary kenneth keller': 'F',
+  'katherine johnson': 'F',
+  'jean bartik': 'F',
+  'kathleen booth': 'F',
+  // Men the model names, recorded so an unmapped name means "nobody has
+  // checked this one" rather than "we already know and it does not matter".
+  'konrad zuse': 'M',
+  'alexey lyapunov': 'M',
+  'sergei lebedev': 'M',
+  'niklaus wirth': 'M',
+  'andrey kolmogorov': 'M',
+}
