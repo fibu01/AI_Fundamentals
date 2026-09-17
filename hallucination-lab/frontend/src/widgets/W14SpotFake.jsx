@@ -156,7 +156,7 @@ export default {
     ],
   },
   predict: {
-    text: 'Six rounds, twenty seconds each. How many real photos will you pick correctly?',
+    text: `Six rounds, ${W14_SECONDS} seconds each. How many real photos will you pick correctly?`,
     options: [
       { key: 'a', label: 'All six' },
       { key: 'b', label: 'Four or five' },
