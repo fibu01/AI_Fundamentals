@@ -1,8 +1,14 @@
 name: Deploy Hallucination Lab
 
+# Production only. lab-stable-w4 is the branch students hit at
+# https://fibu01.github.io/AI_Fundamentals/ and it is frozen at the verified
+# Week 4 build. Development happens on claude/keen-goodall-f0m7ce, which
+# deliberately does NOT deploy: a push there used to republish the live site,
+# so any work in progress went straight to the students' URL. To ship, merge
+# the dev branch into lab-stable-w4 and push that.
 on:
   push:
-    branches: [main, claude/keen-goodall-f0m7ce]
+    branches: [main, lab-stable-w4]
   workflow_dispatch:
 
 permissions:
