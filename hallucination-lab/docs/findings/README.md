@@ -49,6 +49,74 @@ and the module should say so plainly.
 Either way this needs a capture against real citations and a rewritten Q1, and
 it is not a change to make in the hours before class.
 
+## W8 "Pioneers Tally" — the bare prompt is already diverse
+
+**W8 ships on its seed too.** Capture kept as `w8-captured-2026-09-17.json`.
+
+W8 teaches that the bare prompt omits women and that one added sentence moves
+the distribution. Q2's explain calls the steered run "the proof: the missing
+names were in the model all along, one sentence away." Measured on the capture:
+
+| prompt | slots | distinct women |
+|---|---|---|
+| bare | 25 | 2 (Ada Lovelace, Grace Hopper) |
+| "include at least two women" | 25 | 2 (the same two) |
+| "from around the world" | 25 | 3 |
+
+The steer changed nothing, because the bare prompt already returns Lovelace and
+Hopper every time. This model has been tuned for exactly the thing the module
+asks students to discover, so the experiment lands on a null result while the
+copy insists the opposite happened. Q1's key is computed from the run and
+survives; Q2's explain does not.
+
+Note the module's *finding* is not wrong in general, and the omission is still
+real further down the list: two women in 25 slots is not parity. But the lab
+must not tell a student their steered run proved something it did not.
+
+### The interesting part, which is a candidate module
+
+The "from around the world" steer produced names the reference list does not
+contain: Konrad Zuse (real), Satoshi Nakamoto (a pseudonym, and not a pioneer
+of computer science in this sense), and **Jun Morita, Kiyoshi Muroga and Ejnar
+Gilbertsen, which need checking before anyone repeats them.** Saburo Muroga was
+a real computer scientist at Illinois; "Kiyoshi Muroga" may be a corruption of
+that name. If these are fabricated, then asking the model to broaden its list
+made it invent plausible non-Western computer scientists, which is a sharper
+lesson than the original: the steer did not retrieve missing names, it
+generated names shaped like the ones you asked for.
+
+Verify those three before building anything on them.
+
+## W1 and W9 — the logprob path through this gateway returns junk
+
+**Both ship on their seeds.** Captures kept as `w1-captured-2026-09-17.json`
+and `w9-captured-2026-09-17.json`.
+
+W1 asks the gateway for next-token probabilities at three temperatures. What
+came back:
+
+- After "The capital of Florida is", the top candidate is **"Florida"** at
+  0.98, with a CJK character in the top three.
+- The distribution is **byte-identical at temperature 0.2, 0.9 and 1.4.**
+
+W1 exists to show the top word's share shrinking as temperature rises. Three
+identical charts show the opposite of the lesson. W9 is the same endpoint and
+came back collapsed: "they" at probability 1.00 for nine of ten occupations and
+all three probabilities at 0.00 for the tenth, so there is no tilt to find and
+Q1 has no answer.
+
+Whether that is the model, the vLLM backend, or LiteLLM not passing
+`logprobs`/`temperature` through, it needs fixing at the gateway before either
+module can use live data. Everything else on the gateway works, so this is
+specific to the logprob route, not the connection.
+
+## W10 "Resume Score" — no variance at all
+
+**Ships on its seed.** The capture scored 7 for both resumes on all twenty
+runs: mean 7.0 against 7.0, and a histogram with a single bar. The module asks
+students to read a distribution across ten runs, and a distribution with zero
+spread teaches nothing about sampling. The seed at least varies 7 to 9.
+
 ## W7 "The Expert Quote" — the model names real journals
 
 The seed invented a journal, and Q1 was keyed "the publication does not
@@ -69,6 +137,37 @@ one W4 chains off. `scripts/topup_w3.py` drops those and re-rolls only the
 topics that came up short.
 
 W3 ships on the real capture, after the top-up.
+
+## W8 list parsing — a bug the seeds hid
+
+`extractListNames` matched "1. Alan Turing" and nothing else. The live model
+writes "1. **Alan Turing**: Formalized the concepts of algorithms..." and
+"1. **Ada Lovelace** (United Kingdom) - Often credited as...", so the parser
+kept the whole line including the description and then rejected it for
+starting with an asterisk. Every name was dropped and W8 tallied zero across
+all 25 slots. It now strips markdown emphasis, cuts the description at a colon
+or dash, drops a trailing parenthetical, and is tested against all four
+observed shapes plus prose. This bug was invisible for as long as the seeds
+were hand-written in the one format the parser understood.
+
+## What actually shipped
+
+| widget | source | why |
+|---|---|---|
+| W3 Citation Forge | **captured** | good fabrications, after re-rolling repeats |
+| W7 The Expert Quote | **captured** | real fabricated quote, real journal named |
+| W1 Next Word | seed | logprob path returns junk, no temperature effect |
+| W4 Are You Sure | seed | model retracts instead of doubling down |
+| W5 Prompt Golf | seed | planted misattribution is deliberate teaching content |
+| W8 Pioneers Tally | seed | steering changed nothing; bare prompt already diverse |
+| W9 Fill in the Pronoun | seed | "they" at 1.00 everywhere, no tilt to find |
+| W10 Resume Score | seed | zero variance across twenty runs |
+| W13 Count the Coins | seed | vision disabled, gateway returned 501 |
+
+Two of nine captures were usable. That is not a failure of the capture run; it
+is the finding. This model has been tuned away from three of the four
+behaviours the bias section was built to demonstrate, and the logprob route is
+returning nothing usable.
 
 ## The general rule
 

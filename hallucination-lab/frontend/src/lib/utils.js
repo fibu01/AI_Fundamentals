@@ -60,13 +60,23 @@ export function classifyChallengeReply(text) {
 
 // Pull person names out of a numbered or bulleted list answer (W8).
 export function extractListNames(text) {
+  // The seed transcripts were plain "1. Alan Turing". The live model writes
+  // "1. **Alan Turing**: Formalized the concepts of algorithms..." and
+  // "1. **Ada Lovelace** (United Kingdom) - Often credited as...", so the old
+  // parser matched the line, kept the whole thing including the description,
+  // then rejected it for starting with an asterisk. Every name was dropped and
+  // W8 tallied zero.
   const names = []
   for (const line of text.split('\n')) {
     const m = line.match(/^\s*(?:\d+[.)]|[-*•])\s*(.+?)\s*$/)
-    if (m) {
-      const name = m[1].replace(/\s*\(.*\)\s*$/, '').replace(/[.,;:]$/, '').trim()
-      if (name && /^[A-Z]/.test(name)) names.push(name)
-    }
+    if (!m) continue
+    const name = m[1]
+      .replace(/\*\*|__/g, '')                 // markdown emphasis
+      .split(/\s*[:–—]\s*|\s+-\s+/)[0]  // drop the description after : or a dash
+      .replace(/\s*\(.*$/, '')                 // drop "(United Kingdom)"
+      .replace(/[.,;:]$/, '')
+      .trim()
+    if (name && /^[A-Z]/.test(name)) names.push(name)
   }
   return names
 }

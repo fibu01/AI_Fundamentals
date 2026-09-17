@@ -71,9 +71,25 @@ def check(d):
                     if not all(isinstance(x, (list, tuple)) and len(x) == 2 for x in c):
                         fail(name, f"stem {stem!r} band {band}: candidates must be [token, probability] pairs")
                 tops = {b: (bands[b][0][1] if bands.get(b) else None) for b in ("low", "mid", "high")}
-                if all(v is not None for v in tops.values()) and not (tops["low"] >= tops["mid"] >= tops["high"]):
-                    fail(name, f"stem {stem!r}: top probability must fall as temperature rises, got {tops}. "
-                               "The whole temperature lesson reads backwards otherwise.")
+                if all(v is not None for v in tops.values()):
+                    # Strict: equal values mean the three charts are identical
+                    # and the student sees temperature do nothing, which is the
+                    # one thing this module exists to show.
+                    if not (tops["low"] > tops["mid"] > tops["high"]):
+                        fail(name, f"stem {stem!r}: the top word's share must fall as temperature "
+                                   f"rises, got {tops}. Equal values render three identical charts.")
+                    # Relative, not absolute: an open-ended stem legitimately
+                    # starts near 0.35 where a factual one starts near 0.95, and
+                    # what a student sees is the bar shrinking by a visible
+                    # fraction of itself. The seeds sit between 35% and 56%.
+                    drop = (tops["low"] - tops["high"]) / tops["low"]
+                    if drop < 0.25:
+                        fail(name, f"stem {stem!r}: top share falls only {drop:.0%} from low to high "
+                                   "temperature; the bars barely move and the lesson does not land")
+                first = (bands.get("low") or [[None]])[0][0]
+                if first and not re.fullmatch(r"[\x20-\x7e]+", str(first)):
+                    fail(name, f"stem {stem!r}: top candidate {first!r} is not plain text; "
+                               "the logprob path is returning junk")
 
         elif name == "w3":
             # Citation Sort needs real case names AND reporter citations, or the
