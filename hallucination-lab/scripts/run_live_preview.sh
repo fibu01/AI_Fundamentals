@@ -18,7 +18,14 @@ ROOT="$PWD"
 : "${PORT:=8100}"
 # Codespaces and other remote containers forward a port only if the server
 # listens on all interfaces, not just loopback.
-if [ -n "${CODESPACES:-}${GITPOD_WORKSPACE_ID:-}" ]; then : "${HOST:=0.0.0.0}"; else : "${HOST:=127.0.0.1}"; fi
+# Any remote container forwards a port only if the server listens on all
+# interfaces. CODESPACES alone was too narrow a test, so check every marker
+# these environments set.
+if [ -n "${CODESPACES:-}${CODESPACE_NAME:-}${GITPOD_WORKSPACE_ID:-}${REMOTE_CONTAINERS:-}${DEVCONTAINER:-}" ]; then
+  : "${HOST:=0.0.0.0}"
+else
+  : "${HOST:=127.0.0.1}"
+fi
 
 # Codespaces manages node through nvm, which only lands on PATH for login
 # shells. A codespace created before .devcontainer existed has no node at all
@@ -99,9 +106,16 @@ done
 
 if [ -n "${CODESPACE_NAME:-}" ]; then
   PUBLIC_URL="https://${CODESPACE_NAME}-${PORT}.${GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN:-app.github.dev}/"
+  # Forward it explicitly: a codespace built before .devcontainer existed has
+  # no forwardPorts entry, and auto-detection on bind is not guaranteed.
+  if command -v gh >/dev/null 2>&1; then
+    gh codespace ports forward "$PORT:$PORT" --codespace "$CODESPACE_NAME" >/dev/null 2>&1 &
+    gh codespace ports visibility "$PORT:public" --codespace "$CODESPACE_NAME" >/dev/null 2>&1 \
+      && echo "port $PORT set to public" \
+      || echo "could not set port $PORT public automatically; do it in the PORTS tab"
+  fi
   echo
-  echo "Codespace detected. Open the PORTS tab, set port $PORT visibility to Public,"
-  echo "then share this URL:"
+  echo "If the URL below 404s, open the PORTS tab and confirm $PORT is listed and Public."
 fi
 echo
 curl -s "http://localhost:$PORT/api/health"; echo
