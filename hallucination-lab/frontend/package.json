@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "verify": "node tests/verify.mjs",
     "serve:dist": "python3 -m http.server 8300 --directory dist",
-    "build:preview": "vite build --outDir dist-preview",
+    "build:preview": "VITE_CALL_TIMEOUT_MS=90000 vite build --outDir dist-preview",
     "serve:preview": "python3 -m http.server 8301 --directory dist-preview"
   },
   "dependencies": {

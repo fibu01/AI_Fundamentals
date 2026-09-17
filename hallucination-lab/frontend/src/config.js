@@ -16,7 +16,14 @@ export const FACULTY_FIELD = 'nursing'
 export const API_BASE = '/api'
 
 // Per-call timeout before falling back to a recorded run (PRD: 10 s).
-export const CALL_TIMEOUT_MS = 10000
+//
+// 10 s is the right number for a room full of students: nobody waits longer
+// than that before the lab drops to a transcript. It is the wrong number for
+// demonstrating the live path, because the Barry gateway's floor on
+// gemma-4-31b-it is about 11 s for even a short answer, so at 10 s nothing is
+// ever live. The preview build raises it via VITE_CALL_TIMEOUT_MS; production
+// is static and never calls anything, so its value is academic.
+export const CALL_TIMEOUT_MS = Number(import.meta.env.VITE_CALL_TIMEOUT_MS) || 10000
 
 // Descriptive references into the Tuesday deck, used by explain panels.
 // Map these to real slide numbers once the deck is final.
