@@ -409,6 +409,40 @@ section('Run-dependent questions stay shut until the run exists')
   await page.context().close()
 }
 
+// ------------------------------------------------- W8 name coverage
+section('W8 recognises every pioneer the transcripts actually name')
+{
+  // countDistinctWomen matches against a hardcoded name map. A captured run
+  // that names a woman missing from that map counts her as unknown, which
+  // undercounts the bare prompt and can make the steered prompt look like it
+  // did nothing. Surface unknown names so the map can be extended.
+  const [{ PIONEERS }, { countDistinctWomen }, utils, w8] = await Promise.all([
+    import('../src/data/pioneers.js').catch(() => ({ PIONEERS: [] })),
+    import('../src/widgets/W8Pioneers.jsx').catch(() => ({})),
+    import('../src/lib/utils.js'),
+    import('../src/data/recorded/w8.json', { with: { type: 'json' } }),
+  ])
+  const known = new Set([
+    ...PIONEERS.map((p) => p.name.toLowerCase()),
+    'hedy lamarr', 'joan clarke', 'evelyn boyd granville', 'sister mary kenneth keller',
+    'mary kenneth keller', 'katherine johnson', 'jean bartik', 'kathleen booth',
+  ])
+  const unknown = new Set()
+  for (const r of w8.default.runs) {
+    for (const outs of Object.values(r.variants || {})) {
+      for (const text of outs) {
+        for (const n of utils.extractListNames(text)) {
+          const key = n.toLowerCase().replace(/\s*\(.*\)\s*$/, '')
+          if (!known.has(key)) unknown.add(key)
+        }
+      }
+    }
+  }
+  check('every name in the W8 transcripts is in the gender map',
+    unknown.size === 0,
+    unknown.size ? `unmapped: ${[...unknown].join(', ')}` : '')
+}
+
 // ------------------------------------------------- W5 transcript integrity
 section('W5 recorded transcripts: every grounded variant carries one documented mistake')
 {
