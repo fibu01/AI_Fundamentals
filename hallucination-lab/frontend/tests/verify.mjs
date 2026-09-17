@@ -25,7 +25,7 @@ function section(t) { console.log(`\n=== ${t} ===`) }
 const browser = await chromium.launch({ executablePath: EXEC })
 
 async function newPage({ instructor = false } = {}) {
-  const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 } })
+  const ctx = await browser.newContext({ viewport: { width: 1280, height: 900 }, ignoreHTTPSErrors: true })
   const page = await ctx.newPage()
   page.__errors = []
   page.__requests = []
@@ -34,7 +34,7 @@ async function newPage({ instructor = false } = {}) {
   page.on('request', (r) => page.__requests.push(r.url()))
   page.__notFound = []
   page.on('response', (r) => { if (r.status() === 404) page.__notFound.push(r.url()) })
-  await page.goto(BASE + (instructor ? '?mode=instructor' : ''), { waitUntil: 'load' })
+  await page.goto(BASE + (instructor ? '?mode=instructor' : ''), { waitUntil: 'load', timeout: 60000 })
   return page
 }
 
@@ -335,7 +335,7 @@ section('Accessibility basics')
 // -------------------------------------------------------- narrow viewport
 section('Narrow viewport (1280 lab desktop already covered; check 900px)')
 {
-  const ctx = await browser.newContext({ viewport: { width: 900, height: 800 } })
+  const ctx = await browser.newContext({ viewport: { width: 900, height: 800 }, ignoreHTTPSErrors: true })
   const page = await ctx.newPage()
   await page.goto(BASE, { waitUntil: 'load' })
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 2)
@@ -344,6 +344,30 @@ section('Narrow viewport (1280 lab desktop already covered; check 900px)')
   const overflow2 = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 2)
   check('first module does not scroll sideways at 900px', !overflow2)
   await ctx.close()
+}
+
+// ------------------------------------------------- every referenced asset
+section('Asset coverage: every image the manifests reference must resolve')
+{
+  // A .gitignore rule once excluded the W13 placeholders, so they existed
+  // locally and 404'd on the deployed site. Ask for each file by URL rather
+  // than trusting the page, which degrades silently when one is missing.
+  const mod = await import('../src/data/manifests.js')
+  const urls = []
+  for (const g of mod.W12_GRIDS) for (let i = 1; i <= g.count; i++) urls.push(`images/w12/${g.id}/${i}.${mod.W12_EXT}`)
+  for (const im of mod.W13_IMAGES) urls.push(`images/w13/${im.id}.${mod.W13_EXT}`)
+  for (const pr of mod.W14_PAIRS) { urls.push(`images/w14/${pr.id}_ai.${mod.W14_EXT}`); urls.push(`images/w14/${pr.id}_real.${mod.W14_EXT}`) }
+  for (const id of mod.HEADER_IMAGES) urls.push(`images/headers/${id}.png`)
+
+  const page = await newPage()
+  const missing = []
+  for (const u of urls) {
+    const r = await page.request.get(new URL(u, BASE).href, { ignoreHTTPSErrors: true }).catch(() => null)
+    if (!r || r.status() !== 200) missing.push(`${u} (${r ? r.status() : 'no response'})`)
+  }
+  check(`all ${urls.length} manifest images resolve`, missing.length === 0,
+    missing.slice(0, 6).join(', ') + (missing.length > 6 ? ` +${missing.length - 6} more` : ''))
+  await page.context().close()
 }
 
 console.log(`\n================ ${passed} passed, ${failed} failed ================`)
