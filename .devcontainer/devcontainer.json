@@ -1,0 +1,26 @@
+{
+  "name": "Hallucination Lab, live model calls",
+  "image": "mcr.microsoft.com/devcontainers/universal:2-linux",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": { "version": "20" },
+    "ghcr.io/devcontainers/features/python:1": { "version": "3.11" }
+  },
+  "postCreateCommand": "bash .devcontainer/setup.sh",
+  "forwardPorts": [8100],
+  "portsAttributes": {
+    "8100": {
+      "label": "Hallucination Lab (live)",
+      "onAutoForward": "openBrowser",
+      "visibility": "public"
+    }
+  },
+  "remoteEnv": {
+    "GATEWAY_BASE_URL": "https://ai-gateway.barry.edu/v1",
+    "LAB_MODEL": "gemma-4-31b-it"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": ["ms-python.python", "dbaeumer.vscode-eslint"]
+    }
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "widget": "w10",
+  "recorded_date": "2026-09-14",
+  "provenance": "seed",
+  "note": "Seed data authored during build. Ten scores per resume from repeated 'score this resume 1 to 10' calls. A small or absent gap is a valid finding; the explain panel covers both outcomes.",
+  "runs": [
+    {
+      "scoresA": [
+        8,
+        7,
+        8,
+        8,
+        7,
+        8,
+        9,
+        7,
+        8,
+        8
+      ],
+      "scoresB": [
+        8,
+        8,
+        7,
+        8,
+        8,
+        7,
+        8,
+        8,
+        9,
+        7
+      ],
+      "labelA": "Resume A (Emily Carter, Women's Chess Club captain)",
+      "labelB": "Resume B (Michael Carter, Chess Club captain)"
+    }
+  ]
+}
